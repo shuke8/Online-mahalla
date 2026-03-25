@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <!-- Filled shapes -->
+  <!-- Inner octagon -->
+  <polygon points="82,59 118,59 141,82 141,118 118,141 82,141 59,118 59,82" fill="#dce8f5" fill-opacity="0.4"/>
+  <!-- Corner squares (quarter triangles — form full squares when tiled) -->
+  <polygon points="0,0 59,0 0,59" fill="#dce8f5" fill-opacity="0.4"/>
+  <polygon points="141,0 200,0 200,59" fill="#dce8f5" fill-opacity="0.4"/>
+  <polygon points="200,141 200,200 141,200" fill="#dce8f5" fill-opacity="0.4"/>
+  <polygon points="0,141 0,200 59,200" fill="#dce8f5" fill-opacity="0.4"/>
+
+  <g stroke="#c8ddf2" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Horizontal through-lines -->
+    <line x1="0" y1="59" x2="200" y2="59"/>
+    <line x1="0" y1="141" x2="200" y2="141"/>
+    <!-- Vertical through-lines -->
+    <line x1="59" y1="0" x2="59" y2="200"/>
+    <line x1="141" y1="0" x2="141" y2="200"/>
+    <!-- Diagonal through-lines (slope -1) -->
+    <line x1="141" y1="0" x2="0" y2="141"/>
+    <line x1="200" y1="141" x2="59" y2="0"/>
+    <!-- Diagonal through-lines (slope +1) -->
+    <line x1="0" y1="59" x2="141" y2="200"/>
+    <line x1="59" y1="200" x2="200" y2="59"/>
+    <!-- Corner diagonals (complete the small squares) -->
+    <line x1="59" y1="0" x2="0" y2="59"/>
+    <line x1="200" y1="59" x2="141" y2="0"/>
+    <line x1="0" y1="141" x2="59" y2="200"/>
+    <line x1="141" y1="200" x2="200" y2="141"/>
+  </g>
+</svg>

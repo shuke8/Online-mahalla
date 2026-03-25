@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# mcp tools
+claude-talk-to-figma-mcp/
+
+# design assets
+ionicons.designerpack/
+
+# mcp config
+.mcp.json

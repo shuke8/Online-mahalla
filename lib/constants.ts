@@ -1,0 +1,48 @@
+export const COLORS = {
+  navy: "#2b8cee",
+  navyAccent: "#338fff",
+  navyLight: "#61a6fa",
+  navyLighter: "#EDF5FF",
+  orange: "#fd7d07",
+  orangeLight: "#fa8938",
+  purple: "#a162f7",
+  purpleLight: "#cc66ff",
+  gold: "#D4A76A",
+  goldLight: "#F0E4D0",
+  success: "#1dc973",
+  warning: "#F59E0B",
+  danger: "#EF4444",
+  surface: "#f1f5f9",
+  card: "#FFFFFF",
+  textPrimary: "#020817",
+  textLabel: "#334155",
+  textSecondary: "#64748b",
+  border: "#e2e8f0",
+  borderSubtle: "#f0f1f5",
+} as const;
+
+export const NAV_ITEMS = [
+  { label: "Бош саҳифа", href: "/", icon: "LayoutDashboard" },
+  { label: "Инфратузилма", href: "/infratuzilma", icon: "Building2" },
+  { label: "Республика", href: "/respublika", icon: "Globe" },
+  { label: "Вилоят", href: "/viloyat/jizzakh", icon: "Map" },
+  { label: "Туман", href: "/tuman/jizzakh-city", icon: "MapPin" },
+  { label: "МФЙ", href: "/mfy/yangi-hayot", icon: "Home" },
+] as const;
+
+export const REGIONS = [
+  { id: "qoraqalpogiston", name: "Қорақалпоғистон Респ." },
+  { id: "andijon", name: "Андижон вилояти" },
+  { id: "buxoro", name: "Бухоро вилояти" },
+  { id: "jizzakh", name: "Жиззах вилояти" },
+  { id: "qashqadaryo", name: "Қашқадарё вилояти" },
+  { id: "navoiy", name: "Навоий вилояти" },
+  { id: "namangan", name: "Наманган вилояти" },
+  { id: "samarqand", name: "Самарқанд вилояти" },
+  { id: "surxondaryo", name: "Сурхондарё вилояти" },
+  { id: "sirdaryo", name: "Сирдарё вилояти" },
+  { id: "toshkent-v", name: "Тошкент вилояти" },
+  { id: "fargona", name: "Фарғона вилояти" },
+  { id: "xorazm", name: "Хоразм вилояти" },
+  { id: "toshkent-sh", name: "Тошкент шаҳри" },
+] as const;
