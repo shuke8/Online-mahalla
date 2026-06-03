@@ -262,7 +262,8 @@ export default function DalolatnomaScreen({ object, layout, onBack, initialStep 
       {isTablet ? (
         /* ── ПЛАНШЕТ: 2 устун ── */
         <div className="flex-1">
-          <div className="flex items-stretch gap-4 p-4">
+          <div className="flex items-start gap-4 p-4">
+            {/* ЧАП устун — маълумотлар */}
             <div className="flex w-[55%] flex-col gap-4">
               <ObjectHeader object={object} actLabel={actLabel} />
               {toggleBlock}
@@ -270,15 +271,34 @@ export default function DalolatnomaScreen({ object, layout, onBack, initialStep 
                 <SectionTitle icon="document-text">Маълумотлар</SectionTitle>
                 <div className="mt-2">{fieldsBlock}</div>
               </div>
+            </div>
+            {/* ЎНГ устун — геопозиция + иш расмлари (визуал далил) */}
+            <div className="flex w-[45%] flex-col gap-4">
+              <div>
+                <SectionTitle icon="location">Геопозиция</SectionTitle>
+                <div className="mt-2 flex flex-col gap-3">
+                  <p className="text-[11.5px] text-text-secondary">Маркерни суриб аниқ жойни белгиланг</p>
+                  <InfraMap lat={object.lat} lng={object.lng} draggableMarker onLocationChange={setCoords} heightClass="h-[280px]" />
+                  {/* Координаталар — харита остида ихчам карта */}
+                  <div className="flex items-center gap-3 rounded-xl border border-border-light bg-white p-3 shadow-layered-sm">
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy-lighter text-navy">
+                      <Icon name="pin" size={20} variant="Bold" />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-semibold uppercase tracking-wide text-text-secondary">Координаталар</p>
+                      <p className="mt-0.5 text-[13px] font-bold tabular-nums text-text-primary">
+                        {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
+                      </p>
+                      <p className="mt-0.5 truncate text-[11px] text-text-secondary">
+                        {object.mfyName} · {object.tumanName}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div>
                 <SectionTitle icon="camera">Қилинган иш расми</SectionTitle>
                 <div className="mt-2">{uploadBlock}</div>
-              </div>
-            </div>
-            <div className="flex w-[45%] flex-col">
-              <SectionTitle icon="location">Геопозиция</SectionTitle>
-              <div className="mt-2 min-h-0 flex-1">
-                <InfraMap lat={object.lat} lng={object.lng} draggableMarker onLocationChange={setCoords} heightClass="h-full" />
               </div>
             </div>
           </div>

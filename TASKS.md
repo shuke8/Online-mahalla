@@ -2,6 +2,26 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-012: Планшет Далолатнома — Геопозиция (map жуда катта эди)
+**Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
+**Manba:** Foydalanuvchi — "Планшет · Далолатнома дизайнда Геопозиция бўлими яхши чиқмаган, map бунақа катта керак эмас"
+**Status:** DONE
+
+**Sabab:** Планшет 2 устун `items-stretch` + ўнг устун map `h-full` → чап устун (форма) баландлигига
+чўзилиб ~700px+ улкан харита.
+
+**O'zgargan fayл:** `components/mobile/DalolatnomaScreen.tsx` (планшет layout):
+- `items-stretch` → `items-start` (устунлар тепага текисланади, чўзилмайди).
+- Харита `h-full` → `h-[280px]` (нормал ўлчам) + устида hint + остида Координаталар ихчам картаси.
+- Layout баланс: "Қилинган иш расми" чап устундан ЎНГ устунга (Геопозиция остига) кўчирилди —
+  чап=маълумот, ўнг=визуал далил (харита+расмлар). Figure 1522px → 1227px.
+
+**Verification (headless Playwright, /dizayn/dalolatnoma):**
+- Планшет Далолатнома: map нормал ўлчам, Координаталар картаси, расмлар ўнгда, иккала устун баланс.
+  Скриншот: `tablet-geo-fixed.png`. overflowX=0, pageerror=0, tsc 0.
+
+---
+
 ### TASK-011: Бош экран — чап sidebar (drawer)
 **Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
 **Manba:** Foydalanuvchi — "Бош экран (модуллар) бўлимида sidebar очилиши учун имконият бўлсин"
