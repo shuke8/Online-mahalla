@@ -138,6 +138,47 @@ function useFeaturedModules() {
   return { featured, toggle };
 }
 
+type ViewMode = "grid" | "list";
+
+const VIEW_KEY = "onm-modules-view";
+const VIEW_EVENT = "onm-modules-view-changed";
+
+/**
+ * Бўлимлар кўриниши (grid/list) — localStorage'да сақланади; бир саҳифадаги
+ * барча ModulesScreen нусхалари (телефон + планшет) CustomEvent орқали синхрон.
+ * SSR'да доим "grid" — localStorage эса effect'да ўқилади (hydration-safe).
+ */
+function useViewMode() {
+  const [view, setView] = useState<ViewMode>("grid");
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(VIEW_KEY);
+      if (raw === "list" || raw === "grid") setView(raw);
+    } catch {
+      /* localStorage йўқ — default grid */
+    }
+    const onChange = (e: Event) => {
+      const detail = (e as CustomEvent<ViewMode>).detail;
+      if (detail === "list" || detail === "grid") setView(detail);
+    };
+    window.addEventListener(VIEW_EVENT, onChange);
+    return () => window.removeEventListener(VIEW_EVENT, onChange);
+  }, []);
+
+  const set = (v: ViewMode) => {
+    setView(v);
+    try {
+      localStorage.setItem(VIEW_KEY, v);
+    } catch {
+      /* сақланмаса ҳам UI ишлайверади */
+    }
+    window.dispatchEvent(new CustomEvent(VIEW_EVENT, { detail: v }));
+  };
+
+  return { view, setView: set };
+}
+
 export default function ModulesScreen({ activeModule = "infra", onOpenModule, layout = "phone" }: ModulesScreenProps) {
   const isTablet = layout === "tablet";
   const [query, setQuery] = useState("");
@@ -155,6 +196,32 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
     () => featured.map((k) => ALL_MODULES.find((m) => m.key === k)).filter(Boolean) as ModuleTile[],
     [featured],
   );
+
+  const { view, setView } = useViewMode();
+  const listWrapCls = isTablet ? "grid grid-cols-2 gap-2.5" : "flex flex-col gap-2";
+  const gridWrapCls = `grid ${gridCols} gap-2.5`;
+
+  // Бир гуруҳ модулларни танланган кўринишда (grid/list) чизади.
+  function renderModules(modules: ModuleTile[], keyPrefix = "") {
+    return (
+      <div className={view === "list" ? listWrapCls : gridWrapCls}>
+        {modules.map((m) => {
+          const shared = {
+            module: m,
+            active: m.key === activeModule,
+            onClick: () => onOpenModule?.(m.key),
+            featured: featured.includes(m.key),
+            onToggleFeature: () => toggleFeatured(m.key),
+          };
+          return view === "list" ? (
+            <ModuleRow key={keyPrefix + m.key} {...shared} />
+          ) : (
+            <ModuleTile key={keyPrefix + m.key} {...shared} />
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-1 flex-col bg-[#f4f7fb]">
@@ -201,8 +268,16 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
 
       {/* Контент — frame вертикал чўзилади */}
       <div className={`flex-1 -mt-3 rounded-t-3xl bg-[#f4f7fb] pb-5 pt-4 ${isTablet ? "px-6" : "px-3.5"}`}>
+        {(!q || results.length > 0) && (
+          <div className="mb-3 flex items-center justify-between gap-2 px-0.5">
+            <p className="text-[12px] font-medium text-text-secondary">
+              {q ? `${results.length} та натижа топилди` : "Барча бўлимлар"}
+            </p>
+            <ViewToggle value={view} onChange={setView} />
+          </div>
+        )}
         {q ? (
-          /* ── Қидирув натижалари (текис grid) ── */
+          /* ── Қидирув натижалари ── */
           results.length === 0 ? (
             <div className="flex flex-col items-center justify-center px-8 py-16 text-center">
               <span className="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-navy/[0.07] text-navy">
@@ -212,23 +287,7 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
               <p className="mt-1 text-[12px] text-text-secondary">«{query}» бўйича натижа йўқ</p>
             </div>
           ) : (
-            <>
-              <p className="mb-3 px-0.5 text-[12px] font-medium text-text-secondary">
-                {results.length} та натижа топилди
-              </p>
-              <div className={`grid ${gridCols} gap-2.5`}>
-                {results.map((m) => (
-                  <ModuleTile
-                    key={m.key}
-                    module={m}
-                    active={m.key === activeModule}
-                    onClick={() => onOpenModule?.(m.key)}
-                    featured={featured.includes(m.key)}
-                    onToggleFeature={() => toggleFeatured(m.key)}
-                  />
-                ))}
-              </div>
-            </>
+            renderModules(results)
           )
         ) : (
           /* ── Категориялар бўйича ── */
@@ -245,18 +304,7 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
                   </span>
                   <span className="ml-1 h-px flex-1 bg-border-light" />
                 </div>
-                <div className={`grid ${gridCols} gap-2.5`}>
-                  {featuredModules.map((m) => (
-                    <ModuleTile
-                      key={`fav-${m.key}`}
-                      module={m}
-                      active={m.key === activeModule}
-                      onClick={() => onOpenModule?.(m.key)}
-                      featured
-                      onToggleFeature={() => toggleFeatured(m.key)}
-                    />
-                  ))}
-                </div>
+                {renderModules(featuredModules, "fav-")}
               </section>
             )}
             {CATEGORIES.map((cat) => (
@@ -268,18 +316,7 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
                   </span>
                   <span className="ml-1 h-px flex-1 bg-border-light" />
                 </div>
-                <div className={`grid ${gridCols} gap-2.5`}>
-                  {cat.modules.map((m) => (
-                    <ModuleTile
-                    key={m.key}
-                    module={m}
-                    active={m.key === activeModule}
-                    onClick={() => onOpenModule?.(m.key)}
-                    featured={featured.includes(m.key)}
-                    onToggleFeature={() => toggleFeatured(m.key)}
-                  />
-                  ))}
-                </div>
+                {renderModules(cat.modules)}
               </section>
             ))}
           </div>
@@ -354,6 +391,114 @@ function ModuleTile({
         }`}
       >
         <Icon name="star" size={16} variant={featured ? "Bold" : "Outline"} />
+      </button>
+    </div>
+  );
+}
+
+/* ── Кўриниш переключатели (grid / list) ────────────────────────────────── */
+function ViewToggle({ value, onChange }: { value: ViewMode; onChange: (v: ViewMode) => void }) {
+  const btn = (active: boolean) =>
+    `inline-flex h-7 w-7 items-center justify-center rounded-full transition-all active:scale-90 ${
+      active ? "bg-navy text-white shadow-sm" : "text-text-secondary hover:text-navy"
+    }`;
+  return (
+    <div
+      role="group"
+      aria-label="Бўлимлар кўриниши"
+      className="inline-flex items-center rounded-full border border-border-light bg-white p-0.5 shadow-layered-sm"
+    >
+      <button
+        type="button"
+        onClick={() => onChange("grid")}
+        aria-pressed={value === "grid"}
+        aria-label="Тўр кўриниши"
+        title="Тўр кўриниши"
+        className={btn(value === "grid")}
+      >
+        <Icon name="grid" size={15} variant="Bold" />
+      </button>
+      <button
+        type="button"
+        onClick={() => onChange("list")}
+        aria-pressed={value === "list"}
+        aria-label="Рўйхат кўриниши"
+        title="Рўйхат кўриниши"
+        className={btn(value === "list")}
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+          <line x1="9" y1="6" x2="20" y2="6" />
+          <line x1="9" y1="12" x2="20" y2="12" />
+          <line x1="9" y1="18" x2="20" y2="18" />
+          <circle cx="4.5" cy="6" r="1.3" fill="currentColor" stroke="none" />
+          <circle cx="4.5" cy="12" r="1.3" fill="currentColor" stroke="none" />
+          <circle cx="4.5" cy="18" r="1.3" fill="currentColor" stroke="none" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+/* ── Рўйхат кўриниши — горизонтал модул қатори ──────────────────────────── */
+function ModuleRow({
+  module: m,
+  active,
+  onClick,
+  featured,
+  onToggleFeature,
+}: {
+  module: ModuleTile;
+  active?: boolean;
+  onClick?: () => void;
+  featured?: boolean;
+  onToggleFeature?: () => void;
+}) {
+  return (
+    <div className="relative">
+      <PressCard onClick={onClick} className="rounded-xl">
+        <div
+          className={`flex items-center gap-3 rounded-xl border p-2.5 pr-12 transition-shadow ${
+            active
+              ? "border-navy/40 bg-navy-lighter/50 ring-2 ring-navy/25"
+              : "border-border-light bg-white shadow-layered-sm hover:shadow-layered"
+          }`}
+        >
+          <span
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            style={{ background: `${m.hue}1f`, color: m.hue }}
+          >
+            <Icon name={m.icon} size={20} variant="Bold" />
+          </span>
+          <h3 className="min-w-0 flex-1 truncate text-[13px] font-semibold text-text-primary">{m.title}</h3>
+          {m.badge != null ? (
+            <span className="inline-flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-bold text-white">
+              {m.badge > 999 ? "999+" : m.badge}
+            </span>
+          ) : active ? (
+            <span className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-navy px-1.5 py-0.5 text-[9px] font-bold uppercase text-white">
+              <Icon name="tick-circle" size={9} variant="Bold" /> Фаол
+            </span>
+          ) : null}
+        </div>
+      </PressCard>
+
+      {/* Танлаш тугмаси — PressCard'дан ташқари (валид HTML: тугма ичида тугма бўлмайди) */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggleFeature?.();
+        }}
+        aria-pressed={!!featured}
+        aria-label={`${m.title} — ${featured ? "танланганидан олиб ташлаш" : "танланганга қўшиш"}`}
+        title={featured ? "Танланганидан олиб ташлаш" : "Танланганга қўшиш"}
+        className={`absolute right-2 top-1/2 z-20 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border transition-all active:scale-90 ${
+          featured
+            ? "border-[#D4A76A]/45 bg-[#D4A76A]/15 text-[#D4A76A] shadow-[0_2px_8px_rgba(212,167,106,0.4)]"
+            : "border-border-light bg-white text-text-secondary/55 hover:border-[#D4A76A]/40 hover:text-[#D4A76A]"
+        }`}
+      >
+        <Icon name="star" size={15} variant={featured ? "Bold" : "Outline"} />
       </button>
     </div>
   );

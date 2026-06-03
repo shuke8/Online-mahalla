@@ -2,6 +2,26 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-007: Мобил Бош саҳифа — бўлимлар grid ↔ list кўриниши
+**Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
+**Manba:** Foydalanuvchi — "Бош саҳифада бўлимлар ҳозирги (grid) ёки list кўринишига ўзгартириш имконияти бўлсин"
+**Status:** DONE
+
+**O'zgargan fayллар:**
+- `components/mobile/ModulesScreen.tsx`:
+  - `useViewMode()` hook — grid/list танлов localStorage (`onm-modules-view`) + телефон↔планшет CustomEvent sync,
+    SSR'да "grid" (hydration-safe — `featured` pattern билан бир хил).
+  - Контент тепасида toolbar: "Барча бўлимлар"/натижа сони + `ViewToggle` (иконкали segmented: тўр | рўйхат).
+  - `renderModules()` — гуруҳни танланган кўринишда чизади; featured/категория/қидирув ҳаммаси toggle'га бўйсунади.
+  - `ModuleRow` — горизонтал қатор (иконка + ном + badge/Фаол + star). Star PressCard'дан ташқари (валид HTML).
+
+**Verification (headless Playwright, /dizayn/dalolatnoma):**
+- Grid (default) ↔ List almashtirish ишлайди; toolbar toggle faol ҳолат navy. Скриншот: `modules-grid.png`, `modules-list.png`.
+- List'да star тоggle → "Танланган бўлимлар" пайдо (featured ишлайди). localStorage persist (grid→list→grid).
+- Телефон+планшет 2 toggle sync. overflowX=0, pageerror=0, tsc --noEmit 0 error.
+
+---
+
 ### TASK-006: Мобил Далолатнома — Обектлар рўйхати маҳалла бўйича
 **Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
 **Manba:** Foydalanuvchi — "мобил Далолатнома дизайнида Обектлар рўйхати вилоят бўйича эмас,
