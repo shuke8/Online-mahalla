@@ -232,12 +232,23 @@ function ObjectCard({
               <h3 className="line-clamp-2 text-[13.5px] font-bold leading-snug text-text-primary">
                 {o.shortName}
               </h3>
-              {/* Маҳалла такрорланмайди (AppBar'да бор) — обектга хос: режа + қуввати */}
+              {/* Маҳалла такрорланмайди (AppBar'да бор) — формада киритилган маълумотлар */}
               <p className="mt-1 flex items-center gap-1 text-[11.5px] text-text-secondary">
                 <Icon name="construct" size={12} className="shrink-0" />
                 <span className="truncate">
                   {o.rejaNomi} · {o.quvvati} {shortUnit(o.olchovBirligi)}
                 </span>
+              </p>
+              {/* Сарфланган маблағ — далолатнома формасидан */}
+              <p className="mt-0.5 flex items-center gap-1 text-[11px]">
+                <Icon name="wallet" size={12} className="shrink-0 text-text-secondary/70" />
+                {o.sarflanganMablag > 0 ? (
+                  <span className="truncate font-semibold tabular-nums text-text-primary">
+                    {formatMablag(o.sarflanganMablag)}
+                  </span>
+                ) : (
+                  <span className="truncate text-text-secondary/70">Маблағ киритилмаган</span>
+                )}
               </p>
             </div>
           </div>
@@ -259,6 +270,19 @@ function ObjectCard({
 /** Ўлчов бирлигини ихчамлаштиради: "Километр (км)" → "км", "Дона" → "Дона". */
 function shortUnit(unit: string): string {
   return unit.match(/\(([^)]+)\)/)?.[1] ?? unit;
+}
+
+/** Минг ажратгич — пробел билан (форма билан бир хил, hydration-safe). */
+function spaceThousands(n: number): string {
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+/** Сарфланган маблағни ихчам формат: 412000000 → "412 млн сўм", 1.2e9 → "1.2 млрд сўм". */
+function formatMablag(sum: number): string {
+  if (sum <= 0) return "";
+  if (sum >= 1_000_000_000) return `${Math.round(sum / 100_000_000) / 10} млрд сўм`;
+  if (sum >= 1_000_000) return `${Math.round(sum / 100_000) / 10} млн сўм`;
+  return `${spaceThousands(sum)} сўм`;
 }
 
 /** Ихчам акт ҳолати — иконка + битта сўз (Оралиқ/Якуний). */
