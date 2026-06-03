@@ -2,6 +2,25 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-010: Бош экран — welcome hero + тезкор статистика
+**Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
+**Manba:** Foydalanuvchi — "Бош экран модуллар рўйхатида нимадур етишмаётгандай — дизайнга қўш,
+тўлдириб чиройли қилиб тур"
+**Status:** DONE
+
+**O'zgargan fayл:** `components/mobile/ModulesScreen.tsx`:
+- Welcome hero (категория кўринишда, тепада): navy gradient икон + "Хуш келибсиз" + маҳалла (mfyData.name) +
+  glass "22-март" чипи; subtle navy-tinted gradient фон.
+- 3 та `StatMini` карта: Объектлар (infraObjects=6) · Тугалланган (interim&final done=2) · Билдиришнома
+  (badge sum=419) — tinted икон + рақам + label.
+- import'га mfyData қўшилди (infraObjects энди ишлатилади).
+
+**Verification (headless Playwright, /dizayn/dalolatnoma):**
+- Хуш келибсиз + Янги ҳаёт МФЙ + 22-март; 6 Объектлар / 2 Тугалланган / 419 Билдиришнома — рендер OK.
+  Скриншот: `home-hero.png`. grid+list иккаласида кўринади, қидирувда яширин. overflowX=0, pageerror=0, tsc 0.
+
+---
+
 ### TASK-009: Ҳужжат экрани — "Юклаб олиш" ўрнига "Ҳужжат", "Улашиш" олиб ташлаш
 **Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
 **Manba:** Foydalanuvchi — "Ҳужжат (тугалланган) screenда 'юклаб олиш' ўрнига 'ҳужжат' button бўлсин;
