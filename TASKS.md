@@ -249,6 +249,10 @@
   "water", `OBJECT_TYPE_ICON`га water→construct. Скриншот: `mfy-single-item.png`, `mfy-single-row.png`.
   tsc 0, overflowX=0, pageerror=0.
 
+**Refinement 3 (фойдаланувчи: "бажарилган ишлар ёзуви устидан чизиқ керак эмас"):**
+- `InfraObjectCard` checklist — done item'дан `line-through` олиб ташланди (фақат яшил tick + muted матн қолди).
+  `textDecorationLine: none` тасдиқланди. Скриншот: `mfy-no-strike.png`. tsc 0, pageerror=0.
+
 ---
 
 ### TASK-004: Инфратузилма картларини респ./вилоят/туман саҳифаларига қўшиш

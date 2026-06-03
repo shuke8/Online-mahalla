@@ -678,7 +678,7 @@ function InfraObjectCard({ object, accent }: { object: MfyInfraObject; accent: s
                   <Icon name={st.icon} size={13} variant="Bold" className={`${st.text} shrink-0`} />
                   <span
                     className={`flex-1 min-w-0 truncate text-[11.5px] ${
-                      isDone ? "text-text-secondary line-through decoration-text-secondary/30" : "text-text-primary"
+                      isDone ? "text-text-secondary" : "text-text-primary"
                     }`}
                   >
                     {item.work}
