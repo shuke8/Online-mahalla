@@ -10,11 +10,32 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
+import type { CSSProperties } from "react";
 import { Icon } from "@/components/atoms/Icon";
 import type { IconName } from "@/components/atoms/Icon";
 import { mfyData } from "@/lib/mock-data";
 import { AppBar, PressCard, MobileStyles, SearchField } from "@/components/mobile/material";
 import { SideDrawer } from "@/components/mobile/SideDrawer";
+
+/** Бош экран орқа фон варианти. */
+export type ModulesBg = "gradient" | "clean" | "mesh";
+
+/** Орқа фон стиллари — preview'да солиштириш ва танлаш учун ягона манба. */
+export const MODULES_BG_STYLES: Record<ModulesBg, CSSProperties> = {
+  // V1 — юмшоқ brand gradient (тепадан контентга эрийди)
+  gradient: {
+    backgroundImage:
+      "linear-gradient(180deg, rgba(43,140,238,0.13) 0%, rgba(43,140,238,0.05) 16%, rgba(244,247,251,0) 38%)",
+  },
+  // V2 — тоза фон (нақшсиз)
+  clean: { backgroundImage: "none" },
+  // V3 — юмшоқ mesh blob'лар (navy + teal + indigo)
+  mesh: {
+    backgroundImage:
+      "radial-gradient(circle 360px at 92% 2%, rgba(43,140,238,0.16), transparent), radial-gradient(circle 320px at -6% 20%, rgba(20,184,166,0.13), transparent), radial-gradient(circle 340px at 98% 42%, rgba(99,102,241,0.10), transparent)",
+    backgroundRepeat: "no-repeat",
+  },
+};
 
 export interface ModulesScreenProps {
   /** ажратиб кўрсатиладиган (асосий) модул калити */
@@ -23,6 +44,8 @@ export interface ModulesScreenProps {
   onOpenModule?: (key: string) => void;
   /** макет: телефон (2 устун) ёки планшет (4 устун) */
   layout?: "phone" | "tablet";
+  /** орқа фон варианти (default: gradient) */
+  bgVariant?: ModulesBg;
 }
 
 interface ModuleTile {
@@ -180,7 +203,7 @@ function useViewMode() {
   return { view, setView: set };
 }
 
-export default function ModulesScreen({ activeModule = "infra", onOpenModule, layout = "phone" }: ModulesScreenProps) {
+export default function ModulesScreen({ activeModule = "infra", onOpenModule, layout = "phone", bgVariant = "gradient" }: ModulesScreenProps) {
   const isTablet = layout === "tablet";
   const [query, setQuery] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -278,10 +301,7 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
       {/* Контент — frame вертикал чўзилади; орқа фонда енгил миллий нақш */}
       <div
         className={`flex-1 -mt-3 rounded-t-3xl bg-[#f4f7fb] pb-5 pt-4 ${isTablet ? "px-6" : "px-3.5"}`}
-        style={{
-          backgroundImage: "url('/uzbek-pattern.svg')",
-          backgroundSize: "96px 96px",
-        }}
+        style={MODULES_BG_STYLES[bgVariant]}
       >
         {q ? (
           /* ── Қидирув натижалари ── */

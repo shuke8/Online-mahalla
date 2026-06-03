@@ -1,5 +1,33 @@
 # TASKS
 
+## 🟡 Jarayonda
+
+### TASK-013: Бош экран орқа фон — 3 вариант preview (танлов кутилмоқда)
+**Yaratildi:** 2026-06-03
+**Manba:** Foydalanuvchi — "girih pattern ёқмади; Mobbin'дан фон вариантлари топ; 3 версияни профессионал
+тайёрла ва визуал кўриб танлаш имконини бер"
+**Status:** IN_PROGRESS (preview тайёр, фойдаланувчи 1/2/3 танлайди)
+
+**Mobbin тадқиқот:** профессионал app'лар (Rocket Money, Alan, Lovi, Forest) геометрик pattern эмас,
+юмшоқ gradient / тоза фон ишлатади. 3 йўналиш чиқарилди.
+
+**O'zgargan fayллар:**
+- `components/mobile/ModulesScreen.tsx` — `ModulesBg` тип + `MODULES_BG_STYLES` (gradient/clean/mesh) +
+  `bgVariant` prop (default gradient). Girih pattern олиб ташланди; `public/uzbek-pattern.svg` ўчирилди (orphan).
+- `app/dizayn/fon-preview/page.tsx` — ЯНГИ: интерактив preview, 3 та телефон frame ёнма-ён, ҳар бири
+  ўз фони билан; select карта (босиб танлаш) + "Танланган: VN" badge.
+
+**Variantlar:**
+- V1 gradient — навы wash тепадан эрийди (тавсия)
+- V2 clean — нақшсиз тоза фон
+- V3 mesh — navy/teal/indigo хира blob'лар
+
+**Verification:** /dizayn/fon-preview HTTP 200, tsc 0, pageerror 0, босиб танлаш ишлайди.
+Скриншот: `fon-preview.png`, `bg-v1-gradient.png`, `bg-v2-clean.png`, `bg-v3-mesh.png`.
+**Keyingi:** фойдаланувчи 1/2/3 танлагач — `bgVariant` default яқуний қилинади, preview саҳифа қолдирилади ёки ўчирилади.
+
+---
+
 ## 🟢 Bajarildi (verified)
 
 ### TASK-012: Планшет Далолатнома — Геопозиция (map жуда катта эди)
