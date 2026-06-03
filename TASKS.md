@@ -20,6 +20,12 @@
 - List'да star тоggle → "Танланган бўлимлар" пайдо (featured ишлайди). localStorage persist (grid→list→grid).
 - Телефон+планшет 2 toggle sync. overflowX=0, pageerror=0, tsc --noEmit 0 error.
 
+**Refinement (фойдаланувчи: "grid↔list toggle'ни search input билан бир қаторга қўй"):**
+- ViewToggle navy зонага, search box ёнига кўчирилди (search flex-1 + toggle shrink-0, бир қаторда).
+  Toggle уйғун кўриниш: оқ rounded-2xl + search box билан бир хил shadow; тугмалар h-9 (touch).
+- Контент toolbar олиб ташланди; қидирув натижа сони ўз жойига (results бранчига) қайтарилди.
+  Скриншот: `search-toggle-row.png` (grid), `search-toggle-list.png` (list). tsc 0, overflowX=0, pageerror=0.
+
 ---
 
 ### TASK-006: Мобил Далолатнома — Обектлар рўйхати маҳалла бўйича

@@ -241,41 +241,36 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
         }
       />
 
-      {/* Тез қидирув — prominent, navy зона давом этади */}
+      {/* Тез қидирув + кўриниш переключатели — бир қаторда */}
       <div className={`shrink-0 bg-navy pb-4 pt-0.5 ${isTablet ? "px-6" : "px-3.5"}`}>
-        <div className={`flex items-center gap-2.5 rounded-2xl bg-white px-4 shadow-[0_6px_18px_rgba(15,23,42,0.22)] ${isTablet ? "mx-auto max-w-2xl" : ""}`}>
-          <Icon name="search" size={20} className="text-navy" />
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Бўлим қидириш…"
-            aria-label="Бўлимларни қидириш"
-            className="min-h-[52px] w-full bg-transparent text-[15px] font-medium text-text-primary outline-none placeholder:font-normal placeholder:text-text-secondary/70"
-          />
-          {query && (
-            <button
-              type="button"
-              onClick={() => setQuery("")}
-              aria-label="Тозалаш"
-              className="-mr-1.5 inline-flex h-8 w-8 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-slate-100 active:scale-90"
-            >
-              <Icon name="close-circle" size={18} variant="Bold" />
-            </button>
-          )}
+        <div className={`flex items-center gap-2.5 ${isTablet ? "mx-auto max-w-2xl" : ""}`}>
+          <div className="flex min-w-0 flex-1 items-center gap-2.5 rounded-2xl bg-white px-4 shadow-[0_6px_18px_rgba(15,23,42,0.22)]">
+            <Icon name="search" size={20} className="shrink-0 text-navy" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Бўлим қидириш…"
+              aria-label="Бўлимларни қидириш"
+              className="min-h-[52px] w-full bg-transparent text-[15px] font-medium text-text-primary outline-none placeholder:font-normal placeholder:text-text-secondary/70"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                aria-label="Тозалаш"
+                className="-mr-1.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-slate-100 active:scale-90"
+              >
+                <Icon name="close-circle" size={18} variant="Bold" />
+              </button>
+            )}
+          </div>
+          <ViewToggle value={view} onChange={setView} />
         </div>
       </div>
 
       {/* Контент — frame вертикал чўзилади */}
       <div className={`flex-1 -mt-3 rounded-t-3xl bg-[#f4f7fb] pb-5 pt-4 ${isTablet ? "px-6" : "px-3.5"}`}>
-        {(!q || results.length > 0) && (
-          <div className="mb-3 flex items-center justify-between gap-2 px-0.5">
-            <p className="text-[12px] font-medium text-text-secondary">
-              {q ? `${results.length} та натижа топилди` : "Барча бўлимлар"}
-            </p>
-            <ViewToggle value={view} onChange={setView} />
-          </div>
-        )}
         {q ? (
           /* ── Қидирув натижалари ── */
           results.length === 0 ? (
@@ -287,7 +282,12 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
               <p className="mt-1 text-[12px] text-text-secondary">«{query}» бўйича натижа йўқ</p>
             </div>
           ) : (
-            renderModules(results)
+            <>
+              <p className="mb-3 px-0.5 text-[12px] font-medium text-text-secondary">
+                {results.length} та натижа топилди
+              </p>
+              {renderModules(results)}
+            </>
           )
         ) : (
           /* ── Категориялар бўйича ── */
@@ -399,14 +399,14 @@ function ModuleTile({
 /* ── Кўриниш переключатели (grid / list) ────────────────────────────────── */
 function ViewToggle({ value, onChange }: { value: ViewMode; onChange: (v: ViewMode) => void }) {
   const btn = (active: boolean) =>
-    `inline-flex h-7 w-7 items-center justify-center rounded-full transition-all active:scale-90 ${
+    `inline-flex h-9 w-9 items-center justify-center rounded-xl transition-all active:scale-90 ${
       active ? "bg-navy text-white shadow-sm" : "text-text-secondary hover:text-navy"
     }`;
   return (
     <div
       role="group"
       aria-label="Бўлимлар кўриниши"
-      className="inline-flex items-center rounded-full border border-border-light bg-white p-0.5 shadow-layered-sm"
+      className="inline-flex shrink-0 items-center gap-0.5 rounded-2xl bg-white p-1 shadow-[0_6px_18px_rgba(15,23,42,0.22)]"
     >
       <button
         type="button"
@@ -416,7 +416,7 @@ function ViewToggle({ value, onChange }: { value: ViewMode; onChange: (v: ViewMo
         title="Тўр кўриниши"
         className={btn(value === "grid")}
       >
-        <Icon name="grid" size={15} variant="Bold" />
+        <Icon name="grid" size={18} variant="Bold" />
       </button>
       <button
         type="button"
@@ -426,7 +426,7 @@ function ViewToggle({ value, onChange }: { value: ViewMode; onChange: (v: ViewMo
         title="Рўйхат кўриниши"
         className={btn(value === "list")}
       >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
           <line x1="9" y1="6" x2="20" y2="6" />
           <line x1="9" y1="12" x2="20" y2="12" />
           <line x1="9" y1="18" x2="20" y2="18" />
