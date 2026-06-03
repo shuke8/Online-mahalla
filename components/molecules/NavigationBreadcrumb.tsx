@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { Icon } from "@/components/atoms/Icon";
+import { useBreadcrumb } from "@/lib/breadcrumb-context";
+import { useEffect } from "react";
 
 interface BreadcrumbItem {
   label: string;
@@ -13,6 +15,14 @@ interface NavigationBreadcrumbProps {
 }
 
 export function NavigationBreadcrumb({ items }: NavigationBreadcrumbProps) {
+  const { setItems } = useBreadcrumb();
+
+  useEffect(() => {
+    setItems(items);
+    return () => setItems([]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <nav className="flex flex-wrap items-center gap-1 sm:gap-1.5 text-xs sm:text-sm mb-3 sm:mb-5">
       {items.map((item, i) => (

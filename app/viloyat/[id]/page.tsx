@@ -4,10 +4,12 @@ import { Icon, type IconName } from "@/components/atoms/Icon";
 import { GlassIcon } from "@/components/atoms/GlassIcon";
 import { IconCircle } from "@/components/atoms/IconCircle";
 import { UzbekistanMap } from "@/components/organisms/UzbekistanMap";
+import { EntrepreneurshipPrograms } from "@/components/organisms/EntrepreneurshipPrograms";
+import { InfrastructureSection } from "@/components/organisms/InfrastructureSection";
 import { KPIGroup } from "@/components/molecules/KPIGroup";
 import { SectionHeader } from "@/components/molecules/SectionHeader";
 import { NavigationBreadcrumb } from "@/components/molecules/NavigationBreadcrumb";
-import { republicData } from "@/lib/mock-data";
+import { republicData, viloyatEntrepreneurshipPrograms } from "@/lib/mock-data";
 import { use } from "react";
 
 export default function ViloyatPage({ params }: { params: Promise<{ id: string }> }) {
@@ -44,7 +46,7 @@ export default function ViloyatPage({ params }: { params: Promise<{ id: string }
 
       <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 sm:gap-6">
         <div className="xl:col-span-3 space-y-5">
-          <div className="bg-white rounded-2xl border border-border-light shadow-sm p-3 sm:p-5">
+          <div className="bg-white rounded-2xl border border-border-light border-l-4 border-l-navy shadow-sm hover:shadow-md transition-shadow p-3 sm:p-5">
             <SectionHeader title="Камбағалликни қисқартириш" icon="people" />
             <KPIGroup
               items={[
@@ -54,57 +56,67 @@ export default function ViloyatPage({ params }: { params: Promise<{ id: string }
                 { label: "Реестрдан чиқарилган", plan: 5200, actual: 4100 },
               ]}
               columns={2}
+              size="lg"
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <SectionCard title="Микролойиҳалар" icon="bulb" variant="navy" items={[
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <SectionCard title="Микролойиҳалар" icon="bulb" variant="navy" accent="border-l-orange" items={[
               { label: "Сони", plan: "320", actual: "298" },
               { label: "Иш ўринлари", plan: "960", actual: "845" },
               { label: "Кредитлар", plan: "245 та", actual: "3.8 млрд" },
             ]} />
-            <SectionCard title="Тадбиркорлик" icon="briefcase" variant="navy" items={[
-              { label: "Лойиҳалар", plan: "620", actual: "480" },
-              { label: "Иш ўринлари", plan: "1,860", actual: "1,420" },
-              { label: "Субъектлар", plan: "310", actual: "245" },
-            ]} />
-            <SectionCard title="Хонадон даромади" icon="home" variant="success" items={[
+            <SectionCard title="Хонадон даромади" icon="home" variant="success" accent="border-l-success" items={[
               { label: "Танланган", plan: "1,100", actual: "820" },
               { label: "Кредитлар", plan: "880", actual: "695" },
               { label: "Суммаси", plan: "13.2 млрд", actual: "10.4 млрд" },
             ]} />
           </div>
+
+          {/* Entrepreneurship — 4 credit programs */}
+          <EntrepreneurshipPrograms programs={viloyatEntrepreneurshipPrograms} />
         </div>
 
         <div className="xl:col-span-2 order-first xl:order-none">
           <div className="bg-white rounded-2xl border border-border-light shadow-sm p-3 sm:p-5 xl:sticky xl:top-32">
-            <h3 className="text-base font-semibold text-navy mb-4">Вилоят харитаси</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-navy mb-4">Вилоят харитаси</h3>
             <UzbekistanMap data={d.regionMapData} selectedRegion={id} defaultHoveredRegion={id} />
           </div>
         </div>
+      </div>
+
+      {/* Инфратузилма лойиҳалари */}
+      <div className="mt-5 sm:mt-6">
+        <div className="mb-4">
+          <h2 className="text-lg sm:text-xl font-bold text-navy">Инфратузилма лойиҳалари</h2>
+          <p className="text-sm text-text-secondary mt-0.5">
+            Инфратузилма қурилиш объектлари мониторинги
+          </p>
+        </div>
+        <InfrastructureSection />
       </div>
     </div>
   );
 }
 
-function SectionCard({ title, icon, variant, items }: {
-  title: string; icon: IconName; variant: "gold" | "navy" | "success";
+function SectionCard({ title, icon, variant, accent, items }: {
+  title: string; icon: IconName; variant: "gold" | "navy" | "success"; accent?: string;
   items: { label: string; plan: string; actual: string }[];
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-border-light shadow-sm p-3 sm:p-5">
+    <div className={`bg-white rounded-2xl border border-border-light border-l-4 ${accent || "border-l-navy"} shadow-sm hover:shadow-md transition-shadow p-3 sm:p-5`}>
       <div className="flex items-center gap-2.5 mb-4">
         <IconCircle icon={icon} variant={variant} size="sm" />
-        <h3 className="text-base font-semibold text-navy">{title}</h3>
+        <h3 className="text-sm sm:text-base font-semibold text-navy">{title}</h3>
       </div>
       <div className="space-y-3">
         {items.map((item, i) => (
-          <div key={i} className="flex items-center justify-between py-2 border-b border-border-light/50 last:border-0">
+          <div key={i} className="flex items-center justify-between py-2.5 border-b border-border-light/50 last:border-0">
             <span className="text-sm text-text-secondary">{item.label}</span>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-navy-light font-medium">{item.plan}</span>
+            <div className="flex items-center gap-2.5">
+              <span className="text-sm sm:text-base text-navy-light font-medium">{item.plan}</span>
               <span className="text-text-secondary/30">/</span>
-              <span className="text-sm text-navy font-semibold">{item.actual}</span>
+              <span className="text-sm sm:text-base text-navy font-bold">{item.actual}</span>
             </div>
           </div>
         ))}

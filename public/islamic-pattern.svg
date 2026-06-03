@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <defs>
+    <clipPath id="tile"><rect width="200" height="200"/></clipPath>
+    <!-- Large 8-pointed star centered at origin, R=46, r=19 -->
+    <polygon id="s8" points="0,-46 7.3,-19.3 32.5,-32.5 19.3,-7.3 46,0 19.3,7.3 32.5,32.5 7.3,19.3 0,46 -7.3,19.3 -32.5,32.5 -19.3,7.3 -46,0 -19.3,-7.3 -32.5,-32.5 -7.3,-19.3"/>
+    <!-- Small 8-pointed star, R=13, r=5.5 -->
+    <polygon id="s4" points="0,-13 2.1,-5.6 9.2,-9.2 5.6,-2.1 13,0 5.6,2.1 9.2,9.2 2.1,5.6 0,13 -2.1,5.6 -9.2,9.2 -5.6,2.1 -13,0 -5.6,-2.1 -9.2,-9.2 -2.1,-5.6"/>
+    <!-- Hexagon for brown accents -->
+    <polygon id="hex" points="0,-11 9.5,-5.5 9.5,5.5 0,11 -9.5,5.5 -9.5,-5.5"/>
+  </defs>
+
+  <g clip-path="url(#tile)">
+    <!-- Teal base areas -->
+    <rect width="200" height="200" fill="rgba(43,142,180,0.045)"/>
+
+    <!-- Dark accent triangles in diagonal gaps -->
+    <polygon points="33,67 50,50 67,33 67,67" fill="rgba(12,26,46,0.04)"/>
+    <polygon points="133,33 150,50 167,67 133,67" fill="rgba(12,26,46,0.04)"/>
+    <polygon points="167,133 150,150 133,167 133,133" fill="rgba(12,26,46,0.04)"/>
+    <polygon points="67,167 50,150 33,133 67,133" fill="rgba(12,26,46,0.04)"/>
+
+    <!-- Dark accent triangles at edges -->
+    <polygon points="87,0 100,14 113,0" fill="rgba(12,26,46,0.04)"/>
+    <polygon points="0,87 14,100 0,113" fill="rgba(12,26,46,0.04)"/>
+    <polygon points="200,87 186,100 200,113" fill="rgba(12,26,46,0.04)"/>
+    <polygon points="87,200 100,186 113,200" fill="rgba(12,26,46,0.04)"/>
+
+    <!-- Navy blue large stars -->
+    <use href="#s8" transform="translate(100,100)" fill="rgba(26,74,138,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="2" stroke-linejoin="round"/>
+    <use href="#s8" transform="translate(0,0)" fill="rgba(26,74,138,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="2" stroke-linejoin="round"/>
+    <use href="#s8" transform="translate(200,0)" fill="rgba(26,74,138,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="2" stroke-linejoin="round"/>
+    <use href="#s8" transform="translate(0,200)" fill="rgba(26,74,138,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="2" stroke-linejoin="round"/>
+    <use href="#s8" transform="translate(200,200)" fill="rgba(26,74,138,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="2" stroke-linejoin="round"/>
+
+    <!-- Gold small stars at edge midpoints -->
+    <use href="#s4" transform="translate(100,0)" fill="rgba(245,166,35,0.09)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-linejoin="round"/>
+    <use href="#s4" transform="translate(0,100)" fill="rgba(245,166,35,0.09)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-linejoin="round"/>
+    <use href="#s4" transform="translate(200,100)" fill="rgba(245,166,35,0.09)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-linejoin="round"/>
+    <use href="#s4" transform="translate(100,200)" fill="rgba(245,166,35,0.09)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-linejoin="round"/>
+
+    <!-- Brown/orange hexagonal accents at diagonal midpoints -->
+    <use href="#hex" transform="translate(50,50)" fill="rgba(196,122,26,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-linejoin="round"/>
+    <use href="#hex" transform="translate(150,50)" fill="rgba(196,122,26,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-linejoin="round"/>
+    <use href="#hex" transform="translate(50,150)" fill="rgba(196,122,26,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-linejoin="round"/>
+    <use href="#hex" transform="translate(150,150)" fill="rgba(196,122,26,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-linejoin="round"/>
+  </g>
+</svg>

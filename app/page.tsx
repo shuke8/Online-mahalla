@@ -527,7 +527,7 @@ function SummaryCard({
                 const full: Record<string, string> = { "Янв": "Январ", "Фев": "Феврал", "Мар": "Март", "Апр": "Апрел", "Май": "Май", "Июн": "Июн", "Июл": "Июл", "Авг": "Август", "Сен": "Сентябр", "Окт": "Октябр", "Ноя": "Ноябр", "Дек": "Декабр" };
                 return `2026 йил, ${full[month] || month || _l}`;
               }}
-              formatter={(v: number) => [`${v.toLocaleString("en-US")} та`, label]}
+              formatter={(v) => [`${Number(v).toLocaleString("en-US")} та`, label]}
               cursor={{ stroke: sparkColor, strokeWidth: 1, strokeDasharray: "4 4" }}
             />
             <Area type="monotone" dataKey="v" stroke={sparkColor} strokeWidth={1.5} fill={`url(#spark-${sparkId})`} />

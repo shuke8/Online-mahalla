@@ -32,6 +32,30 @@ import {
   Gps,
   Diagram,
   Shop,
+  Camera,
+  DocumentUpload,
+  Gallery,
+  TickCircle,
+  CloseCircle,
+  Maximize3,
+  ArrowLeft2,
+  Trash,
+  Add,
+  Warning2,
+  Send2,
+  Tree,
+  Note1,
+  MedalStar,
+  ShieldTick,
+  Woman,
+  Profile2User,
+  Book1,
+  Hierarchy,
+  Bag2,
+  Building3,
+  Judge,
+  Refresh2,
+  Star1,
 } from "iconsax-react";
 import type { ComponentType } from "react";
 
@@ -65,7 +89,31 @@ export type IconName =
   | "bar-chart"
   | "pin"
   | "analytics"
-  | "storefront";
+  | "storefront"
+  | "camera"
+  | "document-upload"
+  | "gallery"
+  | "tick-circle"
+  | "close-circle"
+  | "maximize"
+  | "arrow-left"
+  | "trash"
+  | "add"
+  | "warning"
+  | "send"
+  | "tree"
+  | "note"
+  | "medal"
+  | "shield-tick"
+  | "woman"
+  | "users"
+  | "book"
+  | "hierarchy"
+  | "bag"
+  | "building-3"
+  | "judge"
+  | "refresh"
+  | "star";
 
 const iconMap: Record<IconName, ComponentType<any>> = {
   people: People,
@@ -98,6 +146,30 @@ const iconMap: Record<IconName, ComponentType<any>> = {
   pin: Gps,
   analytics: Diagram,
   storefront: Shop,
+  camera: Camera,
+  "document-upload": DocumentUpload,
+  gallery: Gallery,
+  "tick-circle": TickCircle,
+  "close-circle": CloseCircle,
+  maximize: Maximize3,
+  "arrow-left": ArrowLeft2,
+  trash: Trash,
+  add: Add,
+  warning: Warning2,
+  send: Send2,
+  tree: Tree,
+  note: Note1,
+  medal: MedalStar,
+  "shield-tick": ShieldTick,
+  woman: Woman,
+  users: Profile2User,
+  book: Book1,
+  hierarchy: Hierarchy,
+  bag: Bag2,
+  "building-3": Building3,
+  judge: Judge,
+  refresh: Refresh2,
+  star: Star1,
 };
 
 interface IconProps {

@@ -1,0 +1,24 @@
+import { chromium } from "playwright";
+import { fileURLToPath } from "url"; import { dirname, join } from "path";
+const OUT = dirname(fileURLToPath(import.meta.url));
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 1440, height: 900 } });
+const p = await ctx.newPage();
+const errors = [];
+p.on("console", m => { if (m.type()==="error") errors.push(m.text().slice(0,140)); });
+p.on("pageerror", e => errors.push("PAGEERR: "+e.message.slice(0,140)));
+await p.goto("http://localhost:3000/infratuzilma/obyektlar/torkul-okar-suv", { waitUntil: "networkidle" });
+await p.waitForTimeout(2000);
+// fill сарфланган маблағлар (the one empty required field)
+await p.getByLabel("сарфланган маблағлар").fill("412000000");
+await p.waitForTimeout(300);
+await p.getByRole("button", { name: /Сақлаш/ }).first().click();
+await p.waitForTimeout(2000);
+const body = await p.evaluate(()=>document.body.innerText);
+console.log("successShown=", /сақланди|муваффақ/iu.test(body));
+console.log("snippet:", body.split("\n").filter(l=>/сақланди|муваффақ|юбор/iu.test(l)).slice(0,3).join(" | "));
+console.log("CONSOLE ERRORS:", errors.length, errors.slice(0,3).join(" || "));
+await p.evaluate(()=>window.scrollTo(0,0));
+await p.waitForTimeout(400);
+await p.screenshot({ path: join(OUT, "interact-success2.png") });
+await b.close();

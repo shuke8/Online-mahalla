@@ -1,0 +1,16 @@
+import { chromium } from "playwright";
+import { fileURLToPath } from "url"; import { dirname, join } from "path";
+const OUT = dirname(fileURLToPath(import.meta.url));
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 1200, height: 2200 }, deviceScaleFactor: 1.4 });
+const p = await ctx.newPage();
+const errs=[]; p.on("console",m=>{if(m.type()==="error")errs.push(m.text().slice(0,140));}); p.on("pageerror",e=>errs.push("PE:"+e.message.slice(0,140)));
+await p.goto("http://localhost:3000/dizayn/dalolatnoma", { waitUntil:"domcontentloaded", timeout: 35000 });
+await p.waitForTimeout(3500);
+const fig = p.locator("figure").nth(0);
+await fig.scrollIntoViewIfNeeded();
+await p.waitForTimeout(800);
+await fig.screenshot({ path: join(OUT, "modules-bento.png") });
+const h = await fig.evaluate(e=>Math.round(e.getBoundingClientRect().height));
+console.log("modules frame H:", h, "errors:", errs.length, errs.slice(0,3).join(" | "));
+await b.close();

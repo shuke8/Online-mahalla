@@ -48,3 +48,6 @@ ionicons.designerpack/
 
 # mcp config
 .mcp.json
+
+# Partial browser downloads
+*.crdownload

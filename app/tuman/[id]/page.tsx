@@ -4,11 +4,13 @@ import { Icon } from "@/components/atoms/Icon";
 import { GlassIcon } from "@/components/atoms/GlassIcon";
 import { IconCircle } from "@/components/atoms/IconCircle";
 import { UzbekistanMap } from "@/components/organisms/UzbekistanMap";
+import { EntrepreneurshipPrograms } from "@/components/organisms/EntrepreneurshipPrograms";
+import { InfrastructureSection } from "@/components/organisms/InfrastructureSection";
 import { KPIGroup } from "@/components/molecules/KPIGroup";
 import { SectionHeader } from "@/components/molecules/SectionHeader";
 import { NavigationBreadcrumb } from "@/components/molecules/NavigationBreadcrumb";
 import { LocationSelector } from "@/components/molecules/LocationSelector";
-import { republicData, tumanList } from "@/lib/mock-data";
+import { republicData, tumanList, tumanEntrepreneurshipPrograms } from "@/lib/mock-data";
 import { use } from "react";
 
 export default function TumanPage({ params }: { params: Promise<{ id: string }> }) {
@@ -46,7 +48,7 @@ export default function TumanPage({ params }: { params: Promise<{ id: string }> 
 
       <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 sm:gap-6">
         <div className="xl:col-span-3 space-y-5">
-          <div className="bg-white rounded-2xl border border-border-light shadow-sm p-3 sm:p-5">
+          <div className="bg-white rounded-2xl border border-border-light border-l-4 border-l-navy shadow-sm hover:shadow-md transition-shadow p-3 sm:p-5">
             <SectionHeader title="Камбағалликни қисқартириш" icon="people" />
             <KPIGroup
               items={[
@@ -56,11 +58,12 @@ export default function TumanPage({ params }: { params: Promise<{ id: string }> 
                 { label: "Реестрдан чиқарилган", plan: 920, actual: 780 },
               ]}
               columns={2}
+              size="lg"
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white rounded-2xl border border-border-light shadow-sm p-3 sm:p-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white rounded-2xl border border-border-light border-l-4 border-l-orange shadow-sm hover:shadow-md transition-shadow p-3 sm:p-5">
               <div className="flex items-center gap-2.5 mb-4">
                 <IconCircle icon="bulb" variant="navy" size="sm" />
                 <h3 className="text-base font-semibold text-navy">Микролойиҳалар</h3>
@@ -71,18 +74,7 @@ export default function TumanPage({ params }: { params: Promise<{ id: string }> 
                 <KPIRow label="Кредитлар" plan="42 та" actual="620 млн" />
               </div>
             </div>
-            <div className="bg-white rounded-2xl border border-border-light shadow-sm p-3 sm:p-5">
-              <div className="flex items-center gap-2.5 mb-4">
-                <IconCircle icon="briefcase" variant="navy" size="sm" />
-                <h3 className="text-base font-semibold text-navy">Тадбиркорлик</h3>
-              </div>
-              <div className="space-y-3">
-                <KPIRow label="Лойиҳалар" plan="98" actual="76" />
-                <KPIRow label="Иш ўринлари" plan="294" actual="225" />
-                <KPIRow label="Субъектлар" plan="48" actual="38" />
-              </div>
-            </div>
-            <div className="bg-white rounded-2xl border border-border-light shadow-sm p-3 sm:p-5">
+            <div className="bg-white rounded-2xl border border-border-light border-l-4 border-l-success shadow-sm hover:shadow-md transition-shadow p-3 sm:p-5">
               <div className="flex items-center gap-2.5 mb-4">
                 <IconCircle icon="home" variant="success" size="sm" />
                 <h3 className="text-base font-semibold text-navy">Хонадон даромади</h3>
@@ -94,6 +86,9 @@ export default function TumanPage({ params }: { params: Promise<{ id: string }> 
               </div>
             </div>
           </div>
+
+          {/* Entrepreneurship — 4 credit programs */}
+          <EntrepreneurshipPrograms programs={tumanEntrepreneurshipPrograms} />
         </div>
 
         {/* Sidebar: map + dropdown — mobile/tablet da yuqorida */}
@@ -104,18 +99,29 @@ export default function TumanPage({ params }: { params: Promise<{ id: string }> 
           </div>
         </div>
       </div>
+
+      {/* Инфратузилма лойиҳалари */}
+      <div className="mt-5 sm:mt-6">
+        <div className="mb-4">
+          <h2 className="text-lg sm:text-xl font-bold text-navy">Инфратузилма лойиҳалари</h2>
+          <p className="text-sm text-text-secondary mt-0.5">
+            Инфратузилма қурилиш объектлари мониторинги
+          </p>
+        </div>
+        <InfrastructureSection />
+      </div>
     </div>
   );
 }
 
 function KPIRow({ label, plan, actual }: { label: string; plan: string; actual: string }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-border-light/50 last:border-0">
+    <div className="flex items-center justify-between py-2.5 border-b border-border-light/50 last:border-0">
       <span className="text-sm text-text-secondary">{label}</span>
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-navy-light font-medium">{plan}</span>
+      <div className="flex items-center gap-2.5">
+        <span className="text-sm sm:text-base text-navy-light font-medium">{plan}</span>
         <span className="text-text-secondary/30">/</span>
-        <span className="text-sm text-navy font-semibold">{actual}</span>
+        <span className="text-sm sm:text-base text-navy font-bold">{actual}</span>
       </div>
     </div>
   );

@@ -21,6 +21,8 @@ interface DataTableProps {
   data: Record<string, unknown>[];
   maxHeight?: string;
   compact?: boolean;
+  rowHref?: (row: Record<string, unknown>) => string;
+  fioHref?: (row: Record<string, unknown>) => string;
 }
 
 export function DataTable({
@@ -28,6 +30,8 @@ export function DataTable({
   data,
   maxHeight = "280px",
   compact = false,
+  rowHref,
+  fioHref,
 }: DataTableProps) {
   return (
     <div className="rounded-lg border border-border-light overflow-hidden">
@@ -66,7 +70,21 @@ export function DataTable({
                       compact ? "py-2 px-3" : "py-2.5 px-4"
                     )}
                   >
-                    {col.key === "status" || col.key === "indPlan" || col.key === "certificate" || col.key === "subsidy" ? (
+                    {col.key === "id" && rowHref ? (
+                      <a
+                        href={rowHref(row)}
+                        className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-navy/10 text-navy font-bold text-xs hover:bg-navy hover:text-white transition-colors"
+                      >
+                        {String(row[col.key] ?? "")}
+                      </a>
+                    ) : col.key === "fio" && fioHref ? (
+                      <a
+                        href={fioHref(row)}
+                        className="text-navy font-medium hover:underline hover:text-navy-light transition-colors"
+                      >
+                        {String(row[col.key] ?? "")}
+                      </a>
+                    ) : col.key === "status" || col.key === "indPlan" || col.key === "certificate" || col.key === "subsidy" ? (
                       <StatusBadge value={String(row[col.key] ?? "")} />
                     ) : (
                       String(row[col.key] ?? "")

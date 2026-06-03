@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon, type IconName } from "@/components/atoms/Icon";
@@ -8,12 +8,12 @@ import { GlassIcon } from "@/components/atoms/GlassIcon";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
-  SheetTrigger,
   SheetContent,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { useBreadcrumb } from "@/lib/breadcrumb-context";
 
 const navItems: { label: string; href: string; icon: IconName }[] = [
   { label: "Бош саҳифа", href: "/", icon: "grid" },
@@ -27,6 +27,14 @@ const navItems: { label: string; href: string; icon: IconName }[] = [
 export function DashboardNav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { items: breadcrumbItems } = useBreadcrumb();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <nav className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-border-light shadow-layered-sm">
@@ -67,35 +75,67 @@ export function DashboardNav() {
         </div>
 
         {/* Tab navigation — desktop only */}
-        <div className="hidden md:flex items-center gap-1.5 pb-2.5">
-          {navItems.map((item) => {
-            const isActive =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href);
+        <div className="hidden md:flex items-center justify-between gap-3 pb-2.5 min-w-0">
+          <div className="flex items-center gap-1.5 min-w-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {navItems.map((item) => {
+              const isActive =
+                item.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(item.href);
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full transition-all duration-200",
-                  isActive
-                    ? "bg-navy text-white shadow-sm"
-                    : "text-text-secondary hover:text-navy hover:bg-surface"
-                )}
-              >
-                <Icon
-                  name={item.icon}
-                  size={16}
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
                   className={cn(
-                    isActive ? "text-white" : "text-text-secondary"
+                    "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 shrink-0 whitespace-nowrap",
+                    isActive
+                      ? "bg-navy text-white shadow-sm"
+                      : "text-text-secondary hover:text-navy hover:bg-surface"
                   )}
-                />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
+                >
+                  <Icon
+                    name={item.icon}
+                    size={16}
+                    className={cn(
+                      isActive ? "text-white" : "text-text-secondary"
+                    )}
+                  />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Breadcrumb — scroll bo'lganda o'ng tomonda chiqadi */}
+          <div
+            className={cn(
+              "flex items-center gap-1 text-xs transition-all duration-300 min-w-0 shrink justify-end overflow-hidden",
+              scrolled && breadcrumbItems.length > 0
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 pointer-events-none translate-y-1"
+            )}
+          >
+            {breadcrumbItems.map((item, i) => (
+              <span key={i} className="flex items-center gap-1">
+                {i > 0 && (
+                  <Icon name="chevron-forward" size={12} className="text-text-secondary/40 shrink-0" />
+                )}
+                {item.href && i < breadcrumbItems.length - 1 ? (
+                  <Link
+                    href={item.href}
+                    className="text-navy-light hover:text-navy font-medium transition-colors hover:underline underline-offset-2 whitespace-nowrap"
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <span className="text-text-primary font-semibold whitespace-nowrap">
+                    {item.label}
+                  </span>
+                )}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 

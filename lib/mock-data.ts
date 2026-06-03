@@ -65,46 +65,66 @@ export const overviewData = {
 export const infrastructureData = {
   oghirMahalla: {
     title: "\"Оғир маҳалла\" инфратузилма лойиҳалари",
+    totalProjects: 920,
     totalObjects: 2450,
     builtObjects: 1890,
     percentage: 77.1,
+    interimPct: 67.3,
+    interimCount: 1650,
+    finalPct: 54.2,
+    finalCount: 1328,
     regions: [
-      { name: "Жиззах вилояти", total: 180, built: 145, pct: 80.6 },
-      { name: "Тошкент вилояти", total: 220, built: 185, pct: 84.1 },
-      { name: "Самарқанд вилояти", total: 250, built: 190, pct: 76.0 },
+      { name: "Жиззах вилояти", total: 180, built: 145, pct: 80.6, projectPct: 74.2, objectPct: 80.6 },
+      { name: "Тошкент вилояти", total: 220, built: 185, pct: 84.1, projectPct: 78.6, objectPct: 84.1 },
+      { name: "Самарқанд вилояти", total: 250, built: 190, pct: 76.0, projectPct: 70.4, objectPct: 76.0 },
     ],
   },
   oghirTuman: {
     title: "\"Оғир туман\" инфратузилма лойиҳалари",
+    totalProjects: 690,
     totalObjects: 1850,
     builtObjects: 1420,
     percentage: 76.8,
+    interimPct: 64.5,
+    interimCount: 1193,
+    finalPct: 51.8,
+    finalCount: 958,
     regions: [
-      { name: "Жиззах вилояти", total: 140, built: 110, pct: 78.6 },
-      { name: "Тошкент вилояти", total: 175, built: 140, pct: 80.0 },
-      { name: "Самарқанд вилояти", total: 195, built: 145, pct: 74.4 },
+      { name: "Жиззах вилояти", total: 140, built: 110, pct: 78.6, projectPct: 72.1, objectPct: 78.6 },
+      { name: "Тошкент вилояти", total: 175, built: 140, pct: 80.0, projectPct: 74.3, objectPct: 80.0 },
+      { name: "Самарқанд вилояти", total: 195, built: 145, pct: 74.4, projectPct: 68.7, objectPct: 74.4 },
     ],
   },
   yangiMahalla: {
     title: "\"Янги Ўзбекистон қиёфасидаги маҳалла\" инфратузилма",
+    totalProjects: 1180,
     totalObjects: 3200,
     builtObjects: 2560,
     percentage: 80.0,
+    interimPct: 71.5,
+    interimCount: 2288,
+    finalPct: 58.4,
+    finalCount: 1869,
     regions: [
-      { name: "Жиззах вилояти", total: 240, built: 200, pct: 83.3 },
-      { name: "Тошкент вилояти", total: 290, built: 245, pct: 84.5 },
-      { name: "Самарқанд вилояти", total: 320, built: 250, pct: 78.1 },
+      { name: "Жиззах вилояти", total: 240, built: 200, pct: 83.3, projectPct: 77.5, objectPct: 83.3 },
+      { name: "Тошкент вилояти", total: 290, built: 245, pct: 84.5, projectPct: 79.2, objectPct: 84.5 },
+      { name: "Самарқанд вилояти", total: 320, built: 250, pct: 78.1, projectPct: 72.4, objectPct: 78.1 },
     ],
   },
   yangiTuman: {
     title: "\"Янги Ўзбекистон қиёфасидаги туман\" инфратузилма",
+    totalProjects: 780,
     totalObjects: 2100,
     builtObjects: 1680,
     percentage: 80.0,
+    interimPct: 70.2,
+    interimCount: 1474,
+    finalPct: 56.8,
+    finalCount: 1193,
     regions: [
-      { name: "Жиззах вилояти", total: 160, built: 130, pct: 81.3 },
-      { name: "Тошкент вилояти", total: 200, built: 168, pct: 84.0 },
-      { name: "Самарқанд вилояти", total: 210, built: 165, pct: 78.6 },
+      { name: "Жиззах вилояти", total: 160, built: 130, pct: 81.3, projectPct: 75.6, objectPct: 81.3 },
+      { name: "Тошкент вилояти", total: 200, built: 168, pct: 84.0, projectPct: 78.0, objectPct: 84.0 },
+      { name: "Самарқанд вилояти", total: 210, built: 165, pct: 78.6, projectPct: 72.9, objectPct: 78.6 },
     ],
   },
 };
@@ -126,6 +146,12 @@ export const republicData = {
     jobs: { formed: 25000, launched: 18500 },
     credits: { count: 5600, sum: 125.8 },
     subjects: { plan: 4200, actual: 3100 },
+  },
+  entrepreneurshipPrograms: {
+    familyBusiness:  { count: 42000, sumBln: 980.5 },
+    firstStep:       { count: 28000, sumBln: 620.4 },
+    mahallaProject:  { count: 35000, sumBln: 780.2 },
+    smallBusiness:   { count: 18000, sumBln: 410.8 },
   },
   householdIncome: {
     selected: { plan: 15000, actual: 11200 },
@@ -151,9 +177,55 @@ export const republicData = {
   ],
 };
 
+/* Level-specific fallback data for viloyat/tuman pages */
+export const viloyatEntrepreneurshipPrograms = {
+  familyBusiness:  { count: 3000, sumBln: 70.0 },
+  firstStep:       { count: 2000, sumBln: 44.3 },
+  mahallaProject:  { count: 2500, sumBln: 55.7 },
+  smallBusiness:   { count: 1285, sumBln: 29.3 },
+};
+
+export const tumanEntrepreneurshipPrograms = {
+  familyBusiness:  { count: 150, sumBln: 3.5 },
+  firstStep:       { count: 100, sumBln: 2.2 },
+  mahallaProject:  { count: 125, sumBln: 2.8 },
+  smallBusiness:   { count: 64,  sumBln: 1.5 },
+};
+
+/* Infrastructure data per MFY type — single mahalla scope (no region breakdown) */
+export const mfyInfrastructure = {
+  ogir: {
+    title: "\"Оғир маҳалла\" инфратузилма лойиҳалари",
+    totalProjects: 24,
+    totalObjects: 65,
+    builtObjects: 48,
+    percentage: 73.8,
+    interimPct: 62.5,
+    interimCount: 40,
+    finalPct: 50.0,
+    finalCount: 32,
+  },
+  yangi: {
+    title: "\"Янги Ўзбекистон қиёфасидаги маҳалла\" инфратузилма",
+    totalProjects: 32,
+    totalObjects: 85,
+    builtObjects: 68,
+    percentage: 80.0,
+    interimPct: 70.6,
+    interimCount: 60,
+    finalPct: 58.8,
+    finalCount: 50,
+  },
+};
+
 export const mfyData = {
   name: "Янги ҳаёт МФЙ",
   breadcrumb: ["Республика", "Жиззах вилояти", "Жиззах шаҳри", "Янги ҳаёт МФЙ"],
+  stats: {
+    households: 1240,
+    population: 4870,
+    families: 1180,
+  },
   povertyReduction: {
     kpiPlan: { families: 120, services: 340, plans: 95 },
     kpiActual: { families: 98, services: 280, plans: 82 },
@@ -178,6 +250,12 @@ export const mfyData = {
       { id: 4, fio: "Қодирова Мунира Тоҳировна", phone: "+998 94 456 78 90", status: "Ишга туширилган", jobs: 3 },
       { id: 5, fio: "Раҳматов Шухрат Исроилович", phone: "+998 90 567 89 01", status: "Режалаштирилган", jobs: 4 },
     ],
+  },
+  entrepreneurshipPrograms: {
+    familyBusiness:  { count: 4, sumBln: 0.12 },
+    firstStep:       { count: 3, sumBln: 0.08 },
+    mahallaProject:  { count: 5, sumBln: 0.17 },
+    smallBusiness:   { count: 2, sumBln: 0.06 },
   },
   entrepreneurship: {
     kpiPlan: { count: 20, jobs: 60, credits: 12 },
@@ -229,7 +307,6 @@ export const mahallaYettiligi = [
     fio: "Ҳакимов Бахтиёр Тоҳирович",
     phone: "+998 90 100 10 01",
     avatar: "/avatars/rais.jpg",
-    description: "Эҳтиёжманд оилаларга уй-жойини яхшилашга кўмаклашиш",
   },
   {
     id: 2,
@@ -237,7 +314,6 @@ export const mahallaYettiligi = [
     fio: "Тўраев Жавоҳир Аълмович",
     phone: "+998 90 200 20 02",
     avatar: "/avatars/hokim.jpg",
-    description: "Ишсизларга иш топишга кўмаклашиш",
   },
   {
     id: 3,
@@ -245,7 +321,6 @@ export const mahallaYettiligi = [
     fio: "Исмоилов Сардор Бобурович",
     phone: "+998 91 300 30 03",
     avatar: "/avatars/yoshlar.jpg",
-    description: "Ёшларни спорт, мусиқа ва тўгаракларга жалб этиш",
   },
   {
     id: 4,
@@ -253,7 +328,6 @@ export const mahallaYettiligi = [
     fio: "Раҳимова Дилноза Камоловна",
     phone: "+998 93 400 40 04",
     avatar: "/avatars/xotin-qizlar.jpg",
-    description: "Аёлларни тадбиркорлик, касаначилик, ҳунармандчиликка жалб қилиш",
   },
   {
     id: 5,
@@ -261,23 +335,20 @@ export const mahallaYettiligi = [
     fio: "Мирзаев Шерзод Рустамович",
     phone: "+998 94 500 50 05",
     avatar: "/avatars/inspektor.jpg",
-    description: "Маҳаллада ҳуқуқбузарликларнинг олдини олиш, жамоат тартибини сақлаш ва хавфсиз муҳитни таъминлаш",
   },
   {
     id: 6,
     role: "Солиқ ходими",
-    fio: "Абдуллаев Нодирбек Файзуллаевич",
-    phone: "+998 90 600 60 06",
-    avatar: "/avatars/soliq.jpg",
-    description: "Маҳалладаги имкониятларни ишга солиб, солиқ базасини кенгайтириш, тадбиркорлик фаолиятини қонунийлаштириш",
+    fio: "",
+    phone: "",
+    avatar: "",
   },
   {
     id: 7,
     role: "Ижтимоий ходим",
-    fio: "Каримова Гулнора Бахтиёровна",
-    phone: "+998 91 700 70 07",
-    avatar: "/avatars/ijtimoiy.jpg",
-    description: "Ёлғиз кекса, ногирон ва бошқа муҳтожларга ижтимоий хизмат кўрсатиш",
+    fio: "",
+    phone: "",
+    avatar: "",
   },
 ];
 
@@ -298,17 +369,201 @@ export const tumanList: { id: string; name: string; families: number; pct: numbe
   { id: "zomin", name: "Зомин тумани", families: 3100, pct: 69.5 },
 ];
 
-export const mfyList: { id: string; name: string; families: number; pct: number }[] = [
-  { id: "yangi-hayot", name: "Янги ҳаёт МФЙ", families: 120, pct: 81.7 },
-  { id: "mustaqillik", name: "Мустақиллик МФЙ", families: 95, pct: 74.2 },
-  { id: "navbahor", name: "Навбаҳор МФЙ", families: 108, pct: 78.5 },
-  { id: "guliston", name: "Гулистон МФЙ", families: 87, pct: 69.8 },
-  { id: "tinchlik", name: "Тинчлик МФЙ", families: 142, pct: 85.3 },
-  { id: "ozodlik", name: "Озодлик МФЙ", families: 76, pct: 63.1 },
-  { id: "bunyodkor", name: "Бунёдкор МФЙ", families: 110, pct: 77.9 },
-  { id: "obod-mahalla", name: "Обод маҳалла МФЙ", families: 98, pct: 72.4 },
-  { id: "yoshlik", name: "Ёшлик МФЙ", families: 65, pct: 80.1 },
-  { id: "sahovat", name: "Саховат МФЙ", families: 83, pct: 67.5 },
-  { id: "farovon", name: "Фаровон МФЙ", families: 91, pct: 75.6 },
-  { id: "do-stlik-mfy", name: "Дўстлик МФЙ", families: 104, pct: 82.3 },
+export type MfyStatus = "yangi" | "ogir";
+
+export const mfyList: { id: string; name: string; families: number; pct: number; status: MfyStatus }[] = [
+  { id: "yangi-hayot",   name: "Янги ҳаёт МФЙ",       families: 120, pct: 81.7, status: "yangi" },
+  { id: "mustaqillik",   name: "Мустақиллик МФЙ",     families: 95,  pct: 74.2, status: "ogir" },
+  { id: "navbahor",      name: "Навбаҳор МФЙ",        families: 108, pct: 78.5, status: "yangi" },
+  { id: "guliston",      name: "Гулистон МФЙ",        families: 87,  pct: 69.8, status: "ogir" },
+  { id: "tinchlik",      name: "Тинчлик МФЙ",         families: 142, pct: 85.3, status: "yangi" },
+  { id: "ozodlik",       name: "Озодлик МФЙ",         families: 76,  pct: 63.1, status: "ogir" },
+  { id: "bunyodkor",     name: "Бунёдкор МФЙ",        families: 110, pct: 77.9, status: "yangi" },
+  { id: "obod-mahalla",  name: "Обод маҳалла МФЙ",    families: 98,  pct: 72.4, status: "yangi" },
+  { id: "yoshlik",       name: "Ёшлик МФЙ",           families: 65,  pct: 80.1, status: "yangi" },
+  { id: "sahovat",       name: "Саховат МФЙ",         families: 83,  pct: 67.5, status: "ogir" },
+  { id: "farovon",       name: "Фаровон МФЙ",         families: 91,  pct: 75.6, status: "yangi" },
+  { id: "do-stlik-mfy",  name: "Дўстлик МФЙ",         families: 104, pct: 82.3, status: "yangi" },
 ];
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * ONM-809 — Инфратузилма обектлари ва далолатнома формаси
+ * Object records for the "оралиқ ва якуний далолатнома" list + form.
+ * Birinchi обект Telegram референсидаги мисолга мос (Тўрткул МФЙ, код 2602182360619002).
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/** Далолатнома ҳолати: бажарилган ёки кутилмоқда */
+export type DalolatnomaStatus = "done" | "pending";
+
+/** Ўлчов бирлиги — форма select учун */
+export const INFRA_WORK_UNITS = [
+  "Километр (км)",
+  "Метр (м)",
+  "Погон метр (пог.м)",
+  "Дона",
+  "Квадрат метр (м²)",
+  "Куб метр (м³)",
+  "Гектар (га)",
+  "Комплект",
+] as const;
+export type InfraWorkUnit = (typeof INFRA_WORK_UNITS)[number];
+
+export interface InfraObject {
+  /** route slug, e.g. "torkul-okar-suv" */
+  id: string;
+  /** Қисқа сарлавҳа (card title) */
+  shortName: string;
+  /** Тўлиқ тавсиф (форма сарлавҳасида) */
+  description: string;
+  /** Обект коди — readonly */
+  objectCode: string;
+  /** Обект ID — readonly */
+  objectId: string;
+  mfyName: string;
+  tumanName: string;
+  viloyatName: string;
+  /** Режа ID — readonly/from object */
+  rejaId: number;
+  /** Режа номи */
+  rejaNomi: string;
+  /** Қуввати */
+  quvvati: number;
+  /** Ўлчов бирлиги */
+  olchovBirligi: InfraWorkUnit;
+  /** Сарфланган маблағлар (сўм). 0 = ҳали киритилмаган */
+  sarflanganMablag: number;
+  /** Геопозиция */
+  lat: number;
+  lng: number;
+  /** Оралиқ далолатнома ҳолати */
+  interim: DalolatnomaStatus;
+  /** Якуний далолатнома ҳолати */
+  final: DalolatnomaStatus;
+}
+
+export const infraObjects: InfraObject[] = [
+  {
+    id: "torkul-okar-suv",
+    shortName: "Тўрткул МФЙ — оқар сув таъминоти",
+    description:
+      "Тўрткул МФЙ да 385 та хонадонларнинг 55 гектар томорқаларини оқар сув таъминотини яхшилаш (Артезиан кудуқ қазиш, Асфальт ётқизиш, сув тармоғи тортиш, электр тармоғи тортиш)",
+    objectCode: "2602182360619002",
+    objectId: "126244",
+    mfyName: "Тўрткул МФЙ",
+    tumanName: "Жиззах шаҳри",
+    viloyatName: "Жиззах вилояти",
+    rejaId: 25,
+    rejaNomi: "Асфальтлаш",
+    quvvati: 3,
+    olchovBirligi: "Километр (км)",
+    sarflanganMablag: 0,
+    lat: 41.3275,
+    lng: 69.2817,
+    interim: "done",
+    final: "pending",
+  },
+  {
+    id: "guliston-suv-tармоги",
+    shortName: "Гулистон МФЙ — сув тармоғи",
+    description:
+      "Гулистон МФЙ да 210 та хонадонни ичимлик суви билан таъминлаш учун сув тармоғини тортиш ва насос станцияси қуриш",
+    objectCode: "2602182360619115",
+    objectId: "126301",
+    mfyName: "Гулистон МФЙ",
+    tumanName: "Жиззах шаҳри",
+    viloyatName: "Жиззах вилояти",
+    rejaId: 12,
+    rejaNomi: "Сув тармоғи тортиш",
+    quvvati: 1.8,
+    olchovBirligi: "Километр (км)",
+    sarflanganMablag: 0,
+    lat: 41.3211,
+    lng: 69.2401,
+    interim: "pending",
+    final: "pending",
+  },
+  {
+    id: "navbahor-elektr-tармоги",
+    shortName: "Навбаҳор МФЙ — электр тармоғи",
+    description:
+      "Навбаҳор МФЙ да 340 та хонадонни узлуксиз электр таъминоти билан таъминлаш учун паст кучланишли электр тармоғини тортиш ва трансформатор ўрнатиш",
+    objectCode: "2602182360619208",
+    objectId: "126355",
+    mfyName: "Навбаҳор МФЙ",
+    tumanName: "Жиззах шаҳри",
+    viloyatName: "Жиззах вилояти",
+    rejaId: 31,
+    rejaNomi: "Электр тармоғи тортиш",
+    quvvati: 2.4,
+    olchovBirligi: "Километр (км)",
+    sarflanganMablag: 412_000_000,
+    lat: 41.3389,
+    lng: 69.2655,
+    interim: "done",
+    final: "done",
+  },
+  {
+    id: "tinchlik-artezian",
+    shortName: "Тинчлик МФЙ — артезиан қудуқ",
+    description:
+      "Тинчлик МФЙ да 410 та хонадоннинг суғориш ва ичимлик суви эҳтиёжини қондириш учун артезиан кудуқлар қазиш ва жиҳозлаш",
+    objectCode: "2602182360619310",
+    objectId: "126402",
+    mfyName: "Тинчлик МФЙ",
+    tumanName: "Жиззах шаҳри",
+    viloyatName: "Жиззах вилояти",
+    rejaId: 7,
+    rejaNomi: "Артезиан кудуқ қазиш",
+    quvvati: 4,
+    olchovBirligi: "Дона",
+    sarflanganMablag: 0,
+    lat: 41.3052,
+    lng: 69.2988,
+    interim: "done",
+    final: "pending",
+  },
+  {
+    id: "bunyodkor-yol-qurilishi",
+    shortName: "Бунёдкор МФЙ — йўл қурилиши",
+    description:
+      "Бунёдкор МФЙ да ички йўлларни таъмирлаш ва янги йўл қуриш орқали 5.2 км масофадаги кўчаларни асфальтлаш",
+    objectCode: "2602182360619422",
+    objectId: "126480",
+    mfyName: "Бунёдкор МФЙ",
+    tumanName: "Жиззах шаҳри",
+    viloyatName: "Жиззах вилояти",
+    rejaId: 19,
+    rejaNomi: "Йўл қурилиши",
+    quvvati: 5.2,
+    olchovBirligi: "Километр (км)",
+    sarflanganMablag: 0,
+    lat: 41.3148,
+    lng: 69.2519,
+    interim: "pending",
+    final: "pending",
+  },
+  {
+    id: "obod-mahalla-kocha-yoritish",
+    shortName: "Обод маҳалла МФЙ — кўча ёритиш",
+    description:
+      "Обод маҳалла МФЙ да кечки вақтда хавфсизликни таъминлаш учун кўчаларга 120 та LED ёритиш чироғларини ўрнатиш",
+    objectCode: "2602182360619533",
+    objectId: "126540",
+    mfyName: "Обод маҳалла МФЙ",
+    tumanName: "Жиззах шаҳри",
+    viloyatName: "Жиззах вилояти",
+    rejaId: 44,
+    rejaNomi: "Кўча ёритиш тармоғи",
+    quvvati: 120,
+    olchovBirligi: "Дона",
+    sarflanganMablag: 268_500_000,
+    lat: 41.3301,
+    lng: 69.2733,
+    interim: "done",
+    final: "done",
+  },
+];
+
+export function getInfraObject(id: string): InfraObject | undefined {
+  return infraObjects.find((o) => o.id === id);
+}
