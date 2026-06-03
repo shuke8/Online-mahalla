@@ -2,6 +2,22 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-009: Ҳужжат экрани — "Юклаб олиш" ўрнига "Ҳужжат", "Улашиш" олиб ташлаш
+**Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
+**Manba:** Foydalanuvchi — "Ҳужжат (тугалланган) screenда 'юклаб олиш' ўрнига 'ҳужжат' button бўлсин;
+улашиш керак эмас — ҳужжат ўзида бу функция бор"
+**Status:** DONE
+
+**O'zgargan faylлар:**
+- `components/mobile/DocumentScreen.tsx`:
+  - Пастки бар: 2 тугма (Улашиш + Юклаб олиш PDF) → битта full-width "Ҳужжат" (document-text икон, navy primary).
+  - AppBar trailing: 2 икон (юклаб олиш + улашиш) → битта "Ҳужжат" икон (document-text). Улашиш олиб ташланди.
+  - Юқори изоҳ янгиланди.
+
+**Verification (headless Playwright, /dizayn/dalolatnoma):**
+- "Улашиш" матни — йўқ; "Юклаб олиш" матни — йўқ (page text текширилди).
+- Пастда битта "Ҳужжат" тугмаси (document икон). Скриншот: `doc-hujjat-btn.png`. tsc 0, pageerror 0.
+
 ### TASK-008: Қидирув майдонини бирхиллаштириш (Обектлар ↔ Бош экран)
 **Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
 **Manba:** Foydalanuvchi — "Обектлар рўйхати ва Бош экран (модуллар) input'и ўлчами ва border radiusи ҳар хил"

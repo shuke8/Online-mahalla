@@ -10,7 +10,7 @@ import { AppBar, SectionTitle, MobileStyles } from "@/components/mobile/material
  * DocumentScreen — тугалланган далолатнома ҳужжатини кўриш экрани.
  * Расмий акт кўриниши: оқ "қоғоз" карта устида — тасдиқ белгиси, сарлавҳа,
  * обект маълумотлари, иш тафсилотлари, расмлар, геолокация, имзо/муҳр.
- * Пастда (shrink-0) "Юклаб олиш (PDF)" / "Улашиш" — визуал (дизайн preview).
+ * Пастда (shrink-0) битта "Ҳужжат" тугмаси — визуал (дизайн preview). Улашиш йўқ.
  * Барча контент детерминистик (Date.now() ишлатилмайди).
  * Contract — O'ZGАРТИРМАНГ:
  */
@@ -47,22 +47,14 @@ export default function DocumentScreen({ object, actType, onBack, layout = "phon
         subtitle={actShort}
         onBack={onBack}
         trailing={
-          <div className="mr-0.5 flex items-center">
-            <button
-              type="button"
-              aria-label="Юклаб олиш"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full text-white/95 transition-colors hover:bg-white/15 active:scale-[0.94]"
-            >
-              <Icon name="document-upload" size={20} />
-            </button>
-            <button
-              type="button"
-              aria-label="Улашиш"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full text-white/95 transition-colors hover:bg-white/15 active:scale-[0.94]"
-            >
-              <Icon name="send" size={19} />
-            </button>
-          </div>
+          <button
+            type="button"
+            aria-label="Ҳужжат"
+            title="Ҳужжат"
+            className="mr-0.5 inline-flex h-11 w-11 items-center justify-center rounded-full text-white/95 transition-colors hover:bg-white/15 active:scale-[0.94]"
+          >
+            <Icon name="document-text" size={20} />
+          </button>
         }
       />
 
@@ -221,23 +213,13 @@ export default function DocumentScreen({ object, actType, onBack, layout = "phon
 
       {/* Bottom action bar — frame пастида (shrink-0) */}
       <div className="shrink-0 border-t border-border-light bg-white px-3 pb-5 pt-2.5 shadow-[0_-4px_16px_rgba(15,23,42,0.06)]">
-        <div className="flex items-center gap-2.5">
-          <button
-            type="button"
-            aria-label="Улашиш"
-            className="inline-flex min-h-[48px] items-center justify-center gap-1.5 rounded-full border border-border-light px-5 text-[14px] font-semibold text-text-label transition-colors hover:bg-slate-50 active:scale-[0.97]"
-          >
-            <Icon name="send" size={17} variant="Bold" />
-            Улашиш
-          </button>
-          <button
-            type="button"
-            className="inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-full bg-navy text-[14.5px] font-bold text-white shadow-[0_6px_18px_rgba(43,140,238,0.35)] transition-all hover:bg-navy-light active:scale-[0.98]"
-          >
-            <Icon name="document-upload" size={18} variant="Bold" />
-            Юклаб олиш (PDF)
-          </button>
-        </div>
+        <button
+          type="button"
+          className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-navy text-[14.5px] font-bold text-white shadow-[0_6px_18px_rgba(43,140,238,0.35)] transition-all hover:bg-navy-light active:scale-[0.98]"
+        >
+          <Icon name="document-text" size={18} variant="Bold" />
+          Ҳужжат
+        </button>
       </div>
     </div>
   );
