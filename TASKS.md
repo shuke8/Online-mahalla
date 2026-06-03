@@ -218,6 +218,13 @@
 - Mobile 390 + 375 + 320: 1 устунга stack, overflowX=0, console+pageerror=0.
 - done=strikethrough+яшил tick, in_progress=сариқ refresh, pending=кулранг clock. tsc --noEmit: 0 error.
 
+**Refinement (фойдаланувчи: "обектлар рўйхатини compactlash — кўпайса контент узун бўлади, асосий эмас, қуйи даражага туш):**
+- `InfraObjectCard` — тўлиқ карта (ҳар бири ~5 қатор checklist) → ИХЧАМ accordion қатор. Йопиқ: иконка(7×7) +
+  ном + ингичка progress bar + N/M + chevron (~40px). Босилганда: manzil + Режа checklist очилади.
+- Container `grid lg:grid-cols-2` → бир устунли `space-y-2`. Сарлавҳага сони badge'и қўшилди.
+  Default йопиқ — обектлар кўпайса ҳам контент узун бўлмайди. Скриншот: `mfy-compact-collapsed/expanded.png`.
+  tsc 0, overflowX=0, pageerror=0, accordion toggle тасдиқланди.
+
 ---
 
 ### TASK-004: Инфратузилма картларини респ./вилоят/туман саҳифаларига қўшиш

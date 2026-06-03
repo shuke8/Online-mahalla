@@ -545,13 +545,16 @@ function MfyInfraSection({ status }: { status: MfyStatus }) {
         {/* Objects & their repair plan */}
         {section.objects.length > 0 && (
           <div>
-            <div className="flex items-center gap-2 mb-2.5">
+            <div className="flex items-center gap-2 mb-2">
               <Icon name="hammer" size={13} variant="Bold" className="text-text-secondary/60" />
               <p className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider">
                 Объектлар ва таъмирлаш режаси
               </p>
+              <span className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-navy/[0.08] px-1.5 text-[10.5px] font-bold text-navy">
+                {section.objects.length}
+              </span>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <div className="space-y-2">
               {section.objects.map((obj) => (
                 <InfraObjectCard key={obj.id} object={obj} accent={palette.main} />
               ))}
@@ -586,73 +589,78 @@ const WORK_STATUS_CONFIG: Record<
 };
 
 function InfraObjectCard({ object, accent }: { object: MfyInfraObject; accent: string }) {
+  const [open, setOpen] = useState(false);
   const total = object.plan.length;
   const done = object.plan.filter((p) => p.status === "done").length;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
   const icon = OBJECT_TYPE_ICON[object.type] ?? "building-3";
 
   return (
-    <div className="rounded-xl border border-border-light/70 bg-surface/40 p-3 sm:p-3.5 hover:border-border-light transition-colors">
-      {/* Header — icon + name + progress badge */}
-      <div className="flex items-start gap-2.5 mb-2.5">
+    <div className="rounded-lg border border-border-light/70 bg-surface/40 overflow-hidden transition-colors hover:border-border-light">
+      {/* Compact header — bosilganда режа очилади */}
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-2.5 px-2.5 py-2 text-left transition-colors hover:bg-surface/60"
+      >
         <span
-          className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-lg"
+          className="shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-lg"
           style={{ backgroundColor: `${accent}14`, color: accent }}
         >
-          <Icon name={icon} size={16} variant="Bold" />
+          <Icon name={icon} size={14} variant="Bold" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="text-[13px] font-semibold text-text-primary leading-snug">{object.name}</p>
-          <span className="inline-flex items-center gap-1 text-[11px] text-text-secondary mt-0.5">
-            <Icon name="location" size={11} className="text-text-secondary/60" />
-            {object.address}
-          </span>
+          <p className="truncate text-[12.5px] font-semibold text-text-primary leading-tight">{object.name}</p>
+          <div className="mt-1 h-1 bg-border-light/70 rounded-full overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{ width: `${pct}%`, background: `linear-gradient(to right, ${accent}cc, ${accent})` }}
+            />
+          </div>
         </div>
-        <span
-          className="shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums"
-          style={{ backgroundColor: `${accent}14`, color: accent }}
-          title="Бажарилган ишлар"
-        >
+        <span className="shrink-0 text-[10.5px] font-bold tabular-nums" style={{ color: accent }} title="Бажарилган ишлар">
           {done}/{total}
         </span>
-      </div>
-
-      {/* Progress bar */}
-      <div className="h-1.5 bg-border-light/70 rounded-full overflow-hidden mb-3">
-        <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{ width: `${pct}%`, background: `linear-gradient(to right, ${accent}cc, ${accent})` }}
+        <Icon
+          name="chevron-down"
+          size={14}
+          className={`shrink-0 text-text-secondary/50 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
-      </div>
+      </button>
 
-      {/* Plan checklist */}
-      <div className="flex items-center gap-1.5 mb-2">
-        <Icon name="document-text" size={12} variant="Bold" className="text-text-secondary/50" />
-        <p className="text-[10px] font-semibold text-text-secondary uppercase tracking-wider">Режа</p>
-      </div>
-      <ul className="space-y-1.5">
-        {object.plan.map((item, i) => {
-          const st = WORK_STATUS_CONFIG[item.status] ?? WORK_STATUS_CONFIG.pending;
-          const isDone = item.status === "done";
-          return (
-            <li key={i} className="flex items-center gap-2">
-              <Icon name={st.icon} size={15} variant="Bold" className={`${st.text} shrink-0`} />
-              <span
-                className={`text-[12px] flex-1 min-w-0 truncate ${
-                  isDone ? "text-text-secondary line-through decoration-text-secondary/30" : "text-text-primary"
-                }`}
-              >
-                {item.work}
-              </span>
-              <span
-                className={`shrink-0 inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${st.bg} ${st.text}`}
-              >
-                {st.label}
-              </span>
-            </li>
-          );
-        })}
-      </ul>
+      {/* Очилганда — manzil + Режа checklist */}
+      {open && (
+        <div className="px-2.5 pb-2.5">
+          <p className="mb-2 flex items-center gap-1 border-t border-border-light/50 pt-2 text-[10.5px] text-text-secondary">
+            <Icon name="location" size={10} className="text-text-secondary/60" />
+            {object.address}
+          </p>
+          <ul className="space-y-1">
+            {object.plan.map((item, i) => {
+              const st = WORK_STATUS_CONFIG[item.status] ?? WORK_STATUS_CONFIG.pending;
+              const isDone = item.status === "done";
+              return (
+                <li key={i} className="flex items-center gap-2">
+                  <Icon name={st.icon} size={13} variant="Bold" className={`${st.text} shrink-0`} />
+                  <span
+                    className={`flex-1 min-w-0 truncate text-[11.5px] ${
+                      isDone ? "text-text-secondary line-through decoration-text-secondary/30" : "text-text-primary"
+                    }`}
+                  >
+                    {item.work}
+                  </span>
+                  <span
+                    className={`shrink-0 inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${st.bg} ${st.text}`}
+                  >
+                    {st.label}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
