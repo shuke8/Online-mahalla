@@ -39,7 +39,11 @@
 - Хуш келибсиз + Янги ҳаёт МФЙ + 22-март; 6 Объектлар / 2 Тугалланган / 419 Билдиришнома — рендер OK.
   Скриншот: `home-hero.png`. grid+list иккаласида кўринади, қидирувда яширин. overflowX=0, pageerror=0, tsc 0.
 
----
+**Refinement (фойдаланувчи: "Объектлар/Тугалланган/Билдиришнома stat'лар керак эмас — орқа фонга енгил миллий нақш қўй"):**
+- 3 та `StatMini` карта + objTotal/objDone + StatMini компонент + infraObjects import олиб ташланди (welcome hero қолди).
+- `public/uzbek-pattern.svg` — ЯНГИ: 8-бурчакли юлдуз girih (navy stroke ~0.13-0.16 alpha), 100×100 tileable.
+- Контент орқа фонига `backgroundImage` (96px tile) — енгил миллий нақш бутун бош экран бўйлаб.
+  Скриншот: `home-pattern2.png`, `pattern-zoom.png`. tsc 0, overflowX=0, pageerror=0.
 
 ### TASK-009: Ҳужжат экрани — "Юклаб олиш" ўрнига "Ҳужжат", "Улашиш" олиб ташлаш
 **Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03

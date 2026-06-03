@@ -12,7 +12,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Icon } from "@/components/atoms/Icon";
 import type { IconName } from "@/components/atoms/Icon";
-import { infraObjects, mfyData } from "@/lib/mock-data";
+import { mfyData } from "@/lib/mock-data";
 import { AppBar, PressCard, MobileStyles, SearchField } from "@/components/mobile/material";
 import { SideDrawer } from "@/components/mobile/SideDrawer";
 
@@ -199,10 +199,8 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
     [featured],
   );
 
-  // Бош экран тезкор статистикаси (реал mock датадан)
   const mahallaName = mfyData.name;
-  const objTotal = infraObjects.length;
-  const objDone = infraObjects.filter((o) => o.interim === "done" && o.final === "done").length;
+  // Sidebar билдиришнома сони — модул badge'лари йиғиндиси
   const notifTotal = ALL_MODULES.reduce((sum, m) => sum + (m.badge ?? 0), 0);
 
   const { view, setView } = useViewMode();
@@ -277,8 +275,14 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
         </div>
       </div>
 
-      {/* Контент — frame вертикал чўзилади */}
-      <div className={`flex-1 -mt-3 rounded-t-3xl bg-[#f4f7fb] pb-5 pt-4 ${isTablet ? "px-6" : "px-3.5"}`}>
+      {/* Контент — frame вертикал чўзилади; орқа фонда енгил миллий нақш */}
+      <div
+        className={`flex-1 -mt-3 rounded-t-3xl bg-[#f4f7fb] pb-5 pt-4 ${isTablet ? "px-6" : "px-3.5"}`}
+        style={{
+          backgroundImage: "url('/uzbek-pattern.svg')",
+          backgroundSize: "96px 96px",
+        }}
+      >
         {q ? (
           /* ── Қидирув натижалари ── */
           results.length === 0 ? (
@@ -300,27 +304,20 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
         ) : (
           /* ── Категориялар бўйича ── */
           <div className="flex flex-col gap-6">
-            {/* Хуш келибсиз hero + тезкор статистика */}
-            <div className="flex flex-col gap-3">
-              <div className="overflow-hidden rounded-2xl border border-navy/10 bg-gradient-to-br from-navy/[0.07] to-navy/[0.02] p-3.5">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-navy to-navy-light text-white shadow-[0_4px_12px_rgba(43,140,238,0.35)]">
-                    <Icon name="home" size={22} variant="Bold" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[11px] font-medium text-text-secondary">Хуш келибсиз</p>
-                    <h2 className="truncate text-[15px] font-bold text-text-primary">{mahallaName}</h2>
-                  </div>
-                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-white/85 px-2.5 py-1 text-[11px] font-semibold text-navy shadow-sm backdrop-blur-sm">
-                    <Icon name="time" size={12} variant="Bold" />
-                    22-март
-                  </span>
+            {/* Хуш келибсиз hero */}
+            <div className="overflow-hidden rounded-2xl border border-navy/10 bg-gradient-to-br from-navy/[0.07] to-navy/[0.02] p-3.5">
+              <div className="flex items-center gap-3">
+                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-navy to-navy-light text-white shadow-[0_4px_12px_rgba(43,140,238,0.35)]">
+                  <Icon name="home" size={22} variant="Bold" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] font-medium text-text-secondary">Хуш келибсиз</p>
+                  <h2 className="truncate text-[15px] font-bold text-text-primary">{mahallaName}</h2>
                 </div>
-              </div>
-              <div className="grid grid-cols-3 gap-2.5">
-                <StatMini icon="business" hue="#2b8cee" value={objTotal} label="Объектлар" />
-                <StatMini icon="tick-circle" hue="#1dc973" value={objDone} label="Тугалланган" />
-                <StatMini icon="notifications" hue="#fd7d07" value={notifTotal} label="Билдиришнома" />
+                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-white/85 px-2.5 py-1 text-[11px] font-semibold text-navy shadow-sm backdrop-blur-sm">
+                  <Icon name="time" size={12} variant="Bold" />
+                  22-март
+                </span>
               </div>
             </div>
 
@@ -427,34 +424,6 @@ function ModuleTile({
       >
         <Icon name="star" size={16} variant={featured ? "Bold" : "Outline"} />
       </button>
-    </div>
-  );
-}
-
-/* ── Тезкор статистика картаси (бош экран hero) ─────────────────────────── */
-function StatMini({
-  icon,
-  hue,
-  value,
-  label,
-}: {
-  icon: IconName;
-  hue: string;
-  value: number;
-  label: string;
-}) {
-  return (
-    <div className="flex flex-col gap-1.5 rounded-2xl border border-border-light bg-white p-3 shadow-layered-sm">
-      <span
-        className="inline-flex h-8 w-8 items-center justify-center rounded-xl"
-        style={{ background: `${hue}1f`, color: hue }}
-      >
-        <Icon name={icon} size={16} variant="Bold" />
-      </span>
-      <span className="text-[18px] font-extrabold leading-none tabular-nums text-text-primary">
-        {value.toLocaleString("en-US")}
-      </span>
-      <span className="text-[10.5px] font-medium leading-tight text-text-secondary">{label}</span>
     </div>
   );
 }
