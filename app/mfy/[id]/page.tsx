@@ -22,6 +22,8 @@ export default function MFYPage({ params }: { params: Promise<{ id: string }> })
   const [taskModalOpen, setTaskModalOpen] = useState(false);
   const hokim = mahallaYettiligi.find((m) => m.role === "Ҳоким ёрдамчиси");
   const mfyStatus = mfyList.find((m) => m.id === id)?.status ?? "yangi";
+  // Харита ранги МФЙ ҳолатига қараб: оғир = қизил, янги Ўзбекистон = яшил
+  const mfyMapColor = mfyStatus === "ogir" ? "#ef4444" : "#16a34a";
 
   return (
     <div className="stagger-children">
@@ -178,7 +180,7 @@ export default function MFYPage({ params }: { params: Promise<{ id: string }> })
         <div className="xl:col-span-1 order-first xl:order-none">
           <div className="xl:sticky xl:top-[6.75rem] xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto space-y-4">
           <div className="bg-white rounded-2xl border border-border-light shadow-sm p-3 sm:p-4 space-y-4">
-            <UzbekistanMap data={republicData.regionMapData} selectedRegion="jizzakh" defaultHoveredRegion="jizzakh" />
+            <UzbekistanMap data={republicData.regionMapData} selectedRegion="jizzakh" defaultHoveredRegion="jizzakh" selectedColor={mfyMapColor} />
             <div className="p-3 bg-navy-lighter/30 rounded-lg">
               <p className="text-sm font-semibold text-navy">{d.name}</p>
               <p className="text-xs text-text-secondary mt-0.5">Жиззах шаҳри, Жиззах вилояти</p>

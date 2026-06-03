@@ -13,6 +13,8 @@ interface UzbekistanMapProps {
   onRegionClick?: (regionId: string) => void;
   selectedRegion?: string;
   defaultHoveredRegion?: string;
+  /** Танланган регион учун махсус fill ранги (мас. МФЙ ҳолати: оғир=қизил, янги=яшил). */
+  selectedColor?: string;
 }
 
 const regions: { id: string; name: string; d: string; labelX: number; labelY: number }[] = [
@@ -39,7 +41,7 @@ function getColor(value: number): string {
   return "#93c5fd";
 }
 
-export function UzbekistanMap({ data = [], onRegionClick, selectedRegion, defaultHoveredRegion }: UzbekistanMapProps) {
+export function UzbekistanMap({ data = [], onRegionClick, selectedRegion, defaultHoveredRegion, selectedColor }: UzbekistanMapProps) {
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(defaultHoveredRegion ?? null);
 
   const getRegionValue = (id: string) => data.find((d) => d.id === id)?.value ?? 0;
@@ -56,8 +58,14 @@ export function UzbekistanMap({ data = [], onRegionClick, selectedRegion, defaul
             <g key={region.id}>
               <path
                 d={region.d}
-                fill={data.length > 0 ? getColor(value) : "#5BA8F5"}
-                stroke={isSelected ? "#D4A76A" : isHovered ? "#FFFFFF" : "#EDF5FF"}
+                fill={
+                  isSelected && selectedColor
+                    ? selectedColor
+                    : data.length > 0
+                      ? getColor(value)
+                      : "#5BA8F5"
+                }
+                stroke={isSelected ? (selectedColor ? "#FFFFFF" : "#D4A76A") : isHovered ? "#FFFFFF" : "#EDF5FF"}
                 strokeWidth={isSelected ? 2.5 : isHovered ? 2 : 1}
                 className="cursor-pointer transition-all duration-200"
                 style={{

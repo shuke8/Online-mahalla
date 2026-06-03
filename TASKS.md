@@ -2,6 +2,23 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-014: МФЙ харита ранги — ҳолатга қараб (оғир=қизил, янги=яшил)
+**Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
+**Manba:** Foydalanuvchi — "оғир МФЙ бўлса харитада ранги қизил, янги Ўзбекистон МФЙ бўлса яшил бўлсин"
+**Status:** DONE
+
+**O'zgargan fayллар:**
+- `components/organisms/UzbekistanMap.tsx` — `selectedColor?` prop: танланган регион fill'и шу рангга
+  бўлади (стрек оқ), бошқалар аввалгидек value→кўк. Additive — бошқа саҳифаларга таъсир йўқ.
+- `app/mfy/[id]/page.tsx` — `mfyMapColor = ogir ? "#ef4444" : "#16a34a"`; харитага `selectedColor` узатилди.
+
+**Verification (headless Playwright):**
+- /mfy/mustaqillik (ogir) → Жиззах региони fill `#ef4444` (қизил). Скриншот: `map-ogir.png`.
+- /mfy/yangi-hayot (yangi) → Жиззах региони fill `#16a34a` (яшил). Скриншот: `map-yangi.png`.
+- Status badge ранги билан мос; қолган регионлар кўк. tsc 0, overflowX=0, pageerror=0.
+
+---
+
 ### TASK-013: Бош экран орқа фон — V1 (юмшоқ brand gradient) танланди
 **Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
 **Manba:** Foydalanuvchi — "girih pattern ёқмади; Mobbin'дан фон вариантлари топ; 3 версияни танлаш имкони
