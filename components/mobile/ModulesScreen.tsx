@@ -13,7 +13,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Icon } from "@/components/atoms/Icon";
 import type { IconName } from "@/components/atoms/Icon";
 import { infraObjects } from "@/lib/mock-data";
-import { AppBar, PressCard, MobileStyles } from "@/components/mobile/material";
+import { AppBar, PressCard, MobileStyles, SearchField } from "@/components/mobile/material";
 
 export interface ModulesScreenProps {
   /** ажратиб кўрсатиладиган (асосий) модул калити */
@@ -244,27 +244,13 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
       {/* Тез қидирув + кўриниш переключатели — бир қаторда */}
       <div className={`shrink-0 bg-navy pb-4 pt-0.5 ${isTablet ? "px-6" : "px-3.5"}`}>
         <div className={`flex items-center gap-2.5 ${isTablet ? "mx-auto max-w-2xl" : ""}`}>
-          <div className="flex min-w-0 flex-1 items-center gap-2.5 rounded-2xl bg-white px-4 shadow-[0_6px_18px_rgba(15,23,42,0.22)]">
-            <Icon name="search" size={20} className="shrink-0 text-navy" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Бўлим қидириш…"
-              aria-label="Бўлимларни қидириш"
-              className="min-h-[52px] w-full bg-transparent text-[15px] font-medium text-text-primary outline-none placeholder:font-normal placeholder:text-text-secondary/70"
-            />
-            {query && (
-              <button
-                type="button"
-                onClick={() => setQuery("")}
-                aria-label="Тозалаш"
-                className="-mr-1.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-slate-100 active:scale-90"
-              >
-                <Icon name="close-circle" size={18} variant="Bold" />
-              </button>
-            )}
-          </div>
+          <SearchField
+            value={query}
+            onChange={setQuery}
+            placeholder="Бўлим қидириш…"
+            ariaLabel="Бўлимларни қидириш"
+            className="flex-1"
+          />
           <ViewToggle value={view} onChange={setView} />
         </div>
       </div>

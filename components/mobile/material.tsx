@@ -329,6 +329,51 @@ export function SegmentedToggle({
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
+ * SearchField — экранлар учун ягона Material қидирув майдони.
+ * Барча экранда бир хил ўлчам/радиус/shadow — divergenция бўлмаслиги учун.
+ * className орқали wrap'га мослашади (flex-1, w-full max-w-md, ва ҳ.к.).
+ * ──────────────────────────────────────────────────────────────────────── */
+export function SearchField({
+  value,
+  onChange,
+  placeholder,
+  ariaLabel,
+  className = "",
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  ariaLabel: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`flex min-w-0 items-center gap-2.5 rounded-2xl bg-white px-4 shadow-[0_6px_18px_rgba(15,23,42,0.22)] ${className}`}
+    >
+      <Icon name="search" size={20} className="shrink-0 text-navy" />
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        aria-label={ariaLabel}
+        className="min-h-[52px] w-full bg-transparent text-[15px] font-medium text-text-primary outline-none placeholder:font-normal placeholder:text-text-secondary/70"
+      />
+      {value && (
+        <button
+          type="button"
+          onClick={() => onChange("")}
+          aria-label="Тозалаш"
+          className="-mr-1.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-slate-100 active:scale-90"
+        >
+          <Icon name="close-circle" size={18} variant="Bold" />
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * SectionTitle — форма бўлим сарлавҳаси
  * ──────────────────────────────────────────────────────────────────────── */
 export function SectionTitle({ icon, children }: { icon: IconName; children: ReactNode }) {

@@ -2,6 +2,26 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-008: Қидирув майдонини бирхиллаштириш (Обектлар ↔ Бош экран)
+**Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
+**Manba:** Foydalanuvchi — "Обектлар рўйхати ва Бош экран (модуллар) input'и ўлчами ва border radiusи ҳар хил"
+**Status:** DONE
+
+**Sabab:** 2 та экранда search markup алоҳида эди — ObjectsListScreen (rounded-full, 46px, 13.5px, text-secondary
+икон, енгил shadow) ≠ ModulesScreen (rounded-2xl, 52px, 15px, navy икон, кучли shadow).
+
+**Yechim (Single Source of Truth):**
+- `components/mobile/material.tsx` — янги `SearchField` экспорти (ягона ўлчам/радиус/shadow; `className` орқали
+  wrap'га мослашади — flex-1, w-full max-w-md). Канон = ModulesScreen стили (rounded-2xl, min-h-52, navy икон, 15px).
+- `ModulesScreen.tsx` + `ObjectsListScreen.tsx` — иккаласи ҳам `<SearchField/>` ишлатади. Энди айнан бир хил,
+  келажакда divergenция бўлмайди.
+
+**Verification (headless Playwright):**
+- Обектлар search энди rounded-2xl + 52px + navy икон (аввал rounded-full/46px). Скриншот: `cmp-objects-search.png`.
+- Иккала экран бир хил компонент → конструкция бўйича айнан бир хил. tsc 0, overflowX=0, pageerror=0.
+
+---
+
 ### TASK-007: Мобил Бош саҳифа — бўлимлар grid ↔ list кўриниши
 **Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
 **Manba:** Foydalanuvchi — "Бош саҳифада бўлимлар ҳозирги (grid) ёки list кўринишига ўзгартириш имконияти бўлсин"

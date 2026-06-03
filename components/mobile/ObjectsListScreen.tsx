@@ -11,7 +11,7 @@ import { useMemo, useState } from "react";
 import { Icon } from "@/components/atoms/Icon";
 import { infraObjects } from "@/lib/mock-data";
 import type { InfraObject } from "@/lib/mock-data";
-import { AppBar, PressCard, MobileStyles } from "@/components/mobile/material";
+import { AppBar, PressCard, MobileStyles, SearchField } from "@/components/mobile/material";
 import type { DalolatnomaStatus } from "@/lib/mock-data";
 
 export interface ObjectsListScreenProps {
@@ -93,32 +93,14 @@ export default function ObjectsListScreen({
       <div className={`shrink-0 bg-navy pb-3 pt-0.5 ${isTablet ? "px-6" : "px-3"}`}>
         {/* Планшет — қидирув + чиплар бир кенг қаторда; телефон — стек */}
         <div className={isTablet ? "flex items-center gap-3" : ""}>
-          {/* Material filled search */}
-          <div
-            className={`flex items-center gap-2 rounded-full bg-white px-3.5 shadow-[0_3px_10px_rgba(15,23,42,0.18)] ${
-              isTablet ? "w-full max-w-md shrink-0" : ""
-            }`}
-          >
-            <Icon name="search" size={18} className="text-text-secondary" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Обект номи ёки коди бўйича қидириш"
-              aria-label="Обектларни қидириш"
-              className="min-h-[46px] w-full bg-transparent text-[13.5px] text-text-primary outline-none placeholder:text-text-secondary/80"
-            />
-            {query && (
-              <button
-                type="button"
-                onClick={() => setQuery("")}
-                aria-label="Тозалаш"
-                className="-mr-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-slate-100 active:scale-90"
-              >
-                <Icon name="close-circle" size={16} variant="Bold" />
-              </button>
-            )}
-          </div>
+          {/* Material қидирув — ModulesScreen билан бир хил (умумий SearchField) */}
+          <SearchField
+            value={query}
+            onChange={setQuery}
+            placeholder="Обект номи ёки коди бўйича қидириш"
+            ariaLabel="Обектларни қидириш"
+            className={isTablet ? "w-full max-w-md shrink-0" : ""}
+          />
 
           {/* Material filter chips — телефонда горизонтал scroll, планшетда қаторга wrap */}
           <div
