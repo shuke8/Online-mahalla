@@ -232,9 +232,12 @@ function ObjectCard({
               <h3 className="line-clamp-2 text-[13.5px] font-bold leading-snug text-text-primary">
                 {o.shortName}
               </h3>
+              {/* Маҳалла такрорланмайди (AppBar'да бор) — обектга хос: режа + қуввати */}
               <p className="mt-1 flex items-center gap-1 text-[11.5px] text-text-secondary">
-                <Icon name="location" size={12} className="shrink-0" />
-                <span className="truncate">{o.mfyName}</span>
+                <Icon name="construct" size={12} className="shrink-0" />
+                <span className="truncate">
+                  {o.rejaNomi} · {o.quvvati} {shortUnit(o.olchovBirligi)}
+                </span>
               </p>
             </div>
           </div>
@@ -251,6 +254,11 @@ function ObjectCard({
       </PressCard>
     </div>
   );
+}
+
+/** Ўлчов бирлигини ихчамлаштиради: "Километр (км)" → "км", "Дона" → "Дона". */
+function shortUnit(unit: string): string {
+  return unit.match(/\(([^)]+)\)/)?.[1] ?? unit;
 }
 
 /** Ихчам акт ҳолати — иконка + битта сўз (Оралиқ/Якуний). */

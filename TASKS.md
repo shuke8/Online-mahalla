@@ -20,6 +20,11 @@
 - Регрессия: DocumentScreen иерархия тўғри (МФЙ: Янги ҳаёт / Туман: Жиззах шаҳри / Вилоят: Жиззах вилояти),
   DalolatnomaScreen shortName/description рендер OK. pageerror=0, tsc --noEmit 0 error.
 
+**Refinement (фойдаланувчи: "ҳар cardда Янги ҳаёт МФЙ такрорлаш шарт эмас"):**
+- `ObjectsListScreen` карта иккиламчи қаторидан маҳалла олиб ташланди (AppBar'да бир марта етарли).
+  Ўрнига обектга хос: `rejaNomi · quvvati shortUnit` (мас. "Асфальтлаш · 3 км", "Электр тармоғи тортиш · 2.4 км").
+- `shortUnit()` helper: "Километр (км)" → "км". Скриншот: `infra-shots/objscreen-nomfy.png`. tsc 0, pageerror 0.
+
 ---
 
 ### TASK-005: МФЙ инфратузилма картига объект + таъмирлаш режаси қўшиш
