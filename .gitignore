@@ -30,8 +30,20 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files — secrets via 1Password (op://Online-mahalla/...)
 .env*
+!.env.template
+!.env.example
+
+# secrets — never commit
+*.p12
+*.p8
+*.key
+service-account*.json
+local.properties
+secrets/
+*PASSWORD*.txt
+*SECRET*.txt
 
 # vercel
 .vercel
