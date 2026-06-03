@@ -70,6 +70,10 @@
   Скриншот: `drawer-open.png`. overflowX=0, pageerror=0, tsc 0.
 - Эслатма: dashboard nav гамбургери ҳам "Менюни очиш" aria-label — collision (md:hidden, контекст бошқа), реал бук эмас.
 
+**Refinement (фойдаланувчи: "refresh button ўрнига profile button"):**
+- AppBar trailing: refresh икон → профил avatar тугмаси (glass circle + people икон + ring); босилганда drawer
+  (профил) очилади. tsc 0, overflowX=0, pageerror=0, click→drawer тасдиқланди. Скриншот: `home-profile-btn.png`.
+
 ---
 
 ### TASK-010: Бош экран — welcome hero + тезкор статистика

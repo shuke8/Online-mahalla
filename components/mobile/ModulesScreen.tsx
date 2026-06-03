@@ -253,10 +253,12 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
         trailing={
           <button
             type="button"
-            aria-label="Янгилаш"
-            className="mr-1 inline-flex h-11 w-11 items-center justify-center rounded-full text-white/95 transition-colors hover:bg-white/15 active:scale-[0.94]"
+            onClick={() => setDrawerOpen(true)}
+            aria-label="Профил"
+            title="Профил"
+            className="mr-1 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white ring-2 ring-white/25 transition-all hover:bg-white/25 active:scale-[0.94]"
           >
-            <Icon name="refresh" size={20} />
+            <Icon name="people" size={18} variant="Bold" />
           </button>
         }
       />
