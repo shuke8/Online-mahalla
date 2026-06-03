@@ -1,12 +1,12 @@
 # TASKS
 
-## 🟡 Jarayonda
+## 🟢 Bajarildi (verified)
 
-### TASK-013: Бош экран орқа фон — 3 вариант preview (танлов кутилмоқда)
-**Yaratildi:** 2026-06-03
-**Manba:** Foydalanuvchi — "girih pattern ёқмади; Mobbin'дан фон вариантлари топ; 3 версияни профессионал
-тайёрла ва визуал кўриб танлаш имконини бер"
-**Status:** IN_PROGRESS (preview тайёр, фойдаланувчи 1/2/3 танлайди)
+### TASK-013: Бош экран орқа фон — V1 (юмшоқ brand gradient) танланди
+**Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
+**Manba:** Foydalanuvchi — "girih pattern ёқмади; Mobbin'дан фон вариантлари топ; 3 версияни танлаш имкони
+бер" → "version 1ни қолдир"
+**Status:** DONE
 
 **Mobbin тадқиқот:** профессионал app'лар (Rocket Money, Alan, Lovi, Forest) геометрик pattern эмас,
 юмшоқ gradient / тоза фон ишлатади. 3 йўналиш чиқарилди.
@@ -22,9 +22,11 @@
 - V2 clean — нақшсиз тоза фон
 - V3 mesh — navy/teal/indigo хира blob'лар
 
-**Verification:** /dizayn/fon-preview HTTP 200, tsc 0, pageerror 0, босиб танлаш ишлайди.
-Скриншот: `fon-preview.png`, `bg-v1-gradient.png`, `bg-v2-clean.png`, `bg-v3-mesh.png`.
-**Keyingi:** фойдаланувчи 1/2/3 танлагач — `bgVariant` default яқуний қилинади, preview саҳифа қолдирилади ёки ўчирилади.
+**Якуний (V1 танлангач):**
+- `ModulesScreen` — V1 gradient hardcode қилинди; `ModulesBg`/`MODULES_BG_STYLES`/`bgVariant` (clean/mesh scaffolding) олиб ташланди.
+- `app/dizayn/fon-preview/page.tsx` ўчирилди (қарор қабул қилинди → 404).
+- Verification: asосий app V1 gradient рендер, tsc 0, overflowX=0, pageerror=0, fon-preview=404.
+  Скриншот: `home-final-v1.png` (+ `bg-v1/v2/v3`, `fon-preview.png` солиштириш архиви).
 
 ---
 
