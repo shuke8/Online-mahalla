@@ -198,7 +198,7 @@ export type InfraWorkStatus = "done" | "in_progress" | "pending";
 
 export interface MfyInfraObject {
   id: number;
-  type: "culture" | "school" | "road" | "kindergarten" | "clinic" | "park" | "sport";
+  type: "culture" | "school" | "road" | "kindergarten" | "clinic" | "park" | "sport" | "water";
   name: string;
   address: string;
   plan: { work: string; status: InfraWorkStatus }[];
@@ -266,6 +266,14 @@ export const mfyInfrastructure: Record<
           { work: "Йўл четларини ободонлаштириш", status: "pending" },
           { work: "Кўча ёритишни ўрнатиш", status: "pending" },
         ],
+      },
+      {
+        // Битта ишли объект — ном ва режа бир хил (қудуқ таъмири)
+        id: 4,
+        type: "water",
+        name: "Қудуқни таъмирлаш",
+        address: "Чашма маҳалласи",
+        plan: [{ work: "Қудуқни таъмирлаш", status: "in_progress" }],
       },
     ],
   },

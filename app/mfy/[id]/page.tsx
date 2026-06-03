@@ -577,6 +577,7 @@ const OBJECT_TYPE_ICON: Record<MfyInfraObject["type"], IconName> = {
   clinic: "shield-tick",
   park: "tree",
   sport: "medal",
+  water: "construct",
 };
 
 const WORK_STATUS_CONFIG: Record<
@@ -594,6 +595,36 @@ function InfraObjectCard({ object, accent }: { object: MfyInfraObject; accent: s
   const done = object.plan.filter((p) => p.status === "done").length;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
   const icon = OBJECT_TYPE_ICON[object.type] ?? "building-3";
+
+  // Битта ишли объект (ном = режа, мас. "Қудуқни таъмирлаш") — accordion эмас,
+  // ҳолат badge тўғридан-тўғри инлайн кўрсатилади (очиш/йопиш керак эмас).
+  if (total <= 1) {
+    const item = object.plan[0];
+    const st = item ? WORK_STATUS_CONFIG[item.status] : WORK_STATUS_CONFIG.pending;
+    return (
+      <div className="flex items-center gap-2.5 rounded-lg border border-border-light/70 bg-surface/40 px-2.5 py-2.5 transition-colors hover:border-border-light">
+        <span
+          className="shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-lg"
+          style={{ backgroundColor: `${accent}14`, color: accent }}
+        >
+          <Icon name={icon} size={14} variant="Bold" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[12.5px] font-semibold text-text-primary leading-tight">{object.name}</p>
+          <span className="mt-0.5 inline-flex items-center gap-1 text-[10.5px] text-text-secondary">
+            <Icon name="location" size={10} className="text-text-secondary/60" />
+            {object.address}
+          </span>
+        </div>
+        <span
+          className={`shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold ${st.bg} ${st.text}`}
+        >
+          <Icon name={st.icon} size={11} variant="Bold" />
+          {st.label}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-lg border border-border-light/70 bg-surface/40 overflow-hidden transition-colors hover:border-border-light">

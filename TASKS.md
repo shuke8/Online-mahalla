@@ -225,6 +225,13 @@
   Default йопиқ — обектлар кўпайса ҳам контент узун бўлмайди. Скриншот: `mfy-compact-collapsed/expanded.png`.
   tsc 0, overflowX=0, pageerror=0, accordion toggle тасдиқланди.
 
+**Refinement 2 (фойдаланувчи: "объект номи ва таъмирлаш режаси битта бўлиши мумкин, мас. Қудуқни таъмирлаш"):**
+- `InfraObjectCard` — `plan.length <= 1` бўлса accordion ЭМАС: иконка + ном + manzil + ҳолат badge
+  (Бажарилди/Жараёнда/Режада) тўғридан-тўғри инлайн. Chevron/progress bar йўқ (очиш керак эмас).
+- Дата: `mfyInfrastructure.ogir`га "Қудуқни таъмирлаш" (type "water", 1 ишли) қўшилди; `MfyInfraObject.type`га
+  "water", `OBJECT_TYPE_ICON`га water→construct. Скриншот: `mfy-single-item.png`, `mfy-single-row.png`.
+  tsc 0, overflowX=0, pageerror=0.
+
 ---
 
 ### TASK-004: Инфратузилма картларини респ./вилоят/туман саҳифаларига қўшиш
