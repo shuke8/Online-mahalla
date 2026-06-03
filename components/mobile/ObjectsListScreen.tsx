@@ -77,7 +77,7 @@ export default function ObjectsListScreen({
 
       <AppBar
         title="Инфратузилма обектлари"
-        subtitle={`${infraObjects.length} та обект · Жиззах`}
+        subtitle={`${infraObjects.length} та обект · ${infraObjects[0]?.mfyName ?? ""}`}
         trailing={
           <button
             type="button"

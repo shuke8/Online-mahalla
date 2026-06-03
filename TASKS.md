@@ -2,6 +2,26 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-006: Мобил Далолатнома — Обектлар рўйхати маҳалла бўйича
+**Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
+**Manba:** Foydalanuvchi — "мобил Далолатнома дизайнида Обектлар рўйхати вилоят бўйича эмас,
+маҳалла бўйича маълумот чиқиши керак"
+**Status:** DONE
+
+**O'zgargan fayллар:**
+- `lib/mock-data.ts` — 6 та `infraObjects` барчаси `mfyName: "Янги ҳаёт МФЙ"` га; shortName'дан "X МФЙ — "
+  префикс олинди (обект иши қолди: Оқар сув таъминоти, Сув тармоғи...); description маҳалла номи янгиланди;
+  изоҳ янгиланди (барча обект битта маҳаллага тегишли).
+- `components/mobile/ObjectsListScreen.tsx` — AppBar subtitle `· Жиззах` (вилоят) → `· ${mfyName}` (маҳалла).
+
+**Verification (headless Playwright, /dizayn/dalolatnoma):**
+- AppBar subtitle: "6 та обект · Янги ҳаёт МФЙ" (вилоят эмас, маҳалла). Скриншот: `infra-shots/objscreen-top.png`.
+- Карталар: "Оқар сув таъминоти / Сув тармоғи / Электр тармоғи..." — барчаси Янги ҳаёт МФЙ.
+- Регрессия: DocumentScreen иерархия тўғри (МФЙ: Янги ҳаёт / Туман: Жиззах шаҳри / Вилоят: Жиззах вилояти),
+  DalolatnomaScreen shortName/description рендер OK. pageerror=0, tsc --noEmit 0 error.
+
+---
+
 ### TASK-005: МФЙ инфратузилма картига объект + таъмирлаш режаси қўшиш
 **Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
 **Manba:** Foydalanuvchi — "МФЙ инфратузилма cardi пастида объект, маданият уйини таъмирлаш, Режаси:
