@@ -597,6 +597,7 @@ function InfraObjectCard({ object, accent }: { object: MfyInfraObject; accent: s
   const done = object.plan.filter((p) => p.status === "done").length;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
   const icon = OBJECT_TYPE_ICON[object.type] ?? "building-3";
+  const isComplete = total > 0 && done === total; // барча ишлар бажарилган
 
   // Битта ишли объект (ном = режа, мас. "Қудуқни таъмирлаш") — accordion эмас,
   // ҳолат badge тўғридан-тўғри инлайн кўрсатилади (очиш/йопиш керак эмас).
@@ -629,17 +630,25 @@ function InfraObjectCard({ object, accent }: { object: MfyInfraObject; accent: s
   }
 
   return (
-    <div className="rounded-lg border border-border-light/70 bg-surface/40 overflow-hidden transition-colors hover:border-border-light">
-      {/* Compact header — bosilganда режа очилади */}
+    <div
+      className={`rounded-lg border overflow-hidden transition-colors ${
+        isComplete ? "border-success/30 bg-success/[0.05]" : "border-border-light/70 bg-surface/40 hover:border-border-light"
+      }`}
+    >
+      {/* Compact header — bosilганда режа очилади */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center gap-2.5 px-2.5 py-2 text-left transition-colors hover:bg-surface/60"
+        className="flex w-full items-center gap-2.5 px-2.5 py-2 text-left transition-colors hover:bg-black/[0.02]"
       >
         <span
           className="shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-lg"
-          style={{ backgroundColor: `${accent}14`, color: accent }}
+          style={
+            isComplete
+              ? { backgroundColor: "rgba(22,163,74,0.12)", color: "#16a34a" }
+              : { backgroundColor: `${accent}14`, color: accent }
+          }
         >
           <Icon name={icon} size={14} variant="Bold" />
         </span>
@@ -648,13 +657,25 @@ function InfraObjectCard({ object, accent }: { object: MfyInfraObject; accent: s
           <div className="mt-1 h-1 bg-border-light/70 rounded-full overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-500"
-              style={{ width: `${pct}%`, background: `linear-gradient(to right, ${accent}cc, ${accent})` }}
+              style={{
+                width: `${pct}%`,
+                background: isComplete
+                  ? "linear-gradient(to right, #34d399, #16a34a)"
+                  : `linear-gradient(to right, ${accent}cc, ${accent})`,
+              }}
             />
           </div>
         </div>
-        <span className="shrink-0 text-[10.5px] font-bold tabular-nums" style={{ color: accent }} title="Бажарилган ишлар">
-          {done}/{total}
-        </span>
+        {isComplete ? (
+          <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-semibold text-success">
+            <Icon name="tick-circle" size={11} variant="Bold" />
+            Бажарилди
+          </span>
+        ) : (
+          <span className="shrink-0 text-[10.5px] font-bold tabular-nums" style={{ color: accent }} title="Бажарилган ишлар">
+            {done}/{total}
+          </span>
+        )}
         <Icon
           name="chevron-down"
           size={14}

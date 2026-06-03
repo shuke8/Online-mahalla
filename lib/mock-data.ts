@@ -275,6 +275,19 @@ export const mfyInfrastructure: Record<
         address: "Чашма маҳалласи",
         plan: [{ work: "Қудуқни таъмирлаш", status: "in_progress" }],
       },
+      {
+        // Тўлиқ бажарилган объект — барча ишлар done
+        id: 5,
+        type: "sport",
+        name: "Спорт майдончасини қуриш",
+        address: "Истиқлол кўчаси, 8",
+        plan: [
+          { work: "Майдонни текислаш", status: "done" },
+          { work: "Сунъий қоплама ётқизиш", status: "done" },
+          { work: "Дарвоза ва жиҳозлар ўрнатиш", status: "done" },
+          { work: "Ёритишни ўрнатиш", status: "done" },
+        ],
+      },
     ],
   },
   yangi: {

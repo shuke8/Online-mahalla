@@ -253,6 +253,12 @@
 - `InfraObjectCard` checklist — done item'дан `line-through` олиб ташланди (фақат яшил tick + muted матн қолди).
   `textDecorationLine: none` тасдиқланди. Скриншот: `mfy-no-strike.png`. tsc 0, pageerror=0.
 
+**Refinement 4 (фойдаланувчи: "бирортаси тўлиқ бажарилган бўлса шуни ҳам кўрсат"):**
+- `InfraObjectCard` — `isComplete = done === total` бўлса: яшил икон + тўлиқ ЯШИЛ progress bar + "✓ Бажарилди"
+  badge (N/M ўрнига) + енгил яшил border/фон. Қисман (кўк) ва жараёнда (сариқ) дан фарқли.
+- Дата: ogir'га "Спорт майдончасини қуриш" (4/4 done) қўшилди. Скриншот: `mfy-objects-done.png`.
+  tsc 0, overflowX=0, pageerror=0.
+
 ---
 
 ### TASK-004: Инфратузилма картларини респ./вилоят/туман саҳифаларига қўшиш
