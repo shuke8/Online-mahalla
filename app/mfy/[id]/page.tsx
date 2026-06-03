@@ -482,6 +482,7 @@ function MfyInfraSection({ status }: { status: MfyStatus }) {
   const section = mfyInfrastructure[status];
   const palette = MFY_INFRA_PALETTE[status];
   const icon: IconName = status === "ogir" ? "construct" : "layers";
+  const [objectsOpen, setObjectsOpen] = useState(true);
 
   return (
     <DashboardQuadrant
@@ -544,10 +545,15 @@ function MfyInfraSection({ status }: { status: MfyStatus }) {
           </div>
         </div>
 
-        {/* Objects & their repair plan */}
+        {/* Objects & their repair plan — бўлим ўзи ҳам йиғилади */}
         {section.objects.length > 0 && (
           <div>
-            <div className="flex items-center gap-2 mb-2">
+            <button
+              type="button"
+              onClick={() => setObjectsOpen((v) => !v)}
+              aria-expanded={objectsOpen}
+              className="flex w-full items-center gap-2 mb-2 text-left transition-colors hover:opacity-80"
+            >
               <Icon name="hammer" size={13} variant="Bold" className="text-text-secondary/60" />
               <p className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider">
                 Объектлар ва таъмирлаш режаси
@@ -555,12 +561,19 @@ function MfyInfraSection({ status }: { status: MfyStatus }) {
               <span className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-navy/[0.08] px-1.5 text-[10.5px] font-bold text-navy">
                 {section.objects.length}
               </span>
-            </div>
-            <div className="space-y-2">
-              {section.objects.map((obj) => (
-                <InfraObjectCard key={obj.id} object={obj} accent={palette.main} />
-              ))}
-            </div>
+              <Icon
+                name="chevron-down"
+                size={15}
+                className={`ml-auto shrink-0 text-text-secondary/50 transition-transform duration-200 ${objectsOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+            {objectsOpen && (
+              <div className="space-y-2">
+                {section.objects.map((obj) => (
+                  <InfraObjectCard key={obj.id} object={obj} accent={palette.main} />
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

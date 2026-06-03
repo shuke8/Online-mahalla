@@ -259,6 +259,11 @@
 - Дата: ogir'га "Спорт майдончасини қуриш" (4/4 done) қўшилди. Скриншот: `mfy-objects-done.png`.
   tsc 0, overflowX=0, pageerror=0.
 
+**Refinement 5 (фойдаланувчи: "бўлимни ўзини ҳам compact ҳолатга келтириш имконияти бўлсин"):**
+- `MfyInfraSection` — "Объектлар ва таъмирлаш режаси" сарлавҳаси босиладиган (toggle) бўлди: chevron +
+  `objectsOpen` state (default очиқ). Босилганда БУТУН рўйхат йиғилади/очилади. Икки даражали compaction:
+  бўлим ўзи + ҳар объект accordion. Скриншот: `mfy-section-open/collapsed.png`. tsc 0, overflowX=0, pageerror=0.
+
 ---
 
 ### TASK-004: Инфратузилма картларини респ./вилоят/туман саҳифаларига қўшиш
