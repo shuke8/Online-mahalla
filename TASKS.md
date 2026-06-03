@@ -2,6 +2,26 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-011: Бош экран — чап sidebar (drawer)
+**Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
+**Manba:** Foydalanuvchi — "Бош экран (модуллар) бўлимида sidebar очилиши учун имконият бўлсин"
+**Status:** DONE
+
+**O'zgargan fayллар:**
+- `components/mobile/SideDrawer.tsx` — ЯНГИ. DeviceFrame ичида абсолют overlay: backdrop + чапдан сирғалувчи
+  панель. Профил шапкаси (navy gradient + glass avatar, ҳоким ёрдамчиси fio + маҳалла), меню (Профил,
+  Билдиришномалар[badge], Ҳисоботлар, Маҳаллани танлаш, Созламалар, Ёрдам), Чиқиш + версия. Escape/backdrop/X — ёпади.
+- `components/mobile/material.tsx` — `AppBar`'га `leading` слот (onBack бўлмаганда — мас. гамбургер).
+- `components/mobile/ModulesScreen.tsx` — drawer state + AppBar leading гамбургер (3 чизиқ SVG) + `<SideDrawer/>`,
+  root `relative`.
+
+**Verification (headless Playwright, /dizayn/dalolatnoma):**
+- Гамбургер бос → drawer чапдан сирғалиб очилди; Профил/Чиқиш/Ҳоким ёрдамчиси/Созламалар рендер.
+  Скриншот: `drawer-open.png`. overflowX=0, pageerror=0, tsc 0.
+- Эслатма: dashboard nav гамбургери ҳам "Менюни очиш" aria-label — collision (md:hidden, контекст бошқа), реал бук эмас.
+
+---
+
 ### TASK-010: Бош экран — welcome hero + тезкор статистика
 **Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
 **Manba:** Foydalanuvchi — "Бош экран модуллар рўйхатида нимадур етишмаётгандай — дизайнга қўш,

@@ -14,6 +14,7 @@ import { Icon } from "@/components/atoms/Icon";
 import type { IconName } from "@/components/atoms/Icon";
 import { infraObjects, mfyData } from "@/lib/mock-data";
 import { AppBar, PressCard, MobileStyles, SearchField } from "@/components/mobile/material";
+import { SideDrawer } from "@/components/mobile/SideDrawer";
 
 export interface ModulesScreenProps {
   /** ажратиб кўрсатиладиган (асосий) модул калити */
@@ -182,6 +183,7 @@ function useViewMode() {
 export default function ModulesScreen({ activeModule = "infra", onOpenModule, layout = "phone" }: ModulesScreenProps) {
   const isTablet = layout === "tablet";
   const [query, setQuery] = useState("");
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const q = query.trim().toLowerCase();
 
   const results = useMemo(
@@ -230,12 +232,26 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-[#f4f7fb]">
+    <div className="relative flex flex-1 flex-col bg-[#f4f7fb]">
       <MobileStyles />
 
       <AppBar
         title="Бош саҳифа"
         subtitle="Online Mahalla платформаси"
+        leading={
+          <button
+            type="button"
+            onClick={() => setDrawerOpen(true)}
+            aria-label="Менюни очиш"
+            className="-ml-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white/95 transition-colors hover:bg-white/15 active:scale-[0.94]"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden>
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        }
         trailing={
           <button
             type="button"
@@ -342,6 +358,9 @@ export default function ModulesScreen({ activeModule = "infra", onOpenModule, la
           {ALL_MODULES.length} та бўлим · 1257 / 3.3.26
         </p>
       </div>
+
+      {/* Чап sidebar (drawer) */}
+      <SideDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} notifCount={notifTotal} />
     </div>
   );
 }

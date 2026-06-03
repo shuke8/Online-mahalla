@@ -52,18 +52,21 @@ export function AppBar({
   title,
   subtitle,
   onBack,
+  leading,
   trailing,
 }: {
   title: string;
   subtitle?: string;
   onBack?: () => void;
+  /** Чап слот (мас. гамбургер меню) — onBack бўлмаганда кўрсатилади */
+  leading?: ReactNode;
   trailing?: ReactNode;
 }) {
   return (
     <div className="shrink-0">
       <StatusBarStrip />
       <div className="flex items-center gap-1 bg-navy px-2 pb-3 pt-1 text-white shadow-[0_2px_8px_rgba(15,23,42,0.18)]">
-        {onBack && (
+        {onBack ? (
           <button
             type="button"
             onClick={onBack}
@@ -72,8 +75,10 @@ export function AppBar({
           >
             <Icon name="arrow-left" size={22} />
           </button>
+        ) : (
+          leading
         )}
-        <div className={`min-w-0 flex-1 ${onBack ? "" : "pl-2"}`}>
+        <div className={`min-w-0 flex-1 ${onBack || leading ? "" : "pl-2"}`}>
           <p className="truncate text-[16px] font-bold leading-tight">{title}</p>
           {subtitle && (
             <p className="truncate text-[11.5px] font-medium leading-tight text-white/70">
