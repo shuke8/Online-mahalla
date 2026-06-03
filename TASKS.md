@@ -2,6 +2,28 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-005: МФЙ инфратузилма картига объект + таъмирлаш режаси қўшиш
+**Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
+**Manba:** Foydalanuvchi — "МФЙ инфратузилма cardi пастида объект, маданият уйини таъмирлаш, Режаси:
+газон босиш, бино юзини сувоқ қилиш — маълумотларни ҳам қўшиш"
+**Status:** DONE
+
+**O'zgargan fayllar:**
+- `lib/mock-data.ts` — `MfyInfraObject` + `InfraWorkStatus` типлари; `mfyInfrastructure` (ogir+yangi)
+  га `objects[]` дата (ҳар бири {type, name, address, plan:[{work,status}]}). 6 объект, реал ишлар.
+- `app/mfy/[id]/page.tsx` — `MfyInfraSection` ичида (gauge'лардан кейин) "Объектлар ва таъмирлаш режаси"
+  бўлими + `InfraObjectCard` компонент (икон+ном+manzil, progress badge N/M + бар, Режа checklist),
+  `OBJECT_TYPE_ICON` + `WORK_STATUS_CONFIG` (done/in_progress/pending — ранг+икон+badge).
+
+**Verification (headless Playwright, dev server :3000):**
+- /mfy/mustaqillik (ogir, кўк) + /mfy/yangi-hayot (yangi, teal) — иккаласида объект бўлими рендер.
+- Desktop 1440: 2 устун карта; "Маданият уйини капитал таъмирлаш" (1/5) → ✓Газон босиш(Бажарилди),
+  ⟳Бино юзини сувоқ қилиш(Жараёнда)... — фойдаланувчи мисоли айнан. Скриншот: `infra-shots/mfyobj3-*.png`.
+- Mobile 390 + 375 + 320: 1 устунга stack, overflowX=0, console+pageerror=0.
+- done=strikethrough+яшил tick, in_progress=сариқ refresh, pending=кулранг clock. tsc --noEmit: 0 error.
+
+---
+
 ### TASK-004: Инфратузилма картларини респ./вилоят/туман саҳифаларига қўшиш
 **Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
 **Manba:** Foydalanuvchi — "dashboarddagi infratuzilma bulimidagi cardlarni respublika/viloyat/tuman pagelariga qo'sh"

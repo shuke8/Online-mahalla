@@ -193,7 +193,32 @@ export const tumanEntrepreneurshipPrograms = {
 };
 
 /* Infrastructure data per MFY type — single mahalla scope (no region breakdown) */
-export const mfyInfrastructure = {
+// Repair/construction work item statuses shown in the object plan checklist.
+export type InfraWorkStatus = "done" | "in_progress" | "pending";
+
+export interface MfyInfraObject {
+  id: number;
+  type: "culture" | "school" | "road" | "kindergarten" | "clinic" | "park" | "sport";
+  name: string;
+  address: string;
+  plan: { work: string; status: InfraWorkStatus }[];
+}
+
+export const mfyInfrastructure: Record<
+  "ogir" | "yangi",
+  {
+    title: string;
+    totalProjects: number;
+    totalObjects: number;
+    builtObjects: number;
+    percentage: number;
+    interimPct: number;
+    interimCount: number;
+    finalPct: number;
+    finalCount: number;
+    objects: MfyInfraObject[];
+  }
+> = {
   ogir: {
     title: "\"Оғир маҳалла\" инфратузилма лойиҳалари",
     totalProjects: 24,
@@ -204,6 +229,45 @@ export const mfyInfrastructure = {
     interimCount: 40,
     finalPct: 50.0,
     finalCount: 32,
+    objects: [
+      {
+        id: 1,
+        type: "culture",
+        name: "Маданият уйини капитал таъмирлаш",
+        address: "Навоий кўчаси, 14",
+        plan: [
+          { work: "Газон босиш", status: "done" },
+          { work: "Бино юзини сувоқ қилиш", status: "in_progress" },
+          { work: "Том қопламасини алмаштириш", status: "in_progress" },
+          { work: "Дераза ва эшикларни ўрнатиш", status: "pending" },
+          { work: "Ички безак ва бўяш ишлари", status: "pending" },
+        ],
+      },
+      {
+        id: 2,
+        type: "school",
+        name: "11-сонли мактаб биносини таъмирлаш",
+        address: "Амир Темур шоҳкўчаси, 3",
+        plan: [
+          { work: "Иситиш тизимини янгилаш", status: "done" },
+          { work: "Сантехника ишларини бажариш", status: "done" },
+          { work: "Электр тармоғини алмаштириш", status: "in_progress" },
+          { work: "Спорт зали полини ётқизиш", status: "pending" },
+        ],
+      },
+      {
+        id: 3,
+        type: "road",
+        name: "Маҳалла ички йўлларини асфальтлаш",
+        address: "Гулзор маҳалласи",
+        plan: [
+          { work: "Йўл асосини тайёрлаш", status: "done" },
+          { work: "Асфальт қоплама ётқизиш", status: "in_progress" },
+          { work: "Йўл четларини ободонлаштириш", status: "pending" },
+          { work: "Кўча ёритишни ўрнатиш", status: "pending" },
+        ],
+      },
+    ],
   },
   yangi: {
     title: "\"Янги Ўзбекистон қиёфасидаги маҳалла\" инфратузилма",
@@ -215,6 +279,44 @@ export const mfyInfrastructure = {
     interimCount: 60,
     finalPct: 58.8,
     finalCount: 50,
+    objects: [
+      {
+        id: 1,
+        type: "kindergarten",
+        name: "Болалар боғчаси биносини қуриш",
+        address: "Бунёдкор кўчаси, 7",
+        plan: [
+          { work: "Пойдевор қуйиш", status: "done" },
+          { work: "Девор кўтариш", status: "done" },
+          { work: "Том ёпиш", status: "in_progress" },
+          { work: "Дераза ва эшик ўрнатиш", status: "pending" },
+          { work: "Ҳовлини ободонлаштириш", status: "pending" },
+        ],
+      },
+      {
+        id: 2,
+        type: "clinic",
+        name: "Оилавий поликлиника биносини таъмирлаш",
+        address: "Соғлом авлод кўчаси, 21",
+        plan: [
+          { work: "Фасадни сувоқ қилиш", status: "done" },
+          { work: "Ички хоналарни таъмирлаш", status: "in_progress" },
+          { work: "Тиббий жиҳозларни ўрнатиш", status: "pending" },
+        ],
+      },
+      {
+        id: 3,
+        type: "park",
+        name: "Хиёбон ва дам олиш майдонини ободонлаштириш",
+        address: "Истиқлол хиёбони",
+        plan: [
+          { work: "Газон босиш", status: "done" },
+          { work: "Дарахт ва буталар экиш", status: "in_progress" },
+          { work: "Ўриндиқ ва чироқларни ўрнатиш", status: "pending" },
+          { work: "Болалар майдончасини қуриш", status: "pending" },
+        ],
+      },
+    ],
   },
 };
 

@@ -12,7 +12,7 @@ import { EntrepreneurshipPrograms } from "@/components/organisms/Entrepreneurshi
 import { RadialGauge } from "@/components/organisms/RadialGauge";
 import { DashboardQuadrant } from "@/components/organisms/DashboardQuadrant";
 import { TaskCreateModal } from "@/components/organisms/TaskCreateModal";
-import { mfyData, mfyList, mfyInfrastructure, republicData, mahallaYettiligi, type MfyStatus } from "@/lib/mock-data";
+import { mfyData, mfyList, mfyInfrastructure, republicData, mahallaYettiligi, type MfyStatus, type MfyInfraObject, type InfraWorkStatus } from "@/lib/mock-data";
 import React, { use, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 
@@ -541,7 +541,118 @@ function MfyInfraSection({ status }: { status: MfyStatus }) {
             />
           </div>
         </div>
+
+        {/* Objects & their repair plan */}
+        {section.objects.length > 0 && (
+          <div>
+            <div className="flex items-center gap-2 mb-2.5">
+              <Icon name="hammer" size={13} variant="Bold" className="text-text-secondary/60" />
+              <p className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider">
+                Объектлар ва таъмирлаш режаси
+              </p>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              {section.objects.map((obj) => (
+                <InfraObjectCard key={obj.id} object={obj} accent={palette.main} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </DashboardQuadrant>
+  );
+}
+
+// ============================================================
+// INFRA OBJECT CARD — one object + its checklist of planned works
+// ============================================================
+const OBJECT_TYPE_ICON: Record<MfyInfraObject["type"], IconName> = {
+  culture: "building-3",
+  school: "book",
+  road: "map",
+  kindergarten: "people",
+  clinic: "shield-tick",
+  park: "tree",
+  sport: "medal",
+};
+
+const WORK_STATUS_CONFIG: Record<
+  InfraWorkStatus,
+  { label: string; text: string; bg: string; icon: IconName }
+> = {
+  done: { label: "Бажарилди", text: "text-success", bg: "bg-success/10", icon: "tick-circle" },
+  in_progress: { label: "Жараёнда", text: "text-warning", bg: "bg-warning/10", icon: "refresh" },
+  pending: { label: "Режада", text: "text-text-secondary", bg: "bg-border-light/70", icon: "time" },
+};
+
+function InfraObjectCard({ object, accent }: { object: MfyInfraObject; accent: string }) {
+  const total = object.plan.length;
+  const done = object.plan.filter((p) => p.status === "done").length;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  const icon = OBJECT_TYPE_ICON[object.type] ?? "building-3";
+
+  return (
+    <div className="rounded-xl border border-border-light/70 bg-surface/40 p-3 sm:p-3.5 hover:border-border-light transition-colors">
+      {/* Header — icon + name + progress badge */}
+      <div className="flex items-start gap-2.5 mb-2.5">
+        <span
+          className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-lg"
+          style={{ backgroundColor: `${accent}14`, color: accent }}
+        >
+          <Icon name={icon} size={16} variant="Bold" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-[13px] font-semibold text-text-primary leading-snug">{object.name}</p>
+          <span className="inline-flex items-center gap-1 text-[11px] text-text-secondary mt-0.5">
+            <Icon name="location" size={11} className="text-text-secondary/60" />
+            {object.address}
+          </span>
+        </div>
+        <span
+          className="shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums"
+          style={{ backgroundColor: `${accent}14`, color: accent }}
+          title="Бажарилган ишлар"
+        >
+          {done}/{total}
+        </span>
+      </div>
+
+      {/* Progress bar */}
+      <div className="h-1.5 bg-border-light/70 rounded-full overflow-hidden mb-3">
+        <div
+          className="h-full rounded-full transition-all duration-700"
+          style={{ width: `${pct}%`, background: `linear-gradient(to right, ${accent}cc, ${accent})` }}
+        />
+      </div>
+
+      {/* Plan checklist */}
+      <div className="flex items-center gap-1.5 mb-2">
+        <Icon name="document-text" size={12} variant="Bold" className="text-text-secondary/50" />
+        <p className="text-[10px] font-semibold text-text-secondary uppercase tracking-wider">Режа</p>
+      </div>
+      <ul className="space-y-1.5">
+        {object.plan.map((item, i) => {
+          const st = WORK_STATUS_CONFIG[item.status] ?? WORK_STATUS_CONFIG.pending;
+          const isDone = item.status === "done";
+          return (
+            <li key={i} className="flex items-center gap-2">
+              <Icon name={st.icon} size={15} variant="Bold" className={`${st.text} shrink-0`} />
+              <span
+                className={`text-[12px] flex-1 min-w-0 truncate ${
+                  isDone ? "text-text-secondary line-through decoration-text-secondary/30" : "text-text-primary"
+                }`}
+              >
+                {item.work}
+              </span>
+              <span
+                className={`shrink-0 inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${st.bg} ${st.text}`}
+              >
+                {st.label}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
