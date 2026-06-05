@@ -1,3 +1,5 @@
+import { REGIONS } from "@/lib/constants";
+
 export const overviewData = {
   povertyReduction: {
     totalFamilies: 660000,
@@ -690,4 +692,132 @@ export const infraObjects: InfraObject[] = [
 
 export function getInfraObject(id: string): InfraObject | undefined {
   return infraObjects.find((o) => o.id === id);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * TASK-015 — Инфратузилма tab'li blok: daraja bo'yicha drill-down data.
+ * Qiymatlar deterministik (entityId dan seed) — reload'da barqaror, har
+ * viloyat/tuman o'ziga xos raqam ko'radi. /infratuzilma dagi eski
+ * infrastructureData ga TEGILMAYDI.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+export type InfraLevel = "republic" | "viloyat" | "tuman";
+export type InfraCategoryKey = "oghirMahalla" | "yangiMahalla" | "oghirTuman" | "yangiTuman";
+
+export interface InfraBreakdownRow {
+  name: string;
+  total: number;
+  projectPct: number;
+  objectPct: number;
+}
+
+export interface InfraLevelCategory {
+  key: InfraCategoryKey;
+  title: string;
+  totalProjects: number;
+  totalObjects: number;
+  interimPct: number;
+  interimCount: number;
+  finalPct: number;
+  finalCount: number;
+  breakdown: InfraBreakdownRow[];
+}
+
+/** Deterministik pseudo-random [0..1) — string seed'dan. Math.random TAQIQ (reload barqarorligi). */
+function seedUnit(seed: string): number {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
+  return (Math.abs(h) % 1000) / 1000;
+}
+
+function seedRange(seed: string, min: number, max: number): number {
+  return min + seedUnit(seed) * (max - min);
+}
+
+function seedPct(seed: string, min: number, max: number): number {
+  return Math.round(seedRange(seed, min, max) * 10) / 10;
+}
+
+const INFRA_CATEGORY_KEYS: InfraCategoryKey[] = [
+  "oghirMahalla",
+  "yangiMahalla",
+  "oghirTuman",
+  "yangiTuman",
+];
+
+const INFRA_TAB_TITLES: Record<InfraCategoryKey, string> = {
+  oghirMahalla: "Оғир маҳалла",
+  yangiMahalla: "Янги Ўзбекистон маҳалла",
+  oghirTuman: "Оғир туман",
+  yangiTuman: "Янги Ўзбекистон туман",
+};
+
+function buildBreakdown(
+  names: string[],
+  catKey: InfraCategoryKey,
+  entitySeed: string,
+  totalObjects: number,
+): InfraBreakdownRow[] {
+  const weights = names.map((n) => 0.5 + seedUnit(`${entitySeed}:${catKey}:${n}:w`));
+  const weightSum = weights.reduce((s, w) => s + w, 0);
+  return names.map((name, i) => ({
+    name,
+    total: Math.max(1, Math.round((totalObjects * weights[i]) / weightSum)),
+    projectPct: seedPct(`${entitySeed}:${catKey}:${name}:p`, 58, 88),
+    objectPct: seedPct(`${entitySeed}:${catKey}:${name}:o`, 62, 92),
+  }));
+}
+
+/**
+ * Daraja bo'yicha infratuzilma kesimi:
+ *  - republic        → 14 viloyat kesimi (KPI = infrastructureData qiymatlari)
+ *  - viloyat + id    → tumanlar kesimi (KPI viloyatga proporsional)
+ *  - tuman + id      → maҳallalar kesimi, faqat маҳалла kategoriyalari
+ */
+export function getInfrastructureByLevel(
+  level: InfraLevel,
+  entityId?: string,
+): InfraLevelCategory[] {
+  const entitySeed = `${level}:${entityId ?? "all"}`;
+  const keys =
+    level === "tuman"
+      ? (["oghirMahalla", "yangiMahalla"] as InfraCategoryKey[])
+      : INFRA_CATEGORY_KEYS;
+
+  return keys.map((key) => {
+    const base = infrastructureData[key];
+    // Republic: butun mamlakat raqamlari. Viloyat: ~5-12%, tuman: ~0.8-2% ulush.
+    const share =
+      level === "republic"
+        ? 1
+        : level === "viloyat"
+          ? seedRange(`${entitySeed}:${key}:share`, 0.05, 0.12)
+          : seedRange(`${entitySeed}:${key}:share`, 0.008, 0.02);
+
+    const totalProjects = Math.max(3, Math.round(base.totalProjects * share));
+    const totalObjects = Math.max(5, Math.round(base.totalObjects * share));
+    const interimPct =
+      level === "republic" ? base.interimPct : seedPct(`${entitySeed}:${key}:i`, 55, 82);
+    const finalPct =
+      level === "republic" ? base.finalPct : seedPct(`${entitySeed}:${key}:f`, 42, interimPct - 6);
+
+    const names =
+      level === "republic"
+        ? REGIONS.map((r) => r.name)
+        : level === "viloyat"
+          ? tumanList.map((t) => t.name)
+          : mfyList.map((m) => m.name);
+
+    return {
+      key,
+      title: INFRA_TAB_TITLES[key],
+      totalProjects,
+      totalObjects,
+      interimPct,
+      interimCount: Math.round((totalObjects * interimPct) / 100),
+      finalPct,
+      finalCount: Math.round((totalObjects * finalPct) / 100),
+      breakdown: buildBreakdown(names, key, entitySeed, totalObjects),
+    };
+  });
 }
