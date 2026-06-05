@@ -1,30 +1,40 @@
 # TASKS
 
-## 🔴 Bajarilmagan
+## 🟢 Bajarildi (verified)
 
 ### TASK-015: «Инфратузилма лойиҳалари» — yagona tab'li blok (redesign)
-**Yaratildi:** 2026-06-05
+**Yaratildi:** 2026-06-05 · **Bajarildi:** 2026-06-05
 **Manba:** Foydalanuvchi — brainstorm sessiyasi (tab'li variant A + ixcham KPI V2 tanlandi)
-**Status:** TODO
+**Status:** DONE
 
 **Tavsif:**
 Республика/Вилоят/Туман sahifalaridagi 4 ta katta infratuzilma kartasi bitta tab'li blokka
-birlashtiriladi. Drill-down: Республика → вилоятлар, Вилоят → туманлар, Туман → маҳаллалар
-(Туман sahifasida faqat 2 ta маҳалла tabi). `/infratuzilma` eski ko'rinishda qoladi, blokdan
-«Батафсил» link beriladi.
+birlashtirildi. Drill-down: Республика → вилоятлар (14), Вилоят → туманлар (12), Туман →
+маҳаллалар (12); Туман sahifasida faqat 2 ta маҳалла tabi. `/infratuzilma` eski 4-kartali
+ko'rinishda qoldi, blokdan «Батафсил» link beriladi.
 
 **Spec:** `docs/superpowers/specs/2026-06-05-infrastructure-tabbed-section-design.md`
+**Plan:** `docs/superpowers/plans/2026-06-05-infrastructure-tabbed-section.md`
 
-**Acceptance criteria:** spec'dagi 7 ta band (tab'li blok, drill-down kesimlar, deterministik
-per-entity raqamlar, «Батафсил» link, 320-1440px overflow yo'q, tsc/console toza).
+**O'zgargan fayllar:**
+- `components/organisms/GroupedBarChart.tsx` — YANGI (ekstraksiya + `title` prop)
+- `components/organisms/infrastructure-palette.ts` — YANGI (shared palitra)
+- `components/organisms/InfrastructureTabbedSection.tsx` — YANGI (tab'li blok, 581→587px balandlik, eski ~2400px+)
+- `components/organisms/InfrastructureSection.tsx` — chart/palette importga o'tdi, vizual o'zgarish yo'q
+- `lib/mock-data.ts` — `getInfrastructureByLevel` (deterministik seed, Math.random yo'q)
+- `app/{respublika,viloyat/[id],tuman/[id]}/page.tsx` — yangi komponent
+- `components/molecules/KPIGroup.tsx` — qo'shimcha fix: 320px overflow (pre-existing, flex-wrap)
 
-**Verification plan:**
-- Playwright: 3 sahifa × (375 + 1440) screenshot, tab flow, navigatsiya
-- 2 xil viloyat raqamlari farqi; `/infratuzilma` regressiya diff
+**Verification natijasi (headless Playwright, `.claude-state/TASK-015/verify.mjs`):**
+- 24/24 PASS: 4 tab (respublika/viloyat), 2 tab (tuman); jizzakh≠samarqand raqamlari;
+  reload barqaror; tuman chartida tuman nomlari, МФЙ chartida МФЙ nomlari; «Батафсил» →
+  /infratuzilma regressiyasiz (4 eski karta); blok balandligi 587px (<900); 320/375/768/1440
+  overflow yo'q; console/pageerror 0
+- Adversarial: noto'g'ri id (`/viloyat/mavjud-emas`) crash yo'q; 12× tez tab almashtirish OK
+- Evidence: `.claude-state/TASK-015/*.png` (respublika-1440/375/320, tuman-1440, infratuzilma-regression)
+- Sifat bahosi: 9.5/10
 
 ---
-
-## 🟢 Bajarildi (verified)
 
 ### TASK-014: МФЙ харита ранги — ҳолатга қараб (оғир=қизил, янги=яшил)
 **Yaratildi:** 2026-06-03 · **Bajarildi:** 2026-06-03
