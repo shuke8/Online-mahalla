@@ -5,7 +5,7 @@ import { GlassIcon } from "@/components/atoms/GlassIcon";
 import { IconCircle } from "@/components/atoms/IconCircle";
 import { UzbekistanMap } from "@/components/organisms/UzbekistanMap";
 import { EntrepreneurshipPrograms } from "@/components/organisms/EntrepreneurshipPrograms";
-import { InfrastructureSection } from "@/components/organisms/InfrastructureSection";
+import { InfrastructureTabbedSection } from "@/components/organisms/InfrastructureTabbedSection";
 import { KPIGroup } from "@/components/molecules/KPIGroup";
 import { SectionHeader } from "@/components/molecules/SectionHeader";
 import { NavigationBreadcrumb } from "@/components/molecules/NavigationBreadcrumb";
@@ -102,13 +102,7 @@ export default function RepublicPage() {
 
       {/* Инфратузилма лойиҳалари */}
       <div className="mt-5 sm:mt-6">
-        <div className="mb-4">
-          <h2 className="text-lg sm:text-xl font-bold text-navy">Инфратузилма лойиҳалари</h2>
-          <p className="text-sm text-text-secondary mt-0.5">
-            Инфратузилма қурилиш объектлари мониторинги
-          </p>
-        </div>
-        <InfrastructureSection />
+        <InfrastructureTabbedSection level="republic" />
       </div>
     </div>
   );
