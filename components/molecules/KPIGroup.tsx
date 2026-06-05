@@ -40,7 +40,7 @@ export function KPIGroup({ items, columns = 2, compact = false, size = "default"
           )}>
             {item.label}
           </span>
-          <div className={cn("flex items-center", isLg ? "gap-3" : "gap-2")}>
+          <div className={cn("flex items-center flex-wrap gap-y-1.5", isLg ? "gap-3" : "gap-2")}>
             <div className={cn("flex items-center", isLg ? "gap-2" : "gap-1.5")}>
               <span className={cn(
                 "inline-flex items-center rounded-md bg-navy/10 font-medium text-navy-light",
