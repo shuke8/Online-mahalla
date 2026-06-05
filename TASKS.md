@@ -1,5 +1,29 @@
 # TASKS
 
+## 🔴 Bajarilmagan
+
+### TASK-015: «Инфратузилма лойиҳалари» — yagona tab'li blok (redesign)
+**Yaratildi:** 2026-06-05
+**Manba:** Foydalanuvchi — brainstorm sessiyasi (tab'li variant A + ixcham KPI V2 tanlandi)
+**Status:** TODO
+
+**Tavsif:**
+Республика/Вилоят/Туман sahifalaridagi 4 ta katta infratuzilma kartasi bitta tab'li blokka
+birlashtiriladi. Drill-down: Республика → вилоятлар, Вилоят → туманлар, Туман → маҳаллалар
+(Туман sahifasida faqat 2 ta маҳалла tabi). `/infratuzilma` eski ko'rinishda qoladi, blokdan
+«Батафсил» link beriladi.
+
+**Spec:** `docs/superpowers/specs/2026-06-05-infrastructure-tabbed-section-design.md`
+
+**Acceptance criteria:** spec'dagi 7 ta band (tab'li blok, drill-down kesimlar, deterministik
+per-entity raqamlar, «Батафсил» link, 320-1440px overflow yo'q, tsc/console toza).
+
+**Verification plan:**
+- Playwright: 3 sahifa × (375 + 1440) screenshot, tab flow, navigatsiya
+- 2 xil viloyat raqamlari farqi; `/infratuzilma` regressiya diff
+
+---
+
 ## 🟢 Bajarildi (verified)
 
 ### TASK-014: МФЙ харита ранги — ҳолатга қараб (оғир=қизил, янги=яшил)
