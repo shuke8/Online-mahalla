@@ -2,6 +2,23 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-016: МФЙ «Объектлар ва таъмирлаш режаси» — zichlik/spacing redesign
+**Yaratildi:** 2026-06-06 · **Bajarildi:** 2026-06-06
+**Manba:** Foydalanuvchi — «kontent juda kichkina, tiqib tashlangan, ba'zi joylar bo'sh, chiroyli taqsimlash kerak» (screenshot bilan)
+**Status:** DONE
+
+**O'zgargan fayllar:**
+- `app/mfy/[id]/page.tsx` — `InfraObjectCard`: header qayta taqsimlandi (ikon 36px, title 14px,
+  manzil headerda doim ko'rinadi, o'ngda fiksirlangan progress klaster bar+%+x/y), checklist
+  desktop'da 2 ustun chip-grid (matn 13px, badge 10.5px), bitta-ishli karta ham moslashtirildi
+
+**Audit + verification:** `web-ui-review-workspace/mfy-repair-plan/iteration-1/findings.md`
+- BEFORE: header 1004×46px (22:1), title 12.5px, badge 9px, progress 4px full-width
+- AFTER: 320/375/1440 × ikkala status (оғир/янги) overflow 0, console 0, tsc 0, element yo'qolmagan
+- Sifat bahosi: 9.3/10
+
+---
+
 ### TASK-015: «Инфратузилма лойиҳалари» — yagona tab'li blok (redesign)
 **Yaratildi:** 2026-06-05 · **Bajarildi:** 2026-06-05
 **Manba:** Foydalanuvchi — brainstorm sessiyasi (tab'li variant A + ixcham KPI V2 tanlandi)

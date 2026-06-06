@@ -618,24 +618,24 @@ function InfraObjectCard({ object, accent }: { object: MfyInfraObject; accent: s
     const item = object.plan[0];
     const st = item ? WORK_STATUS_CONFIG[item.status] : WORK_STATUS_CONFIG.pending;
     return (
-      <div className="flex items-center gap-2.5 rounded-lg border border-border-light/70 bg-surface/40 px-2.5 py-2.5 transition-colors hover:border-border-light">
+      <div className="flex items-center gap-3 rounded-xl border border-border-light/70 bg-surface/40 px-3.5 py-3 transition-colors hover:border-border-light">
         <span
-          className="shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-lg"
+          className="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-lg"
           style={{ backgroundColor: `${accent}14`, color: accent }}
         >
-          <Icon name={icon} size={14} variant="Bold" />
+          <Icon name={icon} size={18} variant="Bold" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[12.5px] font-semibold text-text-primary leading-tight">{object.name}</p>
-          <span className="mt-0.5 inline-flex items-center gap-1 text-[10.5px] text-text-secondary">
-            <Icon name="location" size={10} className="text-text-secondary/60" />
+          <p className="truncate text-sm font-semibold text-text-primary leading-tight">{object.name}</p>
+          <span className="mt-1 inline-flex items-center gap-1 text-[11.5px] text-text-secondary">
+            <Icon name="location" size={11} className="text-text-secondary/60" />
             {object.address}
           </span>
         </div>
         <span
-          className={`shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold ${st.bg} ${st.text}`}
+          className={`shrink-0 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${st.bg} ${st.text}`}
         >
-          <Icon name={st.icon} size={11} variant="Bold" />
+          <Icon name={st.icon} size={12} variant="Bold" />
           {st.label}
         </span>
       </div>
@@ -644,81 +644,86 @@ function InfraObjectCard({ object, accent }: { object: MfyInfraObject; accent: s
 
   return (
     <div
-      className={`rounded-lg border overflow-hidden transition-colors ${
+      className={`rounded-xl border overflow-hidden transition-colors ${
         isComplete ? "border-success/30 bg-success/[0.05]" : "border-border-light/70 bg-surface/40 hover:border-border-light"
       }`}
     >
-      {/* Compact header — bosilганда режа очилади */}
+      {/* Header — bosilганда режа очилади. O'ng tomonda fiksirlangan progress klaster:
+          bar (w-24/w-32) + foiz + x/y — keng ekranda ham proporsiya saqlanadi. */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center gap-2.5 px-2.5 py-2 text-left transition-colors hover:bg-black/[0.02]"
+        className="flex w-full items-center gap-3 px-3.5 py-3 text-left transition-colors hover:bg-black/[0.02]"
       >
         <span
-          className="shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-lg"
+          className="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-lg"
           style={
             isComplete
               ? { backgroundColor: "rgba(22,163,74,0.12)", color: "#16a34a" }
               : { backgroundColor: `${accent}14`, color: accent }
           }
         >
-          <Icon name={icon} size={14} variant="Bold" />
+          <Icon name={icon} size={18} variant="Bold" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[12.5px] font-semibold text-text-primary leading-tight">{object.name}</p>
-          <div className="mt-1 h-1 bg-border-light/70 rounded-full overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{
-                width: `${pct}%`,
-                background: isComplete
-                  ? "linear-gradient(to right, #34d399, #16a34a)"
-                  : `linear-gradient(to right, ${accent}cc, ${accent})`,
-              }}
-            />
-          </div>
+          <p className="truncate text-sm font-semibold text-text-primary leading-tight">{object.name}</p>
+          <span className="mt-1 inline-flex items-center gap-1 text-[11.5px] text-text-secondary">
+            <Icon name="location" size={11} className="text-text-secondary/60" />
+            {object.address}
+          </span>
         </div>
         {isComplete ? (
-          <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-semibold text-success">
-            <Icon name="tick-circle" size={11} variant="Bold" />
+          <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-success/10 px-2.5 py-1 text-[11px] font-semibold text-success">
+            <Icon name="tick-circle" size={12} variant="Bold" />
             Бажарилди
           </span>
         ) : (
-          <span className="shrink-0 text-[10.5px] font-bold tabular-nums" style={{ color: accent }} title="Бажарилган ишлар">
-            {done}/{total}
-          </span>
+          <div className="shrink-0 flex items-center gap-2.5">
+            <div className="hidden sm:block w-24 lg:w-32 h-1.5 bg-border-light/70 rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${pct}%`,
+                  background: `linear-gradient(to right, ${accent}cc, ${accent})`,
+                }}
+              />
+            </div>
+            <span className="text-[13px] font-bold tabular-nums leading-none" style={{ color: accent }}>
+              {pct}%
+            </span>
+            <span className="text-[11px] font-semibold tabular-nums text-text-secondary leading-none" title="Бажарилган ишлар">
+              {done}/{total}
+            </span>
+          </div>
         )}
         <Icon
           name="chevron-down"
-          size={14}
+          size={15}
           className={`shrink-0 text-text-secondary/50 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
       </button>
 
-      {/* Очилганда — manzil + Режа checklist */}
+      {/* Очилганда — Режа checklist. Desktop'da 2 ustun: qisqa ishlar yonma-yon,
+          bo'sh joy qolmaydi va ro'yxat balandligi ikki barobar qisqaradi. */}
       {open && (
-        <div className="px-2.5 pb-2.5">
-          <p className="mb-2 flex items-center gap-1 border-t border-border-light/50 pt-2 text-[10.5px] text-text-secondary">
-            <Icon name="location" size={10} className="text-text-secondary/60" />
-            {object.address}
-          </p>
-          <ul className="space-y-1">
+        <div className="px-3.5 pb-3.5">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 border-t border-border-light/50 pt-3">
             {object.plan.map((item, i) => {
               const st = WORK_STATUS_CONFIG[item.status] ?? WORK_STATUS_CONFIG.pending;
               const isDone = item.status === "done";
               return (
-                <li key={i} className="flex items-center gap-2">
-                  <Icon name={st.icon} size={13} variant="Bold" className={`${st.text} shrink-0`} />
+                <li key={i} className="flex items-center gap-2 rounded-lg bg-white/60 border border-border-light/50 px-2.5 py-2">
+                  <Icon name={st.icon} size={15} variant="Bold" className={`${st.text} shrink-0`} />
                   <span
-                    className={`flex-1 min-w-0 truncate text-[11.5px] ${
+                    className={`flex-1 min-w-0 truncate text-[13px] ${
                       isDone ? "text-text-secondary" : "text-text-primary"
                     }`}
                   >
                     {item.work}
                   </span>
                   <span
-                    className={`shrink-0 inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${st.bg} ${st.text}`}
+                    className={`shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-[10.5px] font-semibold ${st.bg} ${st.text}`}
                   >
                     {st.label}
                   </span>
