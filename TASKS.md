@@ -41,6 +41,17 @@ Cheklov: SVG xaritada faqat viloyat konturlari bor — tuman/MFY faqat selectord
 - Screenshot evidence: `.claude-state/TASK-017/level-*.png`
 - Sifat bahosi: 9.4/10
 
+**Qo'shimcha (xarita ichma-ich, 2026-06-06):**
+- `components/organisms/RegionDrillMap.tsx` — YANGI: sxematik 12-katakli drill xarita
+  (5×4 jitter panja, hover tooltip, legend). Tuman rejimi=ko'k shkala, МФЙ rejimi=holat rangi
+  (янги=yashil, оғир=qizil), tanlangan katak oq stroke + boshqalari xira
+- Explorer: xarita darajasi breadcrumb (Ўзбекистон → Вилоят → Туман, bosib qaytish),
+  daraja almashganda fade+zoom transition; viloyat tanlansa tumanlar xaritasi,
+  tuman tanlansa mahallalar xaritasi ochiladi (selector bilan ikki tomonlama sinxron)
+- Cheklov: real tuman/МФЙ geo-konturlari yo'q — sxematik panja (demo mock-data ga mos)
+- Verification: `verify-drill.mjs` — 17/17 PASS (drill flow xaritadan + selectordan,
+  breadcrumb qaytish, highlight, 4 viewport overflow 0, console 0)
+
 ---
 
 ### TASK-016: МФЙ «Объектлар ва таъмирлаш режаси» — zichlik/spacing redesign

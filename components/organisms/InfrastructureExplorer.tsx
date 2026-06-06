@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Icon, type IconName } from "@/components/atoms/Icon";
 import { UzbekistanMap } from "@/components/organisms/UzbekistanMap";
+import { RegionDrillMap } from "@/components/organisms/RegionDrillMap";
 import {
   InfrastructureCard,
   CategoryAccent,
@@ -27,9 +28,6 @@ const CATEGORY_ICONS: Record<InfraCategoryKey, IconName> = {
   oghirTuman: "hammer",
   yangiTuman: "business",
 };
-
-// МФЙ tanlanganda xarita rangi mahalla holatiga mos (mfy sahifasi bilan konsistent)
-const MFY_MAP_COLORS = { ogir: "#ef4444", yangi: "#16a34a" } as const;
 
 const LEVEL_DESCRIPTIONS = {
   republic: "Республика — барча вилоятлар кесими",
@@ -147,10 +145,6 @@ export function InfrastructureExplorer() {
   const mahallaCards = cards.filter((c) => c.group === "mahalla");
   const tumanCards = cards.filter((c) => c.group === "tuman");
 
-  const selectedMfyStatus = sel.mfyId
-    ? mfyList.find((m) => m.id === sel.mfyId)?.status
-    : undefined;
-
   // Tanlangan hudud nomi (breadcrumb matni uchun)
   const selectionLabel = [
     sel.viloyatId && REGIONS.find((r) => r.id === sel.viloyatId)?.name,
@@ -167,16 +161,81 @@ export function InfrastructureExplorer() {
       {/* Xarita + selectorlar */}
       <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 sm:gap-6 mb-5 sm:mb-6">
         <div className="xl:col-span-3 bg-white rounded-2xl border border-border-light shadow-sm p-3 sm:p-5">
-          <h3 className="text-base font-semibold text-navy mb-1">Ҳудудни танланг</h3>
+          <div className="flex items-center justify-between gap-3 flex-wrap mb-1">
+            <h3 className="text-base font-semibold text-navy">Ҳудудни танланг</h3>
+            {/* Xarita breadcrumb — ichma-ich darajalar orasida qaytish */}
+            <nav className="flex items-center gap-1 text-xs font-semibold flex-wrap" aria-label="Харита даражаси">
+              <button
+                type="button"
+                onClick={() => setSel({})}
+                className={`rounded-md px-2 py-1 transition-colors ${
+                  level === "republic" ? "bg-navy text-white" : "text-navy hover:bg-navy-lighter/60"
+                }`}
+              >
+                Ўзбекистон
+              </button>
+              {sel.viloyatId && (
+                <>
+                  <Icon name="chevron-forward" size={10} className="text-text-secondary/50" />
+                  <button
+                    type="button"
+                    onClick={() => setSel({ viloyatId: sel.viloyatId })}
+                    className={`rounded-md px-2 py-1 transition-colors ${
+                      level === "viloyat" ? "bg-navy text-white" : "text-navy hover:bg-navy-lighter/60"
+                    }`}
+                  >
+                    {REGIONS.find((r) => r.id === sel.viloyatId)?.name.replace(" вилояти", "")}
+                  </button>
+                </>
+              )}
+              {sel.tumanId && (
+                <>
+                  <Icon name="chevron-forward" size={10} className="text-text-secondary/50" />
+                  <button
+                    type="button"
+                    onClick={() => setSel({ viloyatId: sel.viloyatId, tumanId: sel.tumanId })}
+                    className={`rounded-md px-2 py-1 transition-colors ${
+                      level === "tuman" || level === "mfy" ? "bg-navy text-white" : "text-navy hover:bg-navy-lighter/60"
+                    }`}
+                  >
+                    {tumanList.find((t) => t.id === sel.tumanId)?.name.replace(" тумани", "")}
+                  </button>
+                </>
+              )}
+            </nav>
+          </div>
           <p className="text-xs text-text-secondary mb-3">
-            Харитадан вилоятни босинг ёки ёнидаги рўйхатдан туман ва маҳаллагача танланг
+            {level === "republic" && "Харитадан вилоятни босинг ёки ёнидаги рўйхатдан танланг"}
+            {level === "viloyat" && "Энди туманни босинг — туманлар кесими очилади"}
+            {(level === "tuman" || level === "mfy") && "Маҳаллани босинг — маҳалла даражаси очилади"}
           </p>
-          <UzbekistanMap
-            data={republicData.regionMapData}
-            selectedRegion={sel.viloyatId}
-            selectedColor={selectedMfyStatus ? MFY_MAP_COLORS[selectedMfyStatus] : undefined}
-            onRegionClick={(id) => setSel({ viloyatId: id })}
-          />
+          {/* Ichma-ich xarita: republic → viloyatlar SVG, viloyat → tumanlar, tuman/mfy → mahallalar */}
+          <div key={level === "mfy" ? "tuman-map" : level} className="animate-in fade-in zoom-in-95 duration-300">
+            {level === "republic" && (
+              <UzbekistanMap
+                data={republicData.regionMapData}
+                selectedRegion={sel.viloyatId}
+                onRegionClick={(id) => setSel({ viloyatId: id })}
+              />
+            )}
+            {level === "viloyat" && (
+              <RegionDrillMap
+                mode="tuman"
+                cells={tumanList}
+                onCellClick={(id) => setSel({ viloyatId: sel.viloyatId, tumanId: id })}
+              />
+            )}
+            {(level === "tuman" || level === "mfy") && (
+              <RegionDrillMap
+                mode="mfy"
+                cells={mfyList}
+                selectedId={sel.mfyId}
+                onCellClick={(id) =>
+                  setSel({ viloyatId: sel.viloyatId, tumanId: sel.tumanId, mfyId: id })
+                }
+              />
+            )}
+          </div>
         </div>
 
         <div className="xl:col-span-2 bg-white rounded-2xl border border-border-light shadow-sm p-3 sm:p-5">
