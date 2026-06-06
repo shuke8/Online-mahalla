@@ -11,16 +11,28 @@ import { infrastructureData } from "@/lib/mock-data";
 // ============================================================
 // INFRASTRUCTURE CARD — one program (gauges + stats + bar chart)
 // ============================================================
-type InfraSection = typeof infrastructureData.oghirMahalla;
+/** Karta uchun minimal data shakli — infrastructureData ham, explorer generator ham mos keladi. */
+export interface InfraCardSection {
+  title: string;
+  totalProjects: number;
+  totalObjects: number;
+  interimPct: number;
+  interimCount: number;
+  finalPct: number;
+  finalCount: number;
+  regions: { name: string; total: number; projectPct: number; objectPct: number }[];
+}
 
-function InfrastructureCard({
+export function InfrastructureCard({
   section,
   icon,
   palette,
+  chartTitle = "Вилоятлар бўйича таққослама",
 }: {
-  section: InfraSection;
+  section: InfraCardSection;
   icon: IconName;
   palette: InfraPalette;
+  chartTitle?: string;
 }) {
   return (
     <DashboardQuadrant
@@ -82,21 +94,24 @@ function InfrastructureCard({
           </div>
         </div>
 
-        {/* Viloyatlar section — Bar chart with 2 percentage metrics */}
-        <GroupedBarChart
-          data={section.regions.map((r) => ({
-            name: r.name.replace(" вилояти", ""),
-            fullName: r.name,
-            total: r.total,
-            "Лойиҳа бажарилиш фоизи": r.projectPct,
-            "Объектлар бажарилиш фоизи": r.objectPct,
-          }))}
-          series={[
-            { key: "Лойиҳа бажарилиш фоизи", label: "Лойиҳа бажарилиш фоизи", color: palette.main, gradientFrom: palette.mainFrom, gradientTo: palette.mainTo },
-            { key: "Объектлар бажарилиш фоизи", label: "Объектлар бажарилиш фоизи", color: palette.secondary, gradientFrom: palette.secFrom, gradientTo: palette.secTo },
-          ]}
-          averageKey="Объектлар бажарилиш фоизи"
-        />
+        {/* Hudud kesimi — Bar chart with 2 percentage metrics (breakdown bo'sh bo'lsa yashirin) */}
+        {section.regions.length > 0 && (
+          <GroupedBarChart
+            title={chartTitle}
+            data={section.regions.map((r) => ({
+              name: r.name.replace(/ (вилояти|тумани|МФЙ)$/u, "").replace(" Респ.", ""),
+              fullName: r.name,
+              total: r.total,
+              "Лойиҳа бажарилиш фоизи": r.projectPct,
+              "Объектлар бажарилиш фоизи": r.objectPct,
+            }))}
+            series={[
+              { key: "Лойиҳа бажарилиш фоизи", label: "Лойиҳа бажарилиш фоизи", color: palette.main, gradientFrom: palette.mainFrom, gradientTo: palette.mainTo },
+              { key: "Объектлар бажарилиш фоизи", label: "Объектлар бажарилиш фоизи", color: palette.secondary, gradientFrom: palette.secFrom, gradientTo: palette.secTo },
+            ]}
+            averageKey="Объектлар бажарилиш фоизи"
+          />
+        )}
       </div>
     </DashboardQuadrant>
   );
@@ -113,7 +128,7 @@ interface GroupHeaderProps {
   bg: string;
 }
 
-function GroupHeader({ title, subtitle, icon, color, bg }: GroupHeaderProps) {
+export function GroupHeader({ title, subtitle, icon, color, bg }: GroupHeaderProps) {
   return (
     <div className="flex items-center gap-3 mb-4">
       <div
@@ -140,7 +155,7 @@ const KIND_CONFIG = {
   yangi: { color: "#10b981", label: "ЯНГИ ЎЗБЕКИСТОН", desc: "Қиёфасидаги" },
 } as const;
 
-function CategoryAccent({ kind, children }: { kind: keyof typeof KIND_CONFIG; children: React.ReactNode }) {
+export function CategoryAccent({ kind, children }: { kind: keyof typeof KIND_CONFIG; children: React.ReactNode }) {
   const config = KIND_CONFIG[kind];
   return (
     <div className="relative">

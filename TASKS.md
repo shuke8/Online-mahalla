@@ -2,6 +2,47 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-017: /infratuzilma — xarita + kaskad selector + darajaga mos kartalar
+**Yaratildi:** 2026-06-06 · **Bajarildi:** 2026-06-06
+**Manba:** Foydalanuvchi TZ — xarita yonida selectorlar, viloyat/tuman/MFY tanlash; SAVOL javobi: B
+**Status:** DONE
+
+**Tavsif:**
+/infratuzilma sahifasiga xarita (viloyat tanlash) + yonida kaskad selectorlar (Вилоят → Туман → МФЙ).
+Karta ko'rinish qoidalari:
+- Республика (default) yoki Вилоят tanlansa → 4 karta (Оғир маҳалла, Янги маҳалла, Оғир туман, Янги туман)
+- Туман tanlansa → 3 karta: ikkala маҳалла kartasi + tuman turiga (оғир/янги) mos bitta туман kartasi
+- МФЙ tanlansa → 1 karta: mahalla turiga mos (Оғир маҳалла yoki Янги маҳалла)
+Chart kesimi darajaga mos: respublika→viloyatlar, viloyat→tumanlar, tuman→mahallalar, MFY→chart yo'q.
+Cheklov: SVG xaritada faqat viloyat konturlari bor — tuman/MFY faqat selectordan.
+
+**Acceptance criteria:**
+- 4 daraja bo'yicha to'g'ri karta soni (4/4/3/1) va to'g'ri kategoriyalar
+- Xaritadan viloyat tanlash selector bilan sinxron; tuman/MFY tanlanganda xarita viloyatni ko'rsatib turadi
+- MFY tanlanganda xarita rangi mahalla holatiga mos (оғир=qizil, янги=yashil — mfy page bilan konsistent)
+- Selector kaskad: tuman viloyatsiz disabled, MFY tumansiz disabled; reset tugmasi
+- Har daraja raqamlari deterministik va har xil
+- 320-1440px overflow yo'q, tsc/console toza
+
+**O'zgargan fayllar:**
+- `lib/mock-data.ts` — `TumanStatus` + tumanList'ga status; `buildLevelCategory` refactor;
+  `getInfraExplorerCards`/`getInfraExplorerLevel` (daraja qoidalari: 4/4/3/1 karta)
+- `components/organisms/InfrastructureSection.tsx` — `InfrastructureCard`/`CategoryAccent`/`GroupHeader`
+  export, `chartTitle` prop, breakdown bo'sh bo'lsa chart yashirin. Eslatma: `InfrastructureSection`
+  wrapper'ning o'zi endi hech qayerda ishlatilmaydi (dead code — o'chirish alohida ruxsat bilan)
+- `components/organisms/InfrastructureExplorer.tsx` — YANGI: xarita + kaskad selectorlar + kartalar
+- `app/infratuzilma/page.tsx` — Explorer'ga o'tdi
+
+**Verification natijasi (`.claude-state/TASK-017/verify.mjs`):**
+- 21/21 PASS: republic=4, viloyat=4 (tumanlar chart), tuman ogir=3 (Оғир туман, Янги туман yo'q),
+  tuman yangi=3 (Янги туман), MFY ogir=1+qizil xarita, MFY yangi=1+yashil xarita; map↔select sinxron;
+  disabled kaskad; reset; viloyatlar har xil raqam; 320/375/768/1440 overflow 0; 12× tez almashtirish
+  errorsiz; console 0
+- Screenshot evidence: `.claude-state/TASK-017/level-*.png`
+- Sifat bahosi: 9.4/10
+
+---
+
 ### TASK-016: МФЙ «Объектлар ва таъмирлаш режаси» — zichlik/spacing redesign
 **Yaratildi:** 2026-06-06 · **Bajarildi:** 2026-06-06
 **Manba:** Foydalanuvchi — «kontent juda kichkina, tiqib tashlangan, ba'zi joylar bo'sh, chiroyli taqsimlash kerak» (screenshot bilan)

@@ -479,19 +479,22 @@ export const mahallaYettiligi = [
 
 /* ── Tuman va MFY ro'yxatlari ── */
 
-export const tumanList: { id: string; name: string; families: number; pct: number }[] = [
-  { id: "jizzakh-city", name: "Жиззах шаҳри", families: 8200, pct: 79.3 },
-  { id: "arnasoy", name: "Арнасой тумани", families: 4100, pct: 72.1 },
-  { id: "bakhmal", name: "Бахмал тумани", families: 3800, pct: 68.4 },
-  { id: "dostlik", name: "Дўстлик тумани", families: 2900, pct: 81.5 },
-  { id: "forish", name: "Фориш тумани", families: 3200, pct: 65.2 },
-  { id: "gallaorol", name: "Ғаллаорол тумани", families: 4500, pct: 74.8 },
-  { id: "sharof-rashidov", name: "Шароф Рашидов тумани", families: 5100, pct: 77.6 },
-  { id: "mirzachul", name: "Мирзачўл тумани", families: 3600, pct: 70.3 },
-  { id: "pakhtakor", name: "Пахтакор тумани", families: 4800, pct: 83.1 },
-  { id: "yangiobod", name: "Янгиобод тумани", families: 2700, pct: 66.9 },
-  { id: "zafarobod", name: "Зафаробод тумани", families: 3400, pct: 71.7 },
-  { id: "zomin", name: "Зомин тумани", families: 3100, pct: 69.5 },
+/** Туман ҳолати — оғир туман ёки Янги Ўзбекистон қиёфасидаги туман */
+export type TumanStatus = "yangi" | "ogir";
+
+export const tumanList: { id: string; name: string; families: number; pct: number; status: TumanStatus }[] = [
+  { id: "jizzakh-city", name: "Жиззах шаҳри", families: 8200, pct: 79.3, status: "yangi" },
+  { id: "arnasoy", name: "Арнасой тумани", families: 4100, pct: 72.1, status: "ogir" },
+  { id: "bakhmal", name: "Бахмал тумани", families: 3800, pct: 68.4, status: "ogir" },
+  { id: "dostlik", name: "Дўстлик тумани", families: 2900, pct: 81.5, status: "yangi" },
+  { id: "forish", name: "Фориш тумани", families: 3200, pct: 65.2, status: "ogir" },
+  { id: "gallaorol", name: "Ғаллаорол тумани", families: 4500, pct: 74.8, status: "yangi" },
+  { id: "sharof-rashidov", name: "Шароф Рашидов тумани", families: 5100, pct: 77.6, status: "yangi" },
+  { id: "mirzachul", name: "Мирзачўл тумани", families: 3600, pct: 70.3, status: "ogir" },
+  { id: "pakhtakor", name: "Пахтакор тумани", families: 4800, pct: 83.1, status: "yangi" },
+  { id: "yangiobod", name: "Янгиобод тумани", families: 2700, pct: 66.9, status: "ogir" },
+  { id: "zafarobod", name: "Зафаробод тумани", families: 3400, pct: 71.7, status: "ogir" },
+  { id: "zomin", name: "Зомин тумани", families: 3100, pct: 69.5, status: "ogir" },
 ];
 
 export type MfyStatus = "yangi" | "ogir";
@@ -768,6 +771,44 @@ function buildBreakdown(
   }));
 }
 
+/** Bitta kategoriya uchun daraja-mos KPI + breakdown quradi (deterministik). */
+function buildLevelCategory(key: InfraCategoryKey, level: InfraLevel, entitySeed: string): InfraLevelCategory {
+  const base = infrastructureData[key];
+  // Republic: butun mamlakat raqamlari. Viloyat: ~5-12%, tuman: ~0.8-2% ulush.
+  const share =
+    level === "republic"
+      ? 1
+      : level === "viloyat"
+        ? seedRange(`${entitySeed}:${key}:share`, 0.05, 0.12)
+        : seedRange(`${entitySeed}:${key}:share`, 0.008, 0.02);
+
+  const totalProjects = Math.max(3, Math.round(base.totalProjects * share));
+  const totalObjects = Math.max(5, Math.round(base.totalObjects * share));
+  const interimPct =
+    level === "republic" ? base.interimPct : seedPct(`${entitySeed}:${key}:i`, 55, 82);
+  const finalPct =
+    level === "republic" ? base.finalPct : seedPct(`${entitySeed}:${key}:f`, 42, interimPct - 6);
+
+  const names =
+    level === "republic"
+      ? REGIONS.map((r) => r.name)
+      : level === "viloyat"
+        ? tumanList.map((t) => t.name)
+        : mfyList.map((m) => m.name);
+
+  return {
+    key,
+    title: INFRA_TAB_TITLES[key],
+    totalProjects,
+    totalObjects,
+    interimPct,
+    interimCount: Math.round((totalObjects * interimPct) / 100),
+    finalPct,
+    finalCount: Math.round((totalObjects * finalPct) / 100),
+    breakdown: buildBreakdown(names, key, entitySeed, totalObjects),
+  };
+}
+
 /**
  * Daraja bo'yicha infratuzilma kesimi:
  *  - republic        → 14 viloyat kesimi (KPI = infrastructureData qiymatlari)
@@ -784,40 +825,110 @@ export function getInfrastructureByLevel(
       ? (["oghirMahalla", "yangiMahalla"] as InfraCategoryKey[])
       : INFRA_CATEGORY_KEYS;
 
-  return keys.map((key) => {
-    const base = infrastructureData[key];
-    // Republic: butun mamlakat raqamlari. Viloyat: ~5-12%, tuman: ~0.8-2% ulush.
-    const share =
-      level === "republic"
-        ? 1
-        : level === "viloyat"
-          ? seedRange(`${entitySeed}:${key}:share`, 0.05, 0.12)
-          : seedRange(`${entitySeed}:${key}:share`, 0.008, 0.02);
+  return keys.map((key) => buildLevelCategory(key, level, entitySeed));
+}
 
-    const totalProjects = Math.max(3, Math.round(base.totalProjects * share));
-    const totalObjects = Math.max(5, Math.round(base.totalObjects * share));
-    const interimPct =
-      level === "republic" ? base.interimPct : seedPct(`${entitySeed}:${key}:i`, 55, 82);
-    const finalPct =
-      level === "republic" ? base.finalPct : seedPct(`${entitySeed}:${key}:f`, 42, interimPct - 6);
+/* ──────────────────────────────────────────────────────────────────────────
+ * TASK-017 — /infratuzilma explorer: tanlangan hudud darajasiga mos kartalar.
+ * Qoidalar (foydalanuvchi TZ, javob B):
+ *  - republic/viloyat → 4 karta (2 маҳалла + 2 туман kategoriyasi)
+ *  - tuman            → 3 karta (ikkala маҳалла + tuman turiga mos 1 туман)
+ *  - mfy              → 1 karta (mahalla turiga mos маҳалла kategoriyasi)
+ * ──────────────────────────────────────────────────────────────────────── */
 
-    const names =
-      level === "republic"
-        ? REGIONS.map((r) => r.name)
-        : level === "viloyat"
-          ? tumanList.map((t) => t.name)
-          : mfyList.map((m) => m.name);
+export interface InfraExplorerSelection {
+  viloyatId?: string;
+  tumanId?: string;
+  mfyId?: string;
+}
 
-    return {
+export type InfraExplorerLevel = InfraLevel | "mfy";
+
+export interface InfraExplorerCard {
+  key: InfraCategoryKey;
+  kind: "oghir" | "yangi";          // CategoryAccent badge
+  group: "mahalla" | "tuman";        // guruh sektsiyasi
+  title: string;                     // to'liq nom («Оғир маҳалла» инфратузилма лойиҳалари)
+  totalProjects: number;
+  totalObjects: number;
+  interimPct: number;
+  interimCount: number;
+  finalPct: number;
+  finalCount: number;
+  breakdown: InfraBreakdownRow[];    // bo'sh = chart ko'rsatilmaydi (МФЙ darajasi)
+  breakdownTitle: string;
+}
+
+const EXPLORER_BREAKDOWN_TITLES: Record<InfraLevel, string> = {
+  republic: "Вилоятлар бўйича таққослама",
+  viloyat: "Туманлар бўйича таққослама",
+  tuman: "Маҳаллалар бўйича таққослама",
+};
+
+function toExplorerCard(c: InfraLevelCategory, level: InfraLevel): InfraExplorerCard {
+  return {
+    key: c.key,
+    kind: c.key.startsWith("oghir") ? "oghir" : "yangi",
+    group: c.key.endsWith("Mahalla") ? "mahalla" : "tuman",
+    title: infrastructureData[c.key].title,
+    totalProjects: c.totalProjects,
+    totalObjects: c.totalObjects,
+    interimPct: c.interimPct,
+    interimCount: c.interimCount,
+    finalPct: c.finalPct,
+    finalCount: c.finalCount,
+    breakdown: c.breakdown,
+    breakdownTitle: EXPLORER_BREAKDOWN_TITLES[level],
+  };
+}
+
+export function getInfraExplorerLevel(sel: InfraExplorerSelection): InfraExplorerLevel {
+  if (sel.mfyId) return "mfy";
+  if (sel.tumanId) return "tuman";
+  if (sel.viloyatId) return "viloyat";
+  return "republic";
+}
+
+export function getInfraExplorerCards(sel: InfraExplorerSelection): InfraExplorerCard[] {
+  const level = getInfraExplorerLevel(sel);
+
+  if (level === "republic" || level === "viloyat") {
+    return getInfrastructureByLevel(level, sel.viloyatId).map((c) => toExplorerCard(c, level));
+  }
+
+  if (level === "tuman") {
+    const mahallaCards = getInfrastructureByLevel("tuman", sel.tumanId).map((c) =>
+      toExplorerCard(c, "tuman"),
+    );
+    // Tuman turiga mos bitta туман-kategoriya kartasi (B varianti)
+    const tumanStatus = tumanList.find((t) => t.id === sel.tumanId)?.status ?? "ogir";
+    const tumanKey: InfraCategoryKey = tumanStatus === "ogir" ? "oghirTuman" : "yangiTuman";
+    const tumanCard = toExplorerCard(
+      buildLevelCategory(tumanKey, "tuman", `tuman:${sel.tumanId ?? "all"}`),
+      "tuman",
+    );
+    return [...mahallaCards, tumanCard];
+  }
+
+  // МФЙ — mahalla turiga mos bitta karta; KPI lar real mahalla masshtabidagi
+  // mfyInfrastructure namunasidan olinadi, chart yo'q (breakdown bo'sh).
+  const mfyStatus = mfyList.find((m) => m.id === sel.mfyId)?.status ?? "yangi";
+  const src = mfyInfrastructure[mfyStatus];
+  const key: InfraCategoryKey = mfyStatus === "ogir" ? "oghirMahalla" : "yangiMahalla";
+  return [
+    {
       key,
-      title: INFRA_TAB_TITLES[key],
-      totalProjects,
-      totalObjects,
-      interimPct,
-      interimCount: Math.round((totalObjects * interimPct) / 100),
-      finalPct,
-      finalCount: Math.round((totalObjects * finalPct) / 100),
-      breakdown: buildBreakdown(names, key, entitySeed, totalObjects),
-    };
-  });
+      kind: mfyStatus === "ogir" ? "oghir" : "yangi",
+      group: "mahalla",
+      title: infrastructureData[key].title,
+      totalProjects: src.totalProjects,
+      totalObjects: src.totalObjects,
+      interimPct: src.interimPct,
+      interimCount: src.interimCount,
+      finalPct: src.finalPct,
+      finalCount: src.finalCount,
+      breakdown: [],
+      breakdownTitle: "",
+    },
+  ];
 }
