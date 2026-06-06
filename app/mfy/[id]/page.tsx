@@ -713,10 +713,12 @@ function InfraObjectCard({ object, accent }: { object: MfyInfraObject; accent: s
               const st = WORK_STATUS_CONFIG[item.status] ?? WORK_STATUS_CONFIG.pending;
               const isDone = item.status === "done";
               return (
-                <li key={i} className="flex items-center gap-2 rounded-lg bg-white/60 border border-border-light/50 px-2.5 py-2">
-                  <Icon name={st.icon} size={15} variant="Bold" className={`${st.text} shrink-0`} />
+                <li key={i} className="flex items-start gap-2 rounded-lg bg-white/60 border border-border-light/50 px-2.5 py-2">
+                  {/* Uzun ish nomi 2-3 qatorga wrap bo'ladi — icon va badge birinchi qatorga tekis */}
+                  <Icon name={st.icon} size={15} variant="Bold" className={`${st.text} shrink-0 mt-[1.5px]`} />
                   <span
-                    className={`flex-1 min-w-0 truncate text-[13px] ${
+                    title={item.work}
+                    className={`flex-1 min-w-0 text-[13px] leading-snug line-clamp-3 ${
                       isDone ? "text-text-secondary" : "text-text-primary"
                     }`}
                   >

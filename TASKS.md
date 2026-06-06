@@ -17,6 +17,10 @@
 - AFTER: 320/375/1440 × ikkala status (оғир/янги) overflow 0, console 0, tsc 0, element yo'qolmagan
 - Sifat bahosi: 9.3/10
 
+**Qo'shimcha (2026-06-06):** checklist'da uzun ish nomi — `truncate` o'rniga 2-3 qator wrap
+(`line-clamp-3`, `items-start`, icon/badge birinchi qatorga tekis, to'liq matn `title`da).
+Evidence: `longtext-1440.png`, `longtext-375.png` (DOM injection test, overflow 0)
+
 ---
 
 ### TASK-015: «Инфратузилма лойиҳалари» — yagona tab'li blok (redesign)
