@@ -2,6 +2,34 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-018: «Ижтимоий реестр» сўровнома — мобил форма дизайни
+**Yaratildi:** 2026-06-10 · **Bajarildi:** 2026-06-10
+**Manba:** Foydalanuvchi — "dalolatnoma formani duplicate qil, [rasm] сўровнома formasini deep o'rganib mobile design tayyorla"
+**Status:** DONE
+
+**Tavsif:**
+Дала dalolatnoma макетини (`/dizayn/dalolatnoma`) янги `/dizayn/sorovnoma` route'га дублицате қилиб,
+ногиронлиги/ёлғиз/ягона боқувчи оилалар «Ижтимоий реестр» сўровномаси (расмдаги форма, 13 майдон)
+учун мобил дизайн (телефон 4-қадамли wizard + планшет 2-устун) тайёрланди.
+
+**Yangi/o'zgargan fayllar:**
+- `lib/social-survey-data.ts` (yangi) — модель, опциялар, namunaviy oila, ЖШШИР/телефон форматлаш
+- `components/mobile/SorovnomaScreen.tsx` (yangi) — wizard + tablet, shartli mantiq + validatsiya
+- `components/mobile/material.tsx` — TextArea, SearchTextField, ChoiceToggle qo'shildi
+- `components/atoms/Icon.tsx` — call, drop, calendar, profile, personal-card, ruler qo'shildi
+- `app/dizayn/sorovnoma/page.tsx` (yangi) — dizayn-maket sahifa
+
+**Hidden requirement (qo'shildi):** progressive disclosure —
+кадастр/манзил/майдон фақат томорқа Мавжуд бўлса; фойдаланмаслик сабаби фақат Фойдаланмайди;
+ижара муддати фақат Истаги бор. + кадастр lookup (қидириш + verified) + per-step validatsiya.
+
+**Verification:**
+- tsc --noEmit: 0 error · `npm run build`: pass, route `/dizayn/sorovnoma` generated
+- Real brauzer (Playwright): 4 telefon qadami + planshet render OK, pageerror=0
+- Shartli mantiq 3/3 interaktiv tasdiqlandi (Мавжуд эмас / Фойдаланади / Истаги йўқ → maydonlar yashirildi)
+- Commit `428f7d3`, main'ga push qilindi
+**Sifat:** 9.5/10
+
 ### TASK-017: /infratuzilma — xarita + kaskad selector + darajaga mos kartalar
 **Yaratildi:** 2026-06-06 · **Bajarildi:** 2026-06-06
 **Manba:** Foydalanuvchi TZ — xarita yonida selectorlar, viloyat/tuman/MFY tanlash; SAVOL javobi: B
