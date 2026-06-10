@@ -62,6 +62,8 @@ import {
   Profile,
   Personalcard,
   Ruler,
+  Scan,
+  UserTick,
 } from "iconsax-react";
 import type { ComponentType } from "react";
 
@@ -125,7 +127,9 @@ export type IconName =
   | "calendar"
   | "profile"
   | "personal-card"
-  | "ruler";
+  | "ruler"
+  | "scan"
+  | "user-tick";
 
 const iconMap: Record<IconName, ComponentType<any>> = {
   people: People,
@@ -188,6 +192,8 @@ const iconMap: Record<IconName, ComponentType<any>> = {
   profile: Profile,
   "personal-card": Personalcard,
   ruler: Ruler,
+  scan: Scan,
+  "user-tick": UserTick,
 };
 
 interface IconProps {

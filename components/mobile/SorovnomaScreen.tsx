@@ -48,6 +48,7 @@ export interface SorovnomaScreenProps {
 
 type SaveState = "idle" | "saving" | "success";
 type CadastreState = "idle" | "searching" | "verified";
+type FaceScanState = "idle" | "scanning" | "success";
 
 interface FormState {
   tomorqaMavjud: string;
@@ -106,6 +107,9 @@ export default function SorovnomaScreen({
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [cadastre, setCadastre] = useState<CadastreState>("verified");
   const [step, setStep] = useState(initialStep);
+  const [faceVerified, setFaceVerified] = useState(false);
+  const [faceScan, setFaceScan] = useState<FaceScanState>("idle");
+  const [showFaceScan, setShowFaceScan] = useState(false);
 
   useEffect(() => {
     setForm(buildInitialForm(family));
@@ -113,7 +117,26 @@ export default function SorovnomaScreen({
     setSaveState("idle");
     setCadastre("verified");
     setStep(initialStep);
+    setFaceVerified(false);
+    setFaceScan("idle");
+    setShowFaceScan(false);
   }, [family, initialStep]);
+
+  // Юз сканери ҳолат машинаси (cancel-safe: ҳолат ўзгарса таймер тозаланади).
+  useEffect(() => {
+    if (faceScan === "scanning") {
+      const t = window.setTimeout(() => setFaceScan("success"), 1900);
+      return () => window.clearTimeout(t);
+    }
+    if (faceScan === "success") {
+      const t = window.setTimeout(() => {
+        setFaceVerified(true);
+        setShowFaceScan(false);
+        setFaceScan("idle");
+      }, 850);
+      return () => window.clearTimeout(t);
+    }
+  }, [faceScan]);
 
   const hasGarden = form.tomorqaMavjud === "Мавжуд";
   const notUsing = form.foydalanishHolati === "Фойдаланмайди";
@@ -132,6 +155,18 @@ export default function SorovnomaScreen({
     setCadastre("searching");
     // Реал кадастр lookup шу ерга уланади (манзил + майдон автотўлдирилади).
     window.setTimeout(() => setCadastre("verified"), 850);
+  }
+
+  function openFaceScan() {
+    setShowFaceScan(true);
+    setFaceScan("scanning");
+    // Реал биометрия (Face ID / FaceSDK) шу ерга уланади: оила бошлиғи
+    // юзи реестр/паспорт сурати билан солиштирилади.
+  }
+
+  function closeFaceScan() {
+    setShowFaceScan(false);
+    setFaceScan("idle");
   }
 
   function validateGarden(): FormErrors {
@@ -179,6 +214,11 @@ export default function SorovnomaScreen({
     setErrors(found);
     if (Object.keys(found).length > 0) {
       setStep(found.kadastrRaqami || found.manzil || found.erMaydoni ? 1 : 2);
+      return;
+    }
+    // Биометрик тасдиқ — сақлаш учун мажбурий (тугма ҳам disabled, бу қўшимча ҳимоя).
+    if (!faceVerified) {
+      openFaceScan();
       return;
     }
     setSaveState("saving");
@@ -333,8 +373,12 @@ export default function SorovnomaScreen({
   );
 
   return (
-    <div className="flex flex-1 flex-col bg-[#f4f7fb]">
+    <div className="relative flex flex-1 flex-col bg-[#f4f7fb]">
       <MobileStyles />
+
+      {showFaceScan && (
+        <FaceScanOverlay state={faceScan} familyName={family.oilaBoshligiFio} onClose={closeFaceScan} />
+      )}
 
       <AppBar
         title="Сўровнома"
@@ -369,6 +413,16 @@ export default function SorovnomaScreen({
               <div>
                 <SectionTitle icon="briefcase">Фойдаланиш ва ижара</SectionTitle>
                 <div className="mt-2">{usageBlock}</div>
+              </div>
+              <div>
+                <SectionTitle icon="scan">Биометрик тасдиқлаш</SectionTitle>
+                <div className="mt-2">
+                  <BiometricCard
+                    verified={faceVerified}
+                    familyName={family.oilaBoshligiFio}
+                    onVerify={openFaceScan}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -414,7 +468,16 @@ export default function SorovnomaScreen({
               </div>
             )}
             {step === 3 && (
-              <ReviewStep family={family} form={form} hasGarden={hasGarden} notUsing={notUsing} wantsRent={wantsRent} onEdit={() => setStep(1)} />
+              <ReviewStep
+                family={family}
+                form={form}
+                hasGarden={hasGarden}
+                notUsing={notUsing}
+                wantsRent={wantsRent}
+                onEdit={() => setStep(1)}
+                faceVerified={faceVerified}
+                onVerifyFace={openFaceScan}
+              />
             )}
           </div>
         </>
@@ -438,6 +501,12 @@ export default function SorovnomaScreen({
           <p className="mb-2 flex items-center gap-1 text-[11.5px] font-medium text-danger">
             <Icon name="warning" size={13} variant="Bold" />
             Мажбурий майдонларни тўлдиринг
+          </p>
+        )}
+        {(isTablet || step === STEPS.length - 1) && !faceVerified && !hasErrors(errors) && (
+          <p className="mb-2 flex items-center gap-1 text-[11.5px] font-medium text-text-secondary">
+            <Icon name="scan" size={13} variant="Bold" />
+            Сақлаш учун оила бошлиғи юзини тасдиқланг
           </p>
         )}
         <div className="flex items-center gap-2.5">
@@ -464,13 +533,15 @@ export default function SorovnomaScreen({
             <button
               type="button"
               onClick={handleSave}
-              disabled={saveState === "saving"}
-              className="inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-full bg-navy text-[14.5px] font-bold text-white shadow-[0_6px_18px_rgba(43,140,238,0.35)] transition-all hover:bg-navy-light active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-80"
+              disabled={saveState === "saving" || !faceVerified}
+              className="inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-full bg-navy text-[14.5px] font-bold text-white shadow-[0_6px_18px_rgba(43,140,238,0.35)] transition-all hover:bg-navy-light active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
             >
               {saveState === "saving" ? (
                 <><Spinner /> Сақланмоқда…</>
               ) : saveState === "success" ? (
                 <><Icon name="tick-circle" size={18} variant="Bold" /> Сақланди</>
+              ) : !faceVerified ? (
+                <><Icon name="scan" size={17} variant="Bold" /> Тасдиқлангач сақлаш</>
               ) : (
                 <><Icon name="send" size={17} variant="Bold" /> Сақлаш</>
               )}
@@ -601,6 +672,8 @@ function ReviewStep({
   notUsing,
   wantsRent,
   onEdit,
+  faceVerified,
+  onVerifyFace,
 }: {
   family: SocialSurveyFamily;
   form: FormState;
@@ -608,6 +681,8 @@ function ReviewStep({
   notUsing: boolean;
   wantsRent: boolean;
   onEdit: () => void;
+  faceVerified: boolean;
+  onVerifyFace: () => void;
 }) {
   const rows: { label: string; value: string }[] = [
     { label: "Оила бошлиғи", value: family.oilaBoshligiFio },
@@ -663,6 +738,156 @@ function ReviewStep({
           ))}
         </div>
       </div>
+
+      <BiometricCard verified={faceVerified} familyName={family.oilaBoshligiFio} onVerify={onVerifyFace} />
+    </div>
+  );
+}
+
+/* ── Биометрик тасдиқлаш картаси (Face ID) ────────────────────────────────── */
+function BiometricCard({
+  verified,
+  familyName,
+  onVerify,
+}: {
+  verified: boolean;
+  familyName: string;
+  onVerify: () => void;
+}) {
+  if (verified) {
+    return (
+      <div className="flex items-center gap-3 rounded-2xl border border-success/30 bg-success/[0.08] p-3.5">
+        <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-success/15 text-success">
+          <Icon name="user-tick" size={22} variant="Bold" />
+        </span>
+        <div className="min-w-0">
+          <p className="text-[13px] font-bold text-text-primary">Юз орқали тасдиқланди</p>
+          <p className="truncate text-[11.5px] text-text-secondary">
+            {familyName} · шахси тасдиқланди
+          </p>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="rounded-2xl border border-navy/20 bg-navy/[0.05] p-3.5">
+      <div className="flex items-start gap-3">
+        <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy/10 text-navy">
+          <Icon name="scan" size={22} variant="Bold" />
+        </span>
+        <div className="min-w-0">
+          <p className="text-[13px] font-bold text-text-primary">Биометрик тасдиқлаш</p>
+          <p className="text-[11.5px] leading-snug text-text-secondary">
+            Сўровнома тўғрилигини оила бошлиғи юзи орқали тасдиқланг.
+          </p>
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={onVerify}
+        className="mt-3 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border border-navy/30 bg-white text-[13.5px] font-bold text-navy shadow-layered-sm transition-all hover:bg-navy/[0.04] active:scale-[0.98]"
+      >
+        <Icon name="scan" size={18} variant="Bold" />
+        Юзни тасдиқлаш
+      </button>
+    </div>
+  );
+}
+
+/* ── FaceScanOverlay — тўлиқ экранли юз сканери (Face ID) ──────────────────── */
+function FaceScanOverlay({
+  state,
+  familyName,
+  onClose,
+}: {
+  state: FaceScanState;
+  familyName: string;
+  onClose: () => void;
+}) {
+  const success = state === "success";
+  return (
+    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center gap-7 bg-[#0b1220]/95 px-6 text-center backdrop-blur-sm">
+      <style>{`
+        @keyframes faceSweep { 0%{transform:translateY(-78px);opacity:0} 12%{opacity:1} 88%{opacity:1} 100%{transform:translateY(78px);opacity:0} }
+        @keyframes faceBracket { 0%,100%{opacity:.55} 50%{opacity:1} }
+        @keyframes facePop { 0%{transform:scale(.4);opacity:0} 60%{transform:scale(1.12)} 100%{transform:scale(1);opacity:1} }
+        .face-sweep { animation: faceSweep 1.9s cubic-bezier(0.4,0,0.2,1) infinite; }
+        .face-bracket { animation: faceBracket 1.6s ease-in-out infinite; }
+        .face-pop { animation: facePop .45s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+        @media (prefers-reduced-motion: reduce) {
+          .face-sweep, .face-bracket { animation: none; }
+          .face-pop { animation: none; opacity: 1; }
+        }
+      `}</style>
+
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Бекор қилиш"
+        className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/90 transition-colors hover:bg-white/20 active:scale-90"
+      >
+        <Icon name="close-circle" size={24} variant="Bold" />
+      </button>
+
+      <div>
+        <p className="text-[17px] font-bold text-white">
+          {success ? "Шахс тасдиқланди" : "Юзни тасдиқлаш"}
+        </p>
+        <p className="mt-1 text-[12.5px] text-white/65">{familyName}</p>
+      </div>
+
+      {/* Сканер ромкаси */}
+      <div className="relative h-[208px] w-[208px]">
+        {/* Бурчак кронштейнлар */}
+        {[
+          "left-0 top-0 border-l-[3px] border-t-[3px] rounded-tl-[34px]",
+          "right-0 top-0 border-r-[3px] border-t-[3px] rounded-tr-[34px]",
+          "left-0 bottom-0 border-b-[3px] border-l-[3px] rounded-bl-[34px]",
+          "right-0 bottom-0 border-b-[3px] border-r-[3px] rounded-br-[34px]",
+        ].map((pos) => (
+          <span
+            key={pos}
+            className={`absolute h-12 w-12 ${pos} ${success ? "border-success" : "face-bracket border-sky-400"}`}
+          />
+        ))}
+
+        {/* Юз силуэти */}
+        <div className="absolute inset-[26px] flex items-center justify-center overflow-hidden rounded-full bg-white/[0.04]">
+          <Icon
+            name="profile"
+            size={104}
+            variant="Bulk"
+            className={success ? "text-success/70" : "text-white/25"}
+          />
+          {/* Сканерлаш чизиғи */}
+          {!success && (
+            <span className="face-sweep pointer-events-none absolute left-3 right-3 h-[3px] rounded-full bg-sky-400 shadow-[0_0_14px_4px_rgba(56,189,248,0.7)]" />
+          )}
+        </div>
+
+        {/* Муваффақият белгиси */}
+        {success && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="face-pop inline-flex h-[88px] w-[88px] items-center justify-center rounded-full bg-success text-white shadow-[0_10px_30px_rgba(34,197,94,0.5)]">
+              <Icon name="tick-circle" size={52} variant="Bold" />
+            </span>
+          </div>
+        )}
+      </div>
+
+      <p className="flex items-center gap-2 text-[13px] font-medium text-white/80">
+        {success ? (
+          <>
+            <Icon name="user-tick" size={16} variant="Bold" className="text-success" />
+            Биометрик тасдиқ муваффақиятли
+          </>
+        ) : (
+          <>
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-sky-400" />
+            Юзни доира ичида тутиб туринг…
+          </>
+        )}
+      </p>
     </div>
   );
 }
