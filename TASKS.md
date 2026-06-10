@@ -23,6 +23,11 @@
 кадастр/манзил/майдон фақат томорқа Мавжуд бўлса; фойдаланмаслик сабаби фақат Фойдаланмайди;
 ижара муддати фақат Истаги бор. + кадастр lookup (қидириш + verified) + per-step validatsiya.
 
+**Qo'shimcha (foydalanuvchi so'rovi):** Face ID биометрик тасдиқлаш —
+сақлашдан олдин оила бошлиғи юзи орқали тасдиқланиши шарт (сохта сўровномани олдини олиш).
+Тўлиқ экранли скан overlay (бурчак кронштейн + sweep чизиқ + success check), BiometricCard
+(review + планшет), Save тугмаси gate'ланган (тасдиқлангунча disabled). Commit `b101d62`.
+
 **Verification:**
 - tsc --noEmit: 0 error · `npm run build`: pass, route `/dizayn/sorovnoma` generated
 - Real brauzer (Playwright): 4 telefon qadami + planshet render OK, pageerror=0
