@@ -63,3 +63,7 @@ ionicons.designerpack/
 
 # Partial browser downloads
 *.crdownload
+
+# Playwright MCP cache
+.playwright-mcp/
+_bg.mjs

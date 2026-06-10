@@ -280,6 +280,195 @@ export function SelectField({
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
+ * TextArea — кўп қаторли матн майдони (масалан: фойдаланмаслик сабаби)
+ * ──────────────────────────────────────────────────────────────────────── */
+export function TextArea({
+  label,
+  value,
+  onChange,
+  required,
+  placeholder,
+  error,
+  helper,
+  rows = 3,
+  maxLength = 500,
+}: {
+  label: string;
+  value: string;
+  onChange?: (v: string) => void;
+  required?: boolean;
+  placeholder?: string;
+  error?: string;
+  helper?: string;
+  rows?: number;
+  maxLength?: number;
+}) {
+  const id = useId();
+  return (
+    <div>
+      <div className="mb-1.5 flex items-end justify-between">
+        <FieldLabel label={label} required={required} htmlFor={id} />
+        <span className="text-[10.5px] tabular-nums text-text-secondary/70">
+          {value.length}/{maxLength}
+        </span>
+      </div>
+      <div className={`rounded-xl border px-3.5 py-2.5 transition-all duration-200 ${shellClass(error)}`}>
+        <textarea
+          id={id}
+          rows={rows}
+          value={value}
+          maxLength={maxLength}
+          placeholder={placeholder}
+          aria-invalid={!!error}
+          aria-required={required}
+          onChange={(e) => onChange?.(e.target.value)}
+          className="w-full resize-none bg-transparent text-[14.5px] font-medium leading-relaxed text-text-primary outline-none placeholder:font-normal placeholder:text-text-secondary/55"
+        />
+      </div>
+      <FieldError message={error} />
+      {!error && <FieldHelper text={helper} />}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * SearchTextField — киритма + ёнида "қидириш" тугмаси (кадастр lookup).
+ * verified=true бўлганда яшил тасдиқ белгиси кўрсатилади.
+ * ──────────────────────────────────────────────────────────────────────── */
+export function SearchTextField({
+  label,
+  value,
+  onChange,
+  onSearch,
+  searching,
+  verified,
+  required,
+  placeholder,
+  error,
+  helper,
+  leadingIcon,
+  searchLabel = "Қидириш",
+}: {
+  label: string;
+  value: string;
+  onChange?: (v: string) => void;
+  onSearch?: () => void;
+  searching?: boolean;
+  verified?: boolean;
+  required?: boolean;
+  placeholder?: string;
+  error?: string;
+  helper?: string;
+  leadingIcon?: IconName;
+  searchLabel?: string;
+}) {
+  const id = useId();
+  return (
+    <div>
+      <FieldLabel label={label} required={required} htmlFor={id} />
+      <div className="flex items-stretch gap-2">
+        <div
+          className={`flex flex-1 items-center gap-2.5 rounded-xl border px-3.5 transition-all duration-200 ${shellClass(
+            error,
+          )}`}
+        >
+          {leadingIcon && (
+            <span className="shrink-0 text-navy/65">
+              <Icon name={leadingIcon} size={18} variant="Bold" />
+            </span>
+          )}
+          <input
+            id={id}
+            type="text"
+            value={value}
+            placeholder={placeholder}
+            aria-invalid={!!error}
+            aria-required={required}
+            onChange={(e) => onChange?.(e.target.value)}
+            className={innerInputClass}
+          />
+          {verified && !searching && (
+            <span className="shrink-0 text-success" aria-label="Тасдиқланди">
+              <Icon name="tick-circle" size={18} variant="Bold" />
+            </span>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={onSearch}
+          disabled={searching || !value.trim()}
+          className="inline-flex min-h-[52px] shrink-0 items-center gap-1.5 rounded-xl bg-navy px-3.5 text-[13px] font-semibold text-white shadow-[0_4px_14px_rgba(43,140,238,0.32)] transition-all hover:bg-navy-light active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label={searchLabel}
+        >
+          {searching ? (
+            <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.35" strokeWidth="3" />
+              <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+            </svg>
+          ) : (
+            <Icon name="search" size={17} variant="Bold" />
+          )}
+          <span>{searchLabel}</span>
+        </button>
+      </div>
+      <FieldError message={error} />
+      {!error && <FieldHelper text={helper} />}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * ChoiceToggle — умумий 2+ вариантли segmented toggle (ҳолат боғлиқлигисиз).
+ * Масалан: Мавжуд/Мавжуд эмас, Истаги бор/Истаги йўқ.
+ * ──────────────────────────────────────────────────────────────────────── */
+export interface ChoiceOption {
+  value: string;
+  label: string;
+  icon?: IconName;
+}
+
+export function ChoiceToggle({
+  options,
+  value,
+  onChange,
+  ariaLabel,
+}: {
+  options: ChoiceOption[];
+  value: string;
+  onChange: (v: string) => void;
+  ariaLabel: string;
+}) {
+  return (
+    <div
+      role="radiogroup"
+      aria-label={ariaLabel}
+      className="flex w-full overflow-hidden rounded-full border border-border-light bg-surface/60 p-1"
+    >
+      {options.map((opt) => {
+        const active = opt.value === value;
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            onClick={() => onChange(opt.value)}
+            className={`flex min-h-[40px] flex-1 items-center justify-center gap-1.5 rounded-full px-2 text-[12.5px] font-semibold transition-all active:scale-[0.98] ${
+              active
+                ? "bg-navy text-white shadow-[0_2px_8px_rgba(43,140,238,0.35)]"
+                : "text-text-secondary hover:bg-white/70"
+            }`}
+          >
+            {opt.icon && <Icon name={opt.icon} size={14} variant="Bold" />}
+            <span className="truncate">{opt.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * SegmentedToggle — Material segmented buttons (act-type)
  * ──────────────────────────────────────────────────────────────────────── */
 export interface SegmentOption {

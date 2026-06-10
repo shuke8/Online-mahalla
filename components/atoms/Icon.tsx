@@ -56,6 +56,12 @@ import {
   Judge,
   Refresh2,
   Star1,
+  Call,
+  Drop,
+  Calendar,
+  Profile,
+  Personalcard,
+  Ruler,
 } from "iconsax-react";
 import type { ComponentType } from "react";
 
@@ -113,7 +119,13 @@ export type IconName =
   | "building-3"
   | "judge"
   | "refresh"
-  | "star";
+  | "star"
+  | "call"
+  | "drop"
+  | "calendar"
+  | "profile"
+  | "personal-card"
+  | "ruler";
 
 const iconMap: Record<IconName, ComponentType<any>> = {
   people: People,
@@ -170,6 +182,12 @@ const iconMap: Record<IconName, ComponentType<any>> = {
   judge: Judge,
   refresh: Refresh2,
   star: Star1,
+  call: Call,
+  drop: Drop,
+  calendar: Calendar,
+  profile: Profile,
+  "personal-card": Personalcard,
+  ruler: Ruler,
 };
 
 interface IconProps {
