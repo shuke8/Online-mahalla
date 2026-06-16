@@ -563,7 +563,7 @@ function hasErrors(errors: FormErrors): boolean {
 }
 
 /* ── Оила сарлавҳа картаси (реестр маълумотлари) ──────────────────────────── */
-function FamilyHeader({ family }: { family: SocialSurveyFamily }) {
+export function FamilyHeader({ family }: { family: SocialSurveyFamily }) {
   const initials = family.oilaBoshligiFio
     .split(/\s+/)
     .slice(0, 2)
@@ -610,7 +610,7 @@ function FamilyHeader({ family }: { family: SocialSurveyFamily }) {
 }
 
 /* ── InfoNote — рангли эслатма банери ─────────────────────────────────────── */
-function InfoNote({
+export function InfoNote({
   icon,
   tone,
   title,
@@ -637,7 +637,7 @@ function InfoNote({
 }
 
 /* ── Stepper индикатори ───────────────────────────────────────────────────── */
-function Stepper({ current, onStep }: { current: number; onStep: (i: number) => void }) {
+export function Stepper({ current, onStep }: { current: number; onStep: (i: number) => void }) {
   return (
     <div>
       <div className="flex items-center">
@@ -768,7 +768,7 @@ function ReviewStep({
 }
 
 /* ── Биометрик тасдиқлаш картаси (Face ID) ────────────────────────────────── */
-function BiometricCard({
+export function BiometricCard({
   verified,
   familyName,
   onVerify,

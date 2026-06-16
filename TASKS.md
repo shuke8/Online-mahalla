@@ -2,6 +2,37 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-021: Компонентлар ва ҳолатлар — дизайн тизими саҳифаси
+**Yaratildi:** 2026-06-16 · **Bajarildi:** 2026-06-16
+**Manba:** Foydalanuvchi — "sorovnoma va biometrikada ishlatilgan barcha componentlar dizaynlari,
+statuslar dizaynlarini bitta alohida pagega tayyorla; qaysi status tanlansa/tanlanmasa nima bo'ladi"
+**Status:** DONE
+
+**Tavsif:**
+`/dizayn/komponentlar` — дизайн тизими саҳифаси. 2 қисм: (1) КАТАЛОГ — ҳар компонент барча
+ҳолатида; (2) ШАРТЛИ МАНТИҚ — жонли интерактив демолар + қоидалар (танланса → / танланмаса →).
+Барча компонент реал манбадан рендер қилинади (SSOT — кўчирма эмас).
+
+**Yangi fayllar:**
+- `components/mobile/gallery-kit.tsx` — Section / Spec / Variant / RuleCard каркас
+- `components/mobile/gallery-catalog.tsx` — TextField, SelectField, TextArea, SearchTextField,
+  ChoiceToggle, SectionCard, InfoNote, FamilyHeader, Stepper(0-3), BiometricCard(2),
+  FaceRing(4 ҳолат), Primary/GhostButton, AppBar, пастки тугма ҳолатлари
+- `components/mobile/gallery-behavior.tsx` — 4 жонли демо (Томорқа, Фойдаланиш, Ижара, Биометрик gate)
+  + 6 RuleCard
+- `app/dizayn/komponentlar/page.tsx` — саҳифа қобиғи (intro + каталог + мантиқ)
+
+**O'zgargan fayllar:**
+- `SorovnomaScreen.tsx` / `BiometrikaScreen.tsx` — reusable sub-компонентлар named export (additive)
+- `app/dizayn/sorovnoma/page.tsx` — header'га «Компонентлар» ҳавола
+
+**Verification:**
+- tsc 0, 0 console error
+- Каталог барча ҳолат render OK; biometrika dark тайлар OK
+- Жонли демо интерактив тест: «Мавжуд эмас» → майдонлар яширилди, огоҳлантириш чиқди ✓
+- 6 RuleCard (танланса/танланмаса) render OK; SSOT (реал компонентлар)
+**Sifat:** 9.5/10
+
 ### TASK-020: Биометрик тасдиқлаш — алоҳида Face ID оқими саҳифаси
 **Yaratildi:** 2026-06-16 · **Bajarildi:** 2026-06-16
 **Manba:** Foydalanuvchi — "Биометрик тасдиқлаш bulimini qilish uchun yana bitta alohida page qo'sh"

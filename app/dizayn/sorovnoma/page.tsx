@@ -29,17 +29,20 @@ export default function SorovnomaDesignPreview() {
           </p>
         </div>
         <Link
+          href="/dizayn/komponentlar"
+          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+        >
+          <Icon name="layers" size={14} variant="Bold" />
+          Компонентлар
+        </Link>
+        <Link
           href="/dizayn/biometrika"
-          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-navy/20 bg-navy/[0.06] px-2.5 py-1.5 text-[12px] font-semibold text-navy transition-colors hover:bg-navy/10"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-navy/20 bg-navy/[0.06] px-2.5 py-1.5 text-[12px] font-semibold text-navy transition-colors hover:bg-navy/10"
         >
           <Icon name="scan" size={14} variant="Bold" />
           Биометрика
           <Icon name="chevron-forward" size={13} />
         </Link>
-        <span className="hidden items-center gap-1.5 rounded-full bg-navy/10 px-3 py-1 text-[11px] font-semibold text-navy sm:inline-flex">
-          <Icon name="layers" size={13} variant="Bold" />
-          Дизайн макети
-        </span>
       </header>
 
       {/* Design canvas */}

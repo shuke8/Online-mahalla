@@ -195,7 +195,7 @@ function stateCopy(state: FaceState, name: string): { title: string; desc: strin
 }
 
 /* ── Юз ҳалқаси (бурчак кронштейн + силуэт + ҳолат) ────────────────────────── */
-function FaceRing({ mode, size }: { mode: FaceState; size: number }) {
+export function FaceRing({ mode, size }: { mode: FaceState; size: number }) {
   const success = mode === "success";
   const error = mode === "error";
   const scanning = mode === "scanning";
@@ -240,7 +240,7 @@ function FaceRing({ mode, size }: { mode: FaceState; size: number }) {
   );
 }
 
-function PrimaryButton({
+export function PrimaryButton({
   icon,
   label,
   onClick,
@@ -267,7 +267,7 @@ function PrimaryButton({
   );
 }
 
-function GhostButton({ label, onClick }: { label: string; onClick?: () => void }) {
+export function GhostButton({ label, onClick }: { label: string; onClick?: () => void }) {
   return (
     <button
       type="button"
