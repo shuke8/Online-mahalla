@@ -779,40 +779,93 @@ function BiometricCard({
 }) {
   if (verified) {
     return (
-      <div className="flex items-center gap-3 rounded-2xl border border-success/30 bg-success/[0.08] p-3.5">
-        <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-success/15 text-success">
-          <Icon name="user-tick" size={22} variant="Bold" />
-        </span>
-        <div className="min-w-0">
-          <p className="text-[13px] font-bold text-text-primary">Юз орқали тасдиқланди</p>
-          <p className="truncate text-[11.5px] text-text-secondary">
-            {familyName} · шахси тасдиқланди
-          </p>
+      <div className="overflow-hidden rounded-2xl border border-success/30 bg-gradient-to-br from-success/[0.12] to-success/[0.03] p-4 shadow-layered-sm">
+        <div className="flex items-center gap-3.5">
+          <span className="relative inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-success/15 text-success">
+            <Icon name="user-tick" size={26} variant="Bold" />
+            <span className="absolute -bottom-1 -right-1 inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-success text-white shadow-sm">
+              <Icon name="tick-circle" size={13} variant="Bold" />
+            </span>
+          </span>
+          <div className="min-w-0">
+            <p className="text-[14px] font-bold text-text-primary">Юз орқали тасдиқланди</p>
+            <p className="truncate text-[12px] text-text-secondary">
+              {familyName} · шахси тасдиқланди
+            </p>
+            <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-success/15 px-2 py-0.5 text-[10.5px] font-bold text-success">
+              <Icon name="shield-tick" size={11} variant="Bold" />
+              Биометрик тасдиқ фаол
+            </span>
+          </div>
         </div>
       </div>
     );
   }
+
+  const trust: { icon: IconName; text: string }[] = [
+    { icon: "time", text: "Бир неча сония" },
+    { icon: "shield-tick", text: "Сурат сақланмайди" },
+  ];
+  const bracket = [
+    "left-2 top-2 border-l-2 border-t-2 rounded-tl-lg",
+    "right-2 top-2 border-r-2 border-t-2 rounded-tr-lg",
+    "left-2 bottom-2 border-b-2 border-l-2 rounded-bl-lg",
+    "right-2 bottom-2 border-b-2 border-r-2 rounded-br-lg",
+  ];
+
   return (
-    <div className="rounded-2xl border border-navy/20 bg-navy/[0.05] p-3.5">
-      <div className="flex items-start gap-3">
-        <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy/10 text-navy">
-          <Icon name="scan" size={22} variant="Bold" />
+    <div className="overflow-hidden rounded-2xl border border-navy/20 bg-white shadow-layered-sm">
+      <div className="flex items-center gap-2.5 bg-gradient-to-r from-navy/[0.09] to-navy/[0.02] px-4 py-3">
+        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy/10 text-navy">
+          <Icon name="scan" size={18} variant="Bold" />
         </span>
         <div className="min-w-0">
-          <p className="text-[13px] font-bold text-text-primary">Биометрик тасдиқлаш</p>
-          <p className="text-[11.5px] leading-snug text-text-secondary">
-            Сўровнома тўғрилигини оила бошлиғи юзи орқали тасдиқланг.
+          <h3 className="text-[14px] font-bold leading-tight text-text-primary">Биометрик тасдиқлаш</h3>
+          <p className="text-[11px] leading-tight text-text-secondary">Сақлаш учун мажбурий қадам</p>
+        </div>
+        <span className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-full border border-warning/30 bg-warning/10 px-2 py-0.5 text-[10px] font-bold text-[#b45309]">
+          <Icon name="time" size={11} variant="Bold" />
+          Кутилмоқда
+        </span>
+      </div>
+
+      <div className="p-4">
+        <div className="mb-3.5 flex items-center gap-3.5">
+          {/* Юз сканери мини-кўриниши (нима бўлишини кўрсатади) */}
+          <div className="relative grid h-[72px] w-[72px] shrink-0 place-items-center rounded-2xl bg-navy/[0.06]">
+            {bracket.map((pos) => (
+              <span key={pos} className={`absolute h-5 w-5 border-navy/40 ${pos}`} />
+            ))}
+            <Icon name="profile" size={40} variant="Bulk" className="text-navy/55" />
+          </div>
+          <p className="text-[12px] leading-relaxed text-text-secondary">
+            Оила бошлиғи{" "}
+            <span className="font-semibold text-text-primary">{familyName}</span> юзи «Ижтимоий
+            реестр» сурати билан солиштирилади — бу сохта сўровномани олдини олади.
           </p>
         </div>
+
+        <div className="mb-3.5 grid grid-cols-2 gap-2">
+          {trust.map((t) => (
+            <div
+              key={t.text}
+              className="flex items-center gap-2 rounded-xl border border-border-light bg-slate-50/70 px-2.5 py-2"
+            >
+              <Icon name={t.icon} size={15} variant="Bold" className="shrink-0 text-navy/70" />
+              <span className="text-[11px] font-medium text-text-primary">{t.text}</span>
+            </div>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={onVerify}
+          className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-navy to-navy-light text-[14px] font-bold text-white shadow-[0_8px_20px_rgba(43,140,238,0.42)] transition-all hover:brightness-[1.08] active:scale-[0.98]"
+        >
+          <Icon name="scan" size={18} variant="Bold" />
+          Юзни тасдиқлаш
+        </button>
       </div>
-      <button
-        type="button"
-        onClick={onVerify}
-        className="mt-3 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border border-navy/30 bg-white text-[13.5px] font-bold text-navy shadow-layered-sm transition-all hover:bg-navy/[0.04] active:scale-[0.98]"
-      >
-        <Icon name="scan" size={18} variant="Bold" />
-        Юзни тасдиқлаш
-      </button>
     </div>
   );
 }
