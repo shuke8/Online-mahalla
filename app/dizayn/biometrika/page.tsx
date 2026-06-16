@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { Icon, type IconName } from "@/components/atoms/Icon";
 import { DeviceFrame } from "@/components/mobile/DeviceFrame";
-import SorovnomaScreen from "@/components/mobile/SorovnomaScreen";
+import BiometrikaScreen from "@/components/mobile/BiometrikaScreen";
 import { sampleSurveyFamily } from "@/lib/social-survey-data";
 
-export default function SorovnomaDesignPreview() {
+export default function BiometrikaDesignPreview() {
   const family = sampleSurveyFamily;
 
   return (
@@ -14,29 +14,21 @@ export default function SorovnomaDesignPreview() {
       {/* Canvas top bar */}
       <header className="flex shrink-0 items-center gap-3 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur-sm">
         <Link
-          href="/infratuzilma"
+          href="/dizayn/sorovnoma"
           className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-[12px] font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
         >
           <Icon name="arrow-left" size={15} />
-          Бошқарув панели
+          Сўровнома
         </Link>
         <div className="min-w-0">
           <h1 className="truncate text-[14px] font-bold text-slate-900">
-            Сўровнома — мобил илова дизайни
+            Биометрик тасдиқлаш — Face ID оқими
           </h1>
           <p className="truncate text-[11.5px] text-slate-500">
-            «Ижтимоий реестр» оила сўровномаси · Android телефон ва планшет · дизайн макети
+            Оила бошлиғи шахсини юз орқали тасдиқлаш · Android телефон ва планшет · дизайн макети
           </p>
         </div>
-        <Link
-          href="/dizayn/biometrika"
-          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-navy/20 bg-navy/[0.06] px-2.5 py-1.5 text-[12px] font-semibold text-navy transition-colors hover:bg-navy/10"
-        >
-          <Icon name="scan" size={14} variant="Bold" />
-          Биометрика
-          <Icon name="chevron-forward" size={13} />
-        </Link>
-        <span className="hidden items-center gap-1.5 rounded-full bg-navy/10 px-3 py-1 text-[11px] font-semibold text-navy sm:inline-flex">
+        <span className="ml-auto hidden items-center gap-1.5 rounded-full bg-navy/10 px-3 py-1 text-[11px] font-semibold text-navy sm:inline-flex">
           <Icon name="layers" size={13} variant="Bold" />
           Дизайн макети
         </span>
@@ -52,27 +44,27 @@ export default function SorovnomaDesignPreview() {
         }}
       >
         {/* ── ТЕЛЕФОН ── */}
-        <SectionHeader icon="home" title="Телефон" subtitle="Android · portrait · 4 экран (wizard)" />
+        <SectionHeader icon="home" title="Телефон" subtitle="Android · portrait · 4 ҳолат" />
         <div className="mb-12 flex flex-wrap items-start justify-center gap-8 sm:gap-12">
-          <DeviceFrame variant="phone" label="1-қадам · Оила маълумотлари">
-            <SorovnomaScreen family={family} layout="phone" initialStep={0} />
+          <DeviceFrame variant="phone" label="1-ҳолат · Бошланғич">
+            <BiometrikaScreen family={family} layout="phone" initialState="intro" />
           </DeviceFrame>
-          <DeviceFrame variant="phone" label="2-қадам · Томорқа">
-            <SorovnomaScreen family={family} layout="phone" initialStep={1} />
+          <DeviceFrame variant="phone" label="2-ҳолат · Сканерлаш">
+            <BiometrikaScreen family={family} layout="phone" initialState="scanning" />
           </DeviceFrame>
-          <DeviceFrame variant="phone" label="3-қадам · Фойдаланиш ва ижара">
-            <SorovnomaScreen family={family} layout="phone" initialStep={2} />
+          <DeviceFrame variant="phone" label="3-ҳолат · Тасдиқланди">
+            <BiometrikaScreen family={family} layout="phone" initialState="success" />
           </DeviceFrame>
-          <DeviceFrame variant="phone" label="4-қадам · Якунлаш">
-            <SorovnomaScreen family={family} layout="phone" initialStep={3} />
+          <DeviceFrame variant="phone" label="4-ҳолат · Хатолик">
+            <BiometrikaScreen family={family} layout="phone" initialState="error" />
           </DeviceFrame>
         </div>
 
         {/* ── ПЛАНШЕТ ── */}
         <SectionHeader icon="maximize" title="Планшет" subtitle="Android · landscape · якка экран" />
         <div className="flex flex-wrap items-start justify-center gap-10 sm:gap-14">
-          <DeviceFrame variant="tablet" label="Планшет · Сўровнома">
-            <SorovnomaScreen family={family} layout="tablet" />
+          <DeviceFrame variant="tablet" label="Планшет · Бошланғич">
+            <BiometrikaScreen family={family} layout="tablet" initialState="intro" />
           </DeviceFrame>
         </div>
       </div>

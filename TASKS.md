@@ -2,6 +2,29 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-020: Биометрик тасдиқлаш — алоҳида Face ID оқими саҳифаси
+**Yaratildi:** 2026-06-16 · **Bajarildi:** 2026-06-16
+**Manba:** Foydalanuvchi — "Биометрик тасдиқлаш bulimini qilish uchun yana bitta alohida page qo'sh"
+**Status:** DONE
+
+**Tavsif:**
+Сўровнома биометрик тасдиқлаш учун алоҳида тўлиқ экранли Face ID оқими саҳифаси —
+`/dizayn/biometrika` дизайн макети. Dark immersive (navy-черн) экран, 4 ҳолат:
+intro → scanning → success → error.
+
+**Yangi fayllar:**
+- `components/mobile/BiometrikaScreen.tsx` — мустақил Face ID оқими (phone/tablet, initialState
+  preview, FaceRing бурчак кронштейн + sweep + success/error pop, авто-ўтиш фақат фойдаланувчи
+  бошлаганда — preview статик туради)
+- `app/dizayn/biometrika/page.tsx` — дизайн канвас: 4 телефон ҳолат + планшет (2 устун intro)
+- `app/dizayn/sorovnoma/page.tsx` — header'га «Биометрика →» ҳавола (топилувчанлик)
+
+**Verification:**
+- tsc 0, 0 console error
+- 4 телефон ҳолат + планшет render OK; scanning preview статик (авто-ўтиш фикс)
+- Сўровнома → Биометрика ҳавола ишлайди
+**Sifat:** 9.5/10
+
 ### TASK-019: Сўровнома — бўлимларни кенгайтириш (нафас олдириш)
 **Yaratildi:** 2026-06-16 · **Bajarildi:** 2026-06-16
 **Manba:** Foydalanuvchi — "shu dizayndagi bo'limlarni kattaroq qilish kerak, ko'p ma'lumotlar bitta joyda tiqilib qolganday"
