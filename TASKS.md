@@ -2,6 +2,32 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-023: Альтернатив (шартли) экран previewларни дизайн тизими саҳifaсига кўчириш
+**Yaratildi:** 2026-06-16 · **Bajarildi:** 2026-06-16
+**Manba:** Ярим қолган рефактор (мид-флайт): TASK-022 фреймлари сўровнома саҳифасидан
+олиб ташланган, лекин ҳеч қаерга уланмаган эди (orphaned).
+**Status:** DONE
+
+**Tavsif:**
+Альтернатив (шартли) тармоқларнинг ТЎЛИҚ ЭКРАН previewлари `/dizayn/sorovnoma` канвасидан
+`/dizayn/komponentlar` (дизайн тизими) саҳифасига кўчирилди — каталог + behavior + тўлиқ
+экранлар энди битта жойда. `GalleryScreens` (default ёнида альтернатив тармоқ, ёнма-ён) +
+«Тўлиқ экран» divider қўшилди. Сўровнома саҳифаси энди планшет фрейми билан тоза тугайди.
+
+**O'zgargan fayllar:**
+- `components/mobile/gallery-screens.tsx` — янги (`GalleryScreens`: 6 фрейм, барқарор reference prefill)
+- `app/dizayn/komponentlar/page.tsx` — import + «Тўлиқ экран» divider + `<GalleryScreens />`
+- `app/dizayn/sorovnoma/page.tsx` — «Альтернатив» бўлим олиб ташланди (SSOT — дизайн тизимида)
+
+**Verification:**
+- tsc --noEmit: 0 error
+- Playwright: komponentlar 1440px — default «Мавжуд» ёнида «Мавжуд эмас» (майдонлар яширин +
+  огоҳлантириш) тўғри render; 0 console error
+- Сўровнома: «Альтернатив» бўлим йўқ, планшетда тоза тугайди, horizontal overflow йўқ (375===375)
+- 375px: фреймлар вертикал стек, марказда; document overflow йўқ (фон device mockup 384px —
+  canvas ичида, бошқа `/dizayn/*` саҳифалар билан бир хил хулқ)
+**Sifat:** 9.5/10
+
 ### TASK-022: Сўровнома — альтернатив (шартли) ҳолат previewлари
 **Yaratildi:** 2026-06-16 · **Bajarildi:** 2026-06-16
 **Manba:** Foydalanuvchi — "Томорқа «Мавжуд эмас» танлангандаги кўриниш алоҳида йўқ; шундан
