@@ -24,6 +24,15 @@
 - Логика ўзгармаган (wizard, валидатсия, Face ID gate бир хил)
 **Sifat:** 9.5/10
 
+**Қўшимча — мобил полиш (foydalanuvchi: "mobileda ham yanada chiroyli qil"):**
+- Қадам ўтиш анимацияси (fade + slide up, `prefers-reduced-motion` ҳурмат қилинади)
+- Stepper premium: gradient + glow актив дот, h-7→8, йўғонроқ rounded connector, белгиланган қадам яшил ✓
+- Контент фони flat → нозик кўк gradient (appbar navy билан боғланади)
+- Оила картаси navy header'ига оила бошлиғи монограм аватари (ҒЗ)
+- Кейингиси/Сақлаш тугмалари gradient + кучлироқ brand shadow
+- Планшет: бошқарувсиз ҳамма бўлим кўринади (landscape кенг — қадамга бўлиш клик кўпайтиради) — атайин қолдирилди, фақат полиш қўшилди
+- Verify: tsc 0, 0 console error, wizard навигация ишлайди (frame 0→2 тест), планшет регрессия йўқ
+
 ### TASK-018: «Ижтимоий реестр» сўровнома — мобил форма дизайни
 **Yaratildi:** 2026-06-10 · **Bajarildi:** 2026-06-10
 **Manba:** Foydalanuvchi — "dalolatnoma formani duplicate qil, [rasm] сўровнома formasini deep o'rganib mobile design tayyorla"

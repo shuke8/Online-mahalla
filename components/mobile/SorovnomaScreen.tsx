@@ -373,8 +373,13 @@ export default function SorovnomaScreen({
   );
 
   return (
-    <div className="relative flex flex-1 flex-col bg-[#f4f7fb]">
+    <div className="relative flex flex-1 flex-col bg-gradient-to-b from-[#e9f0fb] via-[#f1f5fb] to-[#f5f8fc]">
       <MobileStyles />
+      <style>{`
+        @keyframes sorovStep { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        .sorov-step { animation: sorovStep .34s cubic-bezier(0.16,1,0.3,1); }
+        @media (prefers-reduced-motion: reduce) { .sorov-step { animation: none; } }
+      `}</style>
 
       {showFaceScan && (
         <FaceScanOverlay state={faceScan} familyName={family.oilaBoshligiFio} onClose={closeFaceScan} />
@@ -440,7 +445,7 @@ export default function SorovnomaScreen({
             <Stepper current={step} onStep={(i) => i < step && setStep(i)} />
           </div>
 
-          <div className="flex-1 px-3.5 py-4">
+          <div key={step} className="sorov-step flex-1 px-3.5 py-4">
             {step === 0 && (
               <div className="flex flex-col gap-4">
                 <InfoNote
@@ -523,7 +528,7 @@ export default function SorovnomaScreen({
             <button
               type="button"
               onClick={goNext}
-              className="inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-full bg-navy text-[14.5px] font-bold text-white shadow-[0_6px_18px_rgba(43,140,238,0.35)] transition-all hover:bg-navy-light active:scale-[0.98]"
+              className="inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-navy to-navy-light text-[14.5px] font-bold text-white shadow-[0_8px_20px_rgba(43,140,238,0.42)] transition-all hover:brightness-[1.08] active:scale-[0.98]"
             >
               Кейингиси
               <Icon name="chevron-forward" size={17} variant="Bold" />
@@ -533,7 +538,7 @@ export default function SorovnomaScreen({
               type="button"
               onClick={handleSave}
               disabled={saveState === "saving" || !faceVerified}
-              className="inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-full bg-navy text-[14.5px] font-bold text-white shadow-[0_6px_18px_rgba(43,140,238,0.35)] transition-all hover:bg-navy-light active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+              className="inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-navy to-navy-light text-[14.5px] font-bold text-white shadow-[0_8px_20px_rgba(43,140,238,0.42)] transition-all hover:brightness-[1.08] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
             >
               {saveState === "saving" ? (
                 <><Spinner /> Сақланмоқда…</>
@@ -558,6 +563,12 @@ function hasErrors(errors: FormErrors): boolean {
 
 /* ── Оила сарлавҳа картаси (реестр маълумотлари) ──────────────────────────── */
 function FamilyHeader({ family }: { family: SocialSurveyFamily }) {
+  const initials = family.oilaBoshligiFio
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0] ?? "")
+    .join("")
+    .toUpperCase();
   const rows: { icon: IconName; label: string; value: string }[] = [
     { icon: "profile", label: "Оила бошлиғи Ф.И.О.си", value: family.oilaBoshligiFio },
     { icon: "personal-card", label: "ЖШШИР", value: formatJshshir(family.jshshir) },
@@ -569,6 +580,12 @@ function FamilyHeader({ family }: { family: SocialSurveyFamily }) {
       <div className="flex items-center gap-2 bg-gradient-to-br from-navy to-navy-light px-4 py-3 text-white">
         <Icon name="shield-tick" size={17} variant="Bold" />
         <p className="text-[12.5px] font-bold uppercase tracking-wide">Оила маълумотлари</p>
+        <span
+          aria-hidden
+          className="ml-auto inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-[12.5px] font-bold tabular-nums ring-1 ring-white/25 backdrop-blur-sm"
+        >
+          {initials}
+        </span>
       </div>
       <div className="divide-y divide-border-light/70">
         {rows.map((r) => (
@@ -632,28 +649,34 @@ function Stepper({ current, onStep }: { current: number; onStep: (i: number) => 
                 type="button"
                 onClick={() => onStep(i)}
                 aria-label={`${i + 1}-қадам: ${s.title}`}
-                className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] font-bold transition-colors ${
+                className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12.5px] font-bold transition-all duration-300 ${
                   done
-                    ? "bg-success text-white"
+                    ? "bg-success text-white shadow-[0_3px_10px_rgba(34,197,94,0.4)]"
                     : active
-                      ? "bg-navy text-white ring-4 ring-navy/15"
+                      ? "bg-gradient-to-br from-navy to-navy-light text-white ring-4 ring-navy/15 shadow-[0_5px_14px_rgba(43,140,238,0.45)]"
                       : "border border-border-light bg-white text-text-secondary"
                 } ${done ? "cursor-pointer" : "cursor-default"}`}
               >
-                {done ? <Icon name="tick-circle" size={15} variant="Bold" /> : i + 1}
+                {done ? <Icon name="tick-circle" size={16} variant="Bold" /> : i + 1}
               </button>
               {i < STEPS.length - 1 && (
-                <span className={`mx-1 h-0.5 flex-1 rounded ${i < current ? "bg-success" : "bg-border-light"}`} />
+                <span
+                  className={`mx-1.5 h-1 flex-1 rounded-full transition-colors duration-300 ${
+                    i < current ? "bg-success" : "bg-border-light"
+                  }`}
+                />
               )}
             </Fragment>
           );
         })}
       </div>
-      <div className="mt-1.5 grid grid-cols-4 text-center">
+      <div className="mt-2 grid grid-cols-4 text-center">
         {STEPS.map((s, i) => (
           <span
             key={s.label}
-            className={`truncate px-0.5 text-[9.5px] font-semibold ${i === current ? "text-navy" : "text-text-secondary/80"}`}
+            className={`truncate px-0.5 text-[10px] transition-colors ${
+              i === current ? "font-bold text-navy" : "font-semibold text-text-secondary/75"
+            }`}
           >
             {s.label}
           </span>
