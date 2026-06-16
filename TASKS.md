@@ -2,6 +2,31 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-022: Сўровнома — альтернатив (шартли) ҳолат previewлари
+**Yaratildi:** 2026-06-16 · **Bajarildi:** 2026-06-16
+**Manba:** Foydalanuvchi — "Томорқа «Мавжуд эмас» танлангандаги кўриниш алоҳида йўқ; шундан
+келиб чиқиб бошқа камчиликларни ҳам топиб тузат"
+**Status:** DONE
+
+**Tavsif (принципиал камчилик):**
+Дизайн макетда ҳар шартли танловнинг фақат default (ижобий) тармоғи кўрсатилган эди, альтернативи йўқ.
+Топилган барча шундай камчиликлар тузатилди:
+- Томорқа «Мавжуд эмас» — майдонлар яширин + огоҳлантириш + бўлим ўтказилиши
+- Фойдаланиш «Фойдаланади/Қисман» — «сабаб» майдони яширин
+- Ижара «Истаги йўқ» — «муддат» майдони яширин
+- Биометрик тасдиқланган — Сақлаш фаол
+
+**O'zgargan fayllar:**
+- `components/mobile/SorovnomaScreen.tsx` — `initialForm?: Partial<FormState>` ва
+  `initialFaceVerified?: boolean` preview override проплари (барқарор reference, спурияр reset йўқ)
+- `app/dizayn/sorovnoma/page.tsx` — «Альтернатив (шартли) ҳолатлар» бўлими: 5 фрейм
+  (Томорқа эмас ×3 қадам, Фойдаланади+ижарасиз, Якунлаш тасдиқланган)
+
+**Verification:**
+- tsc 0, 0 console error
+- 5 альтернатив фрейм render OK; default фреймлар ва интерактивлик регрессиясиз
+**Sifat:** 9.5/10
+
 ### TASK-021: Компонентлар ва ҳолатлар — дизайн тизими саҳифаси
 **Yaratildi:** 2026-06-16 · **Bajarildi:** 2026-06-16
 **Manba:** Foydalanuvchi — "sorovnoma va biometrikada ishlatilgan barcha componentlar dizaynlari,

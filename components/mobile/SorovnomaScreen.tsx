@@ -44,6 +44,10 @@ export interface SorovnomaScreenProps {
   onBack?: () => void;
   /** телефон wizard учун бошланғич қадам (0..3) — preview учун */
   initialStep?: number;
+  /** preview учун бошланғич форма қийматлари (масалан альтернатив шартли тармоқ) */
+  initialForm?: Partial<FormState>;
+  /** preview учун: биометрик тасдиқ аллақачон бажарилган ҳолат */
+  initialFaceVerified?: boolean;
 }
 
 type SaveState = "idle" | "saving" | "success";
@@ -79,7 +83,7 @@ const STEPS: { label: string; title: string; icon: IconName }[] = [
   { label: "Якун", title: "Якунлаш", icon: "tick-circle" },
 ];
 
-function buildInitialForm(family: SocialSurveyFamily): FormState {
+function buildInitialForm(family: SocialSurveyFamily, overrides?: Partial<FormState>): FormState {
   return {
     tomorqaMavjud: "Мавжуд",
     kadastrRaqami: family.kadastrRaqami,
@@ -91,6 +95,7 @@ function buildInitialForm(family: SocialSurveyFamily): FormState {
     suvTaminoti: "Марказлашган ичимлик суви",
     ijaraIstagi: "Истаги бор",
     ijaraMuddati: "12 ой",
+    ...overrides,
   };
 }
 
@@ -99,28 +104,30 @@ export default function SorovnomaScreen({
   layout,
   onBack,
   initialStep = 0,
+  initialForm,
+  initialFaceVerified = false,
 }: SorovnomaScreenProps) {
   const isTablet = layout === "tablet";
 
-  const [form, setForm] = useState<FormState>(() => buildInitialForm(family));
+  const [form, setForm] = useState<FormState>(() => buildInitialForm(family, initialForm));
   const [errors, setErrors] = useState<FormErrors>({});
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [cadastre, setCadastre] = useState<CadastreState>("verified");
   const [step, setStep] = useState(initialStep);
-  const [faceVerified, setFaceVerified] = useState(false);
+  const [faceVerified, setFaceVerified] = useState(initialFaceVerified);
   const [faceScan, setFaceScan] = useState<FaceScanState>("idle");
   const [showFaceScan, setShowFaceScan] = useState(false);
 
   useEffect(() => {
-    setForm(buildInitialForm(family));
+    setForm(buildInitialForm(family, initialForm));
     setErrors({});
     setSaveState("idle");
     setCadastre("verified");
     setStep(initialStep);
-    setFaceVerified(false);
+    setFaceVerified(initialFaceVerified);
     setFaceScan("idle");
     setShowFaceScan(false);
-  }, [family, initialStep]);
+  }, [family, initialStep, initialForm, initialFaceVerified]);
 
   // Юз сканери ҳолат машинаси (cancel-safe: ҳолат ўзгарса таймер тозаланади).
   useEffect(() => {

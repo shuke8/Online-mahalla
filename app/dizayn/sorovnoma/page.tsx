@@ -6,6 +6,10 @@ import { DeviceFrame } from "@/components/mobile/DeviceFrame";
 import SorovnomaScreen from "@/components/mobile/SorovnomaScreen";
 import { sampleSurveyFamily } from "@/lib/social-survey-data";
 
+// Альтернатив (шартли) тармоқ префиллари — модул даражасида (барқарор reference).
+const ALT_NO_GARDEN = { tomorqaMavjud: "Мавжуд эмас" };
+const ALT_USING_NO_RENT = { foydalanishHolati: "Фойдаланади", ijaraIstagi: "Истаги йўқ" };
+
 export default function SorovnomaDesignPreview() {
   const family = sampleSurveyFamily;
 
@@ -73,9 +77,33 @@ export default function SorovnomaDesignPreview() {
 
         {/* ── ПЛАНШЕТ ── */}
         <SectionHeader icon="maximize" title="Планшет" subtitle="Android · landscape · якка экран" />
-        <div className="flex flex-wrap items-start justify-center gap-10 sm:gap-14">
+        <div className="mb-12 flex flex-wrap items-start justify-center gap-10 sm:gap-14">
           <DeviceFrame variant="tablet" label="Планшет · Сўровнома">
             <SorovnomaScreen family={family} layout="tablet" />
+          </DeviceFrame>
+        </div>
+
+        {/* ── АЛЬТЕРНАТИВ (ШАРТЛИ) ҲОЛАТЛАР ── */}
+        <SectionHeader
+          icon="hierarchy"
+          title="Альтернатив (шартли) ҳолатлар"
+          subtitle="Бошқа статус танланганда экран қандай ўзгаради"
+        />
+        <div className="flex flex-wrap items-start justify-center gap-8 sm:gap-12">
+          <DeviceFrame variant="phone" label="Томорқа · «Мавжуд эмас»">
+            <SorovnomaScreen family={family} layout="phone" initialStep={1} initialForm={ALT_NO_GARDEN} />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="Фойдаланиш · «Мавжуд эмас» (ўтказилди)">
+            <SorovnomaScreen family={family} layout="phone" initialStep={2} initialForm={ALT_NO_GARDEN} />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="Якунлаш · «Мавжуд эмас»">
+            <SorovnomaScreen family={family} layout="phone" initialStep={3} initialForm={ALT_NO_GARDEN} />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="Фойдаланиш · «Фойдаланади», ижарасиз">
+            <SorovnomaScreen family={family} layout="phone" initialStep={2} initialForm={ALT_USING_NO_RENT} />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="Якунлаш · биометрик тасдиқланган">
+            <SorovnomaScreen family={family} layout="phone" initialStep={3} initialFaceVerified />
           </DeviceFrame>
         </div>
       </div>
