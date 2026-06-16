@@ -24,7 +24,7 @@ import {
   TextArea,
   SearchTextField,
   ChoiceToggle,
-  SectionTitle,
+  SectionCard,
   MobileStyles,
 } from "@/components/mobile/material";
 import {
@@ -232,9 +232,9 @@ export default function SorovnomaScreen({
   const familyBlock = <FamilyHeader family={family} />;
 
   const gardenBlock = (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <div>
-        <p className="mb-1.5 text-[12px] font-semibold text-text-label">
+        <p className="mb-2 text-[12.5px] font-semibold text-text-label">
           Томорқаси мавжудлиги <span className="text-danger">*</span>
         </p>
         <ChoiceToggle
@@ -303,7 +303,7 @@ export default function SorovnomaScreen({
   );
 
   const usageBlock = hasGarden ? (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <SelectField
         label="Томорқадан фойдаланиш ҳолати"
         value={form.foydalanishHolati}
@@ -331,12 +331,12 @@ export default function SorovnomaScreen({
         error={errors.suvTaminoti}
       />
 
-      <div className="mt-1 rounded-2xl border border-border-light bg-white p-3 shadow-layered-sm">
-        <div className="mb-2.5 flex items-center gap-2">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-navy/[0.08] text-navy">
-            <Icon name="wallet" size={15} variant="Bold" />
+      <div className="mt-1 rounded-2xl border border-border-light bg-slate-50/70 p-3.5">
+        <div className="mb-3 flex items-center gap-2.5">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-navy/[0.08] text-navy">
+            <Icon name="wallet" size={16} variant="Bold" />
           </span>
-          <p className="text-[12.5px] font-bold text-text-primary">
+          <p className="text-[13px] font-bold text-text-primary">
             Ҳақ эвазига ижарага бериш
           </p>
         </div>
@@ -401,29 +401,26 @@ export default function SorovnomaScreen({
               боқувчи оилалар сўровномаси
             </p>
           </div>
-          <div className="flex items-start gap-4 p-4">
-            <div className="flex w-[54%] flex-col gap-4">
+          <div className="flex items-start gap-6 p-5">
+            <div className="flex w-1/2 flex-col gap-5">
               {familyBlock}
-              <div>
-                <SectionTitle icon="tree">Томорқа маълумотлари</SectionTitle>
-                <div className="mt-2">{gardenBlock}</div>
-              </div>
+              <SectionCard icon="tree" title="Томорқа маълумотлари" meta="Кадастр, манзил, ер майдони">
+                {gardenBlock}
+              </SectionCard>
             </div>
-            <div className="flex w-[46%] flex-col gap-4">
-              <div>
-                <SectionTitle icon="briefcase">Фойдаланиш ва ижара</SectionTitle>
-                <div className="mt-2">{usageBlock}</div>
-              </div>
-              <div>
-                <SectionTitle icon="scan">Биометрик тасдиқлаш</SectionTitle>
-                <div className="mt-2">
-                  <BiometricCard
-                    verified={faceVerified}
-                    familyName={family.oilaBoshligiFio}
-                    onVerify={openFaceScan}
-                  />
-                </div>
-              </div>
+            <div className="flex w-1/2 flex-col gap-5">
+              <SectionCard
+                icon="briefcase"
+                title="Фойдаланиш ва ижара"
+                meta="Фойдаланиш ҳолати, сув таъминоти, ижара"
+              >
+                {usageBlock}
+              </SectionCard>
+              <BiometricCard
+                verified={faceVerified}
+                familyName={family.oilaBoshligiFio}
+                onVerify={openFaceScan}
+              />
             </div>
           </div>
         </div>
@@ -445,7 +442,7 @@ export default function SorovnomaScreen({
 
           <div className="flex-1 px-3.5 py-4">
             {step === 0 && (
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-4">
                 <InfoNote
                   icon="shield-tick"
                   tone="navy"
@@ -456,16 +453,18 @@ export default function SorovnomaScreen({
               </div>
             )}
             {step === 1 && (
-              <div>
-                <SectionTitle icon="tree">Томорқа маълумотлари</SectionTitle>
-                <div className="mt-2.5">{gardenBlock}</div>
-              </div>
+              <SectionCard icon="tree" title="Томорқа маълумотлари" meta="Кадастр, манзил, ер майдони">
+                {gardenBlock}
+              </SectionCard>
             )}
             {step === 2 && (
-              <div>
-                <SectionTitle icon="briefcase">Фойдаланиш ва ижара</SectionTitle>
-                <div className="mt-2.5">{usageBlock}</div>
-              </div>
+              <SectionCard
+                icon="briefcase"
+                title="Фойдаланиш ва ижара"
+                meta="Фойдаланиш ҳолати, сув таъминоти, ижара"
+              >
+                {usageBlock}
+              </SectionCard>
             )}
             {step === 3 && (
               <ReviewStep
@@ -567,21 +566,21 @@ function FamilyHeader({ family }: { family: SocialSurveyFamily }) {
   ];
   return (
     <div className="overflow-hidden rounded-2xl border border-border-light bg-white shadow-layered-sm">
-      <div className="flex items-center gap-2 bg-gradient-to-br from-navy to-navy-light px-3.5 py-2.5 text-white">
-        <Icon name="shield-tick" size={16} variant="Bold" />
-        <p className="text-[12px] font-bold uppercase tracking-wide">Оила маълумотлари</p>
+      <div className="flex items-center gap-2 bg-gradient-to-br from-navy to-navy-light px-4 py-3 text-white">
+        <Icon name="shield-tick" size={17} variant="Bold" />
+        <p className="text-[12.5px] font-bold uppercase tracking-wide">Оила маълумотлари</p>
       </div>
       <div className="divide-y divide-border-light/70">
         {rows.map((r) => (
-          <div key={r.label} className="flex items-center gap-3 px-3.5 py-2.5">
-            <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy/[0.07] text-navy">
-              <Icon name={r.icon} size={17} variant="Bold" />
+          <div key={r.label} className="flex items-center gap-3.5 px-4 py-3.5">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-navy/[0.07] text-navy">
+              <Icon name={r.icon} size={18} variant="Bold" />
             </span>
             <div className="min-w-0">
               <p className="text-[10.5px] font-medium uppercase tracking-wide text-text-secondary">
                 {r.label}
               </p>
-              <p className="mt-0.5 truncate text-[13.5px] font-bold tabular-nums text-text-primary">
+              <p className="mt-0.5 truncate text-[14px] font-bold tabular-nums text-text-primary">
                 {r.value}
               </p>
             </div>
@@ -705,20 +704,20 @@ function ReviewStep({
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-3 rounded-2xl border border-success/30 bg-success/[0.07] p-3.5">
-        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-success/15 text-success">
-          <Icon name="tick-circle" size={22} variant="Bold" />
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-3 rounded-2xl border border-success/30 bg-success/[0.07] p-4">
+        <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-success/15 text-success">
+          <Icon name="tick-circle" size={23} variant="Bold" />
         </span>
         <div>
-          <p className="text-[13.5px] font-bold text-text-primary">Сақлашга тайёр</p>
+          <p className="text-[14px] font-bold text-text-primary">Сақлашга тайёр</p>
           <p className="text-[11.5px] text-text-secondary">Маълумотларни текшириб, тасдиқланг.</p>
         </div>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-border-light bg-white shadow-layered-sm">
-        <div className="flex items-center justify-between border-b border-border-light px-3.5 py-2.5">
-          <span className="text-[12px] font-bold text-text-primary">Киритилган маълумотлар</span>
+        <div className="flex items-center justify-between border-b border-border-light bg-gradient-to-r from-slate-50 to-white px-4 py-3">
+          <span className="text-[13px] font-bold text-text-primary">Киритилган маълумотлар</span>
           <button
             type="button"
             onClick={onEdit}
@@ -729,9 +728,9 @@ function ReviewStep({
         </div>
         <div className="divide-y divide-border-light/70">
           {rows.map((r) => (
-            <div key={r.label} className="flex items-start justify-between gap-3 px-3.5 py-2.5">
-              <span className="shrink-0 text-[11.5px] text-text-secondary">{r.label}</span>
-              <span className="max-w-[62%] text-right text-[12.5px] font-semibold text-text-primary">
+            <div key={r.label} className="flex items-start justify-between gap-3 px-4 py-3">
+              <span className="shrink-0 text-[12px] text-text-secondary">{r.label}</span>
+              <span className="max-w-[62%] text-right text-[13px] font-semibold text-text-primary">
                 {r.value}
               </span>
             </div>

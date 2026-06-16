@@ -582,6 +582,43 @@ export function SectionTitle({ icon, children }: { icon: IconName; children: Rea
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
+ * SectionCard — форма бўлими панели: тинтли сарлавҳа (иконка + ном [+ изоҳ])
+ * + падингли танаси. Бўлимларни яққол ажратиш ва нафас олдириш учун —
+ * маълумотлар бир жойда "тиқилиб" қолмаслиги учун ҳар бўлим алоҳида карта.
+ * ──────────────────────────────────────────────────────────────────────── */
+export function SectionCard({
+  icon,
+  title,
+  meta,
+  children,
+  bodyClassName = "p-4",
+}: {
+  icon: IconName;
+  title: string;
+  /** Сарлавҳа остидаги кичик изоҳ (бўлим нимани ўз ичига олади) */
+  meta?: string;
+  children: ReactNode;
+  bodyClassName?: string;
+}) {
+  return (
+    <section className="overflow-hidden rounded-2xl border border-border-light bg-white shadow-layered-sm">
+      <header className="flex items-center gap-2.5 border-b border-border-light/70 bg-gradient-to-r from-slate-50 to-white px-4 py-3">
+        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy/[0.08] text-navy">
+          <Icon name={icon} size={18} variant="Bold" />
+        </span>
+        <div className="min-w-0">
+          <h3 className="text-[14px] font-bold leading-tight text-text-primary">{title}</h3>
+          {meta && (
+            <p className="mt-0.5 truncate text-[11px] leading-tight text-text-secondary">{meta}</p>
+          )}
+        </div>
+      </header>
+      <div className={bodyClassName}>{children}</div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * PressCard — Material ripple-ish босиш эффекти билан карта/тугма ўрамаси.
  * Ripple keyframe бу файлда (components/mobile доирасида) ишора билан берилади,
  * globals.css'ни таҳрирламаслик учун.

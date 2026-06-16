@@ -2,6 +2,28 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-019: Сўровнома — бўлимларни кенгайтириш (нафас олдириш)
+**Yaratildi:** 2026-06-16 · **Bajarildi:** 2026-06-16
+**Manba:** Foydalanuvchi — "shu dizayndagi bo'limlarni kattaroq qilish kerak, ko'p ma'lumotlar bitta joyda tiqilib qolganday"
+**Status:** DONE
+
+**Tavsif:**
+`/dizayn/sorovnoma` дизайнида бўлимлар яққол ажралмаган эди — кичик inline сарлавҳа + майдонлар
+битта оқимдай қўшилиб кетган, айниқса планшетда 4 бўлим 2 устунга тиқилган. Ҳар форма бўлими
+алоҳида **панел-карта**га (`SectionCard`) ўралди: тинтли header (иконка + ном + изоҳ) + падингли тана.
+
+**O'zgartirilgan fayllar:**
+- `components/mobile/material.tsx` — янги `SectionCard` примитиви (header + body panel)
+- `components/mobile/SorovnomaScreen.tsx` — Томорқа/Фойдаланиш бўлимлари SectionCard'га,
+  планшет gap 4→6/5, телефон қадам gap 3→4, FamilyHeader қатор py-2.5→3.5, ReviewStep spacing,
+  ижара ички картаси tinted bg, `SectionTitle` олиб ташланди
+
+**Verification:**
+- tsc --noEmit: 0 error · Playwright (1200px): 4 телефон қадами + планшет render OK, 0 console error
+- Before/After screenshot: бўлимлар энди аниқ ажралган, нафас олади (тиқилиш йўқолди)
+- Логика ўзгармаган (wizard, валидатсия, Face ID gate бир хил)
+**Sifat:** 9.5/10
+
 ### TASK-018: «Ижтимоий реестр» сўровнома — мобил форма дизайни
 **Yaratildi:** 2026-06-10 · **Bajarildi:** 2026-06-10
 **Manba:** Foydalanuvchi — "dalolatnoma formani duplicate qil, [rasm] сўровнома formasini deep o'rganib mobile design tayyorla"
