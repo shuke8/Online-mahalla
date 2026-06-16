@@ -33,6 +33,11 @@
 - Планшет: бошқарувсиз ҳамма бўлим кўринади (landscape кенг — қадамга бўлиш клик кўпайтиради) — атайин қолдирилди, фақат полиш қўшилди
 - Verify: tsc 0, 0 console error, wizard навигация ишлайди (frame 0→2 тест), планшет регрессия йўқ
 
+**Қўшимча — кадастр рақами тўлиқ кўриниши (foydalanuvchi):**
+- `SearchTextField`'га `stackAction` prop — телефонда input тўлиқ кенглик + «Қидириш» остида
+  (19 белгили рақам "20:12:01:05:01:0000" тўлиқ кўринади); планшетда ёнма-ён қолади (кенг жой бор)
+- Verify: телефон + планшет иккаласида тўлиқ қиймат кўринади, tsc 0, 0 console error
+
 ### TASK-018: «Ижтимоий реестр» сўровнома — мобил форма дизайни
 **Yaratildi:** 2026-06-10 · **Bajarildi:** 2026-06-10
 **Manba:** Foydalanuvchi — "dalolatnoma formani duplicate qil, [rasm] сўровнома formasini deep o'rganib mobile design tayyorla"

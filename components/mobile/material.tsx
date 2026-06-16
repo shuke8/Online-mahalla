@@ -348,6 +348,7 @@ export function SearchTextField({
   helper,
   leadingIcon,
   searchLabel = "Қидириш",
+  stackAction = false,
 }: {
   label: string;
   value: string;
@@ -361,16 +362,18 @@ export function SearchTextField({
   helper?: string;
   leadingIcon?: IconName;
   searchLabel?: string;
+  /** true — қидириш тугмаси input остида (тор экранда қиймат тўлиқ кўриниши учун) */
+  stackAction?: boolean;
 }) {
   const id = useId();
   return (
     <div>
       <FieldLabel label={label} required={required} htmlFor={id} />
-      <div className="flex items-stretch gap-2">
+      <div className={stackAction ? "flex flex-col gap-2" : "flex items-stretch gap-2"}>
         <div
-          className={`flex flex-1 items-center gap-2.5 rounded-xl border px-3.5 transition-all duration-200 ${shellClass(
-            error,
-          )}`}
+          className={`flex items-center gap-2.5 rounded-xl border px-3.5 transition-all duration-200 ${
+            stackAction ? "" : "flex-1"
+          } ${shellClass(error)}`}
         >
           {leadingIcon && (
             <span className="shrink-0 text-navy/65">
@@ -385,7 +388,7 @@ export function SearchTextField({
             aria-invalid={!!error}
             aria-required={required}
             onChange={(e) => onChange?.(e.target.value)}
-            className={innerInputClass}
+            className={`${innerInputClass} min-w-0`}
           />
           {verified && !searching && (
             <span className="shrink-0 text-success" aria-label="Тасдиқланди">
@@ -397,7 +400,9 @@ export function SearchTextField({
           type="button"
           onClick={onSearch}
           disabled={searching || !value.trim()}
-          className="inline-flex min-h-[52px] shrink-0 items-center gap-1.5 rounded-xl bg-navy px-3.5 text-[13px] font-semibold text-white shadow-[0_4px_14px_rgba(43,140,238,0.32)] transition-all hover:bg-navy-light active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50"
+          className={`inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-navy to-navy-light text-[13px] font-semibold text-white shadow-[0_4px_14px_rgba(43,140,238,0.32)] transition-all hover:brightness-[1.08] active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 ${
+            stackAction ? "min-h-[48px] w-full px-4" : "min-h-[52px] shrink-0 px-3.5"
+          }`}
           aria-label={searchLabel}
         >
           {searching ? (

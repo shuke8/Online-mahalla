@@ -261,6 +261,7 @@ export default function SorovnomaScreen({
             searching={cadastre === "searching"}
             verified={cadastre === "verified"}
             required
+            stackAction={!isTablet}
             error={errors.kadastrRaqami}
             placeholder="00:00:00:00:00:0000"
             leadingIcon="location"
