@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Icon } from "@/components/atoms/Icon";
 import { GalleryCatalog } from "@/components/mobile/gallery-catalog";
 import { GalleryBehavior } from "@/components/mobile/gallery-behavior";
+import { GalleryScreens } from "@/components/mobile/gallery-screens";
 
 export default function KomponentlarDesignPage() {
   return (
@@ -69,6 +70,19 @@ export default function KomponentlarDesignPage() {
 
           {/* Behavior / conditional logic */}
           <GalleryBehavior />
+
+          {/* Divider */}
+          <div className="my-12 flex items-center gap-3">
+            <span className="h-px flex-1 bg-slate-300/70" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-800 px-3 py-1 text-[11px] font-semibold text-white">
+              <Icon name="maximize" size={13} variant="Bold" />
+              Тўлиқ экран
+            </span>
+            <span className="h-px flex-1 bg-slate-300/70" />
+          </div>
+
+          {/* Full-screen conditional previews */}
+          <GalleryScreens />
 
           <p className="mt-12 text-center text-[11.5px] text-slate-400">
             Барча компонентлар реал манбадан (material.tsx · SorovnomaScreen · BiometrikaScreen) рендер қилинади —
