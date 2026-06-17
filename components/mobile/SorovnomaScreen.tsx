@@ -513,47 +513,12 @@ export default function SorovnomaScreen({
       )}
 
       {saveState === "success" && (
-        <div className="shrink-0 px-3 pb-1">
-          {hasGarden && wantsRent ? (
-            /* «Истаги бор» — шартнома тузишга ўтиш таклифи */
-            <div className="overflow-hidden rounded-2xl border border-success/30 bg-gradient-to-br from-success/[0.10] to-success/[0.02] p-3.5 shadow-layered-sm">
-              <div className="flex items-center gap-2.5">
-                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-success/15 text-success">
-                  <Icon name="tick-circle" size={20} variant="Bold" />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-[13px] font-bold text-text-primary">Сўровнома сақланди</p>
-                  <p className="text-[11px] text-text-secondary">Оила ижарага рози — шартнома тузиш мумкин</p>
-                </div>
-              </div>
-              <div className="mt-3 flex items-center gap-2.5">
-                <button
-                  type="button"
-                  onClick={onCreateContract}
-                  className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-navy to-navy-light text-[13.5px] font-bold text-white shadow-[0_8px_20px_rgba(43,140,238,0.42)] transition-all hover:brightness-[1.08] active:scale-[0.98]"
-                >
-                  <Icon name="document-text" size={16} variant="Bold" />
-                  Шартнома тузиш
-                </button>
-                <button
-                  type="button"
-                  onClick={onBack}
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-full px-4 text-[13px] font-semibold text-text-secondary transition-colors hover:bg-slate-100 active:scale-[0.97]"
-                >
-                  Рўйхатга
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div
-              role="status"
-              className="flex items-center gap-2 rounded-xl border border-success/25 bg-success/[0.12] px-3 py-2.5 text-success shadow-layered-sm"
-            >
-              <Icon name="tick-circle" size={18} variant="Bold" />
-              <p className="text-[13px] font-semibold">Сўровнома сақланди</p>
-            </div>
-          )}
-        </div>
+        <SavedModal
+          wantsRent={hasGarden && wantsRent}
+          onCreateContract={onCreateContract}
+          onBack={onBack}
+          onClose={() => setSaveState("idle")}
+        />
       )}
 
       {/* Bottom action bar */}
@@ -1054,6 +1019,112 @@ export function FaceScanOverlay({
           Қайта уриниш
         </button>
       )}
+    </div>
+  );
+}
+
+/* ── SavedModal — «Сўровнома сақланди» тасдиқ ойнаси (модал) ───────────────── */
+export function SavedModal({
+  wantsRent,
+  onCreateContract,
+  onBack,
+  onClose,
+}: {
+  /** «Истаги бор» — ижарага рози: шартнома тузишга ўтиш таклифи кўрсатилади */
+  wantsRent: boolean;
+  onCreateContract?: () => void;
+  onBack?: () => void;
+  onClose: () => void;
+}) {
+  // Esc билан ёпиш — клавиатура фойдаланувчилари учун
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div className="saved-backdrop absolute inset-0 z-50 flex items-center justify-center bg-[#0b1220]/45 px-5 backdrop-blur-[3px]">
+      <style>{`
+        @keyframes savedBackdrop { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes savedCard { 0% { opacity: 0; transform: translateY(14px) scale(.94) } 100% { opacity: 1; transform: none } }
+        @keyframes savedPop { 0% { transform: scale(.3); opacity: 0 } 60% { transform: scale(1.14) } 100% { transform: scale(1); opacity: 1 } }
+        @keyframes savedRing { 0% { transform: scale(.65); opacity: .5 } 100% { transform: scale(1.6); opacity: 0 } }
+        .saved-backdrop { animation: savedBackdrop .22s ease-out }
+        .saved-card { animation: savedCard .4s cubic-bezier(0.16,1,0.3,1) }
+        .saved-pop { animation: savedPop .5s cubic-bezier(0.34,1.56,0.64,1) forwards }
+        .saved-ring { animation: savedRing 1.5s ease-out infinite }
+        @media (prefers-reduced-motion: reduce) {
+          .saved-backdrop, .saved-card, .saved-pop { animation: none; opacity: 1 }
+          .saved-ring { animation: none; opacity: 0 }
+        }
+      `}</style>
+
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="saved-modal-title"
+        className="saved-card relative w-full max-w-[330px] overflow-hidden rounded-3xl border border-white/60 bg-white p-6 text-center shadow-[0_30px_70px_-12px_rgba(15,23,42,0.5)]"
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Ёпиш"
+          className="absolute right-3.5 top-3.5 inline-flex h-9 w-9 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-slate-100 active:scale-90"
+        >
+          <Icon name="close-circle" size={22} variant="Bold" />
+        </button>
+
+        {/* Муваффақият белгиси — пульсли ҳалқа + поп */}
+        <div className="relative mx-auto mb-4 mt-1 flex h-[68px] w-[68px] items-center justify-center">
+          <span aria-hidden className="saved-ring absolute inset-0 rounded-full bg-success/30" />
+          <span className="saved-pop relative inline-flex h-[68px] w-[68px] items-center justify-center rounded-full bg-success text-white shadow-[0_12px_30px_rgba(34,197,94,0.45)]">
+            <Icon name="tick-circle" size={40} variant="Bold" />
+          </span>
+        </div>
+
+        <p id="saved-modal-title" className="text-[17px] font-extrabold text-text-primary">
+          Сўровнома сақланди
+        </p>
+        <p className="mx-auto mt-1.5 max-w-[260px] text-[12.5px] leading-snug text-text-secondary">
+          {wantsRent
+            ? "Оила ижарага рози — энди шартнома тузишингиз мумкин."
+            : "Маълумотлар муваффақиятли юборилди ва рўйхатга қўшилди."}
+        </p>
+
+        <div className="mt-5 flex flex-col gap-2.5">
+          {wantsRent ? (
+            <>
+              <button
+                type="button"
+                onClick={onCreateContract}
+                className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-navy to-navy-light text-[14px] font-bold text-white shadow-[0_10px_24px_rgba(43,140,238,0.42)] transition-all hover:brightness-[1.08] active:scale-[0.98]"
+              >
+                <Icon name="document-text" size={17} variant="Bold" />
+                Шартнома тузиш
+              </button>
+              <button
+                type="button"
+                onClick={onBack ?? onClose}
+                className="inline-flex min-h-[44px] w-full items-center justify-center rounded-full text-[13.5px] font-semibold text-text-secondary transition-colors hover:bg-slate-100 active:scale-[0.98]"
+              >
+                Рўйхатга қайтиш
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={onBack ?? onClose}
+              className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-navy to-navy-light text-[14px] font-bold text-white shadow-[0_10px_24px_rgba(43,140,238,0.42)] transition-all hover:brightness-[1.08] active:scale-[0.98]"
+            >
+              <Icon name="arrow-left" size={16} variant="Bold" />
+              Рўйхатга қайтиш
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
