@@ -15,6 +15,7 @@
  */
 
 import type { IconName } from "@/components/atoms/Icon";
+import type { FoydalanishHolati, SuvTaminoti } from "@/lib/social-survey-data";
 
 export type FamilyStatus = "survey_pending" | "declined" | "contract_pending" | "contract_done";
 
@@ -33,6 +34,54 @@ export interface IjaraFamily {
   status: FamilyStatus;
   /** Сўровнома натижаси — «Истаги бор» оилаларда ижара муддати (тугаш санасини таклиф қилади) */
   ijaraMuddati?: string;
+
+  /* ── Ўтказилган сўровнома натижаси (фақат status ≠ survey_pending) ──────── */
+  /** Сўровнома ўтказилган сана (dd.MM.yyyy) */
+  sorovnomaSana?: string;
+  /** Томорқаси мавжудлиги — false бўлса «Мавжуд эмас» (ижара имконсиз, рад этилади) */
+  tomorqaMavjud?: boolean;
+  /** Томорқадан фойдаланиш ҳолати — сўровнома жавоби */
+  foydalanishHolati?: FoydalanishHolati;
+  /** Сув таъминоти — сўровнома жавоби */
+  suvTaminoti?: SuvTaminoti;
+  /** Рад этиш сабаби — фақат «declined» оилаларда (ижара истаги йўқ) */
+  radSababi?: string;
+}
+
+/* ── Ўтказилган сўровнома натижаси — hero банер матни (status бўйича) ──────── */
+export const SURVEY_OUTCOME: Record<FamilyStatus, { title: string; subtitle: string }> = {
+  survey_pending: {
+    title: "Сўровнома кутилмоқда",
+    subtitle: "Сўровнома ҳали ўтказилмаган.",
+  },
+  declined: {
+    title: "Рад этилган",
+    subtitle: "Оила томорқани ижарага беришни истамади.",
+  },
+  contract_pending: {
+    title: "Ижарага рози — шартномага тайёр",
+    subtitle: "Оила томорқани ижарага беришга рози. Энди шартнома тузиш мумкин.",
+  },
+  contract_done: {
+    title: "Шартнома тузилган",
+    subtitle: "Ижара шартномаси расмийлаштирилган.",
+  },
+};
+
+/** Сўровнома натижасида ижара истаги — статусдан келиб чиқади (SSOT). */
+export function ijaraIstagiOf(status: FamilyStatus): "Истаги бор" | "Истаги йўқ" {
+  return status === "declined" || status === "survey_pending" ? "Истаги йўқ" : "Истаги бор";
+}
+
+/** Сўровнома натижа банери — «томорқа мавжуд эмас» алоҳида ҳолат сифатида. */
+export function surveyOutcomeOf(family: IjaraFamily): { title: string; subtitle: string } {
+  if (family.tomorqaMavjud === false) {
+    return {
+      title: "Томорқа мавжуд эмас",
+      subtitle: "Оилада томорқа (ер участкаси) йўқ — ижара дастурига киритилмади.",
+    };
+  }
+  return SURVEY_OUTCOME[family.status];
 }
 
 /* ── Шартнома reference ro'yxatlari (real tizimдан) ───────────────────────── */
@@ -84,6 +133,9 @@ export const ijaraFamilies: IjaraFamily[] = [
     erMaydoni: "121.12",
     status: "contract_pending",
     ijaraMuddati: "12 ой",
+    sorovnomaSana: "12.06.2026",
+    foydalanishHolati: "Фойдаланмайди",
+    suvTaminoti: "Марказлашган ичимлик суви",
   },
   {
     id: "F-002",
@@ -117,6 +169,10 @@ export const ijaraFamilies: IjaraFamily[] = [
     manzil: "Ёшлик МФЙ, Навоий кўчаси, 7-уй",
     erMaydoni: "52.30",
     status: "declined",
+    sorovnomaSana: "10.06.2026",
+    foydalanishHolati: "Фойдаланади",
+    suvTaminoti: "Қудуқ",
+    radSababi: "Оила томорқадан деҳқончилик учун ўзи фойдаланмоқда, ижарага беришни истамайди.",
   },
   {
     id: "F-005",
@@ -129,6 +185,9 @@ export const ijaraFamilies: IjaraFamily[] = [
     erMaydoni: "98.75",
     status: "contract_pending",
     ijaraMuddati: "24 ой",
+    sorovnomaSana: "13.06.2026",
+    foydalanishHolati: "Қисман фойдаланади",
+    suvTaminoti: "Ариқ ёки канал",
   },
   {
     id: "F-006",
@@ -141,6 +200,9 @@ export const ijaraFamilies: IjaraFamily[] = [
     erMaydoni: "73.50",
     status: "contract_done",
     ijaraMuddati: "12 ой",
+    sorovnomaSana: "08.06.2026",
+    foydalanishHolati: "Фойдаланмайди",
+    suvTaminoti: "Марказлашган ичимлик суви",
   },
   {
     id: "F-007",
@@ -164,6 +226,23 @@ export const ijaraFamilies: IjaraFamily[] = [
     erMaydoni: "67.80",
     status: "contract_done",
     ijaraMuddati: "36 ой",
+    sorovnomaSana: "05.06.2026",
+    foydalanishHolati: "Фойдаланмайди",
+    suvTaminoti: "Қудуқ",
+  },
+  {
+    id: "F-009",
+    oilaBoshligiFio: "Каримова Дилбар Аъзам қизи",
+    jshshir: "51908913640025",
+    telefon: "+998907781234",
+    oilaAzolariSoni: 3,
+    kadastrRaqami: "—",
+    manzil: "Янгиобод МФЙ, Гулзор кўчаси, 2-уй",
+    erMaydoni: "0",
+    status: "declined",
+    sorovnomaSana: "14.06.2026",
+    tomorqaMavjud: false,
+    radSababi: "Оилада томорқа (ер участкаси) мавжуд эмас — ижара дастурига кирмайди.",
   },
 ];
 
