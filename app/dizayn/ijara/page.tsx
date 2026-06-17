@@ -5,6 +5,7 @@ import { Icon, type IconName } from "@/components/atoms/Icon";
 import { DeviceFrame } from "@/components/mobile/DeviceFrame";
 import IjaraModuleScreen from "@/components/mobile/IjaraModuleScreen";
 import IjaraListScreen from "@/components/mobile/IjaraListScreen";
+import SorovnomaScreen from "@/components/mobile/SorovnomaScreen";
 import ShartnomaScreen, { sampleContractForm } from "@/components/mobile/ShartnomaScreen";
 import ShartnomaDocument from "@/components/mobile/ShartnomaDocument";
 import { ijaraFamilies } from "@/lib/ijara-module-data";
@@ -98,6 +99,24 @@ export default function IjaraModuleDesignPreview() {
           </DeviceFrame>
           <DeviceFrame variant="tablet" label="Планшет · Шартнома рўйхати">
             <IjaraListScreen layout="tablet" mode="contract" initialTab="ready" />
+          </DeviceFrame>
+        </div>
+
+        {/* ── СЎРОВНОМА → ШАРТНОМА ЎТИШИ ── */}
+        <SectionHeader
+          icon="hierarchy"
+          title="Сўровнома → шартнома ўтиши"
+          subtitle="«Истаги бор» сўровнома сақлангач — дарҳол «Шартнома тузиш» таклифи"
+        />
+        <div className="mb-12 flex flex-wrap items-start justify-center gap-10 sm:gap-14">
+          <DeviceFrame variant="phone" label="Сўровнома якуни · ижарага рози">
+            <SorovnomaScreen
+              family={ijaraFamilies[0]}
+              layout="phone"
+              initialStep={3}
+              initialFaceVerified
+              initialSaved
+            />
           </DeviceFrame>
         </div>
 

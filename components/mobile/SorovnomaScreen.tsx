@@ -50,6 +50,10 @@ export interface SorovnomaScreenProps {
   initialFaceVerified?: boolean;
   /** preview учун: юз сканери overlay'ини маълум ҳолатда статик кўрсатиш */
   previewFaceScan?: "scanning" | "success" | "error";
+  /** preview учун: сақланган (success) ҳолатни кўрсатиш */
+  initialSaved?: boolean;
+  /** «Истаги бор» сўровномадан кейин — шартнома тузишга ўтиш */
+  onCreateContract?: () => void;
 }
 
 type SaveState = "idle" | "saving" | "success";
@@ -110,12 +114,14 @@ export default function SorovnomaScreen({
   initialForm,
   initialFaceVerified = false,
   previewFaceScan,
+  initialSaved = false,
+  onCreateContract,
 }: SorovnomaScreenProps) {
   const isTablet = layout === "tablet";
 
   const [form, setForm] = useState<FormState>(() => buildInitialForm(family, initialForm));
   const [errors, setErrors] = useState<FormErrors>({});
-  const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [saveState, setSaveState] = useState<SaveState>(initialSaved ? "success" : "idle");
   const [cadastre, setCadastre] = useState<CadastreState>("verified");
   const [step, setStep] = useState(initialStep);
   const [faceVerified, setFaceVerified] = useState(initialFaceVerified);
@@ -125,13 +131,13 @@ export default function SorovnomaScreen({
   useEffect(() => {
     setForm(buildInitialForm(family, initialForm));
     setErrors({});
-    setSaveState("idle");
+    setSaveState(initialSaved ? "success" : "idle");
     setCadastre("verified");
     setStep(initialStep);
     setFaceVerified(initialFaceVerified);
     setFaceScan(previewFaceScan ?? "idle");
     setShowFaceScan(Boolean(previewFaceScan));
-  }, [family, initialStep, initialForm, initialFaceVerified, previewFaceScan]);
+  }, [family, initialStep, initialForm, initialFaceVerified, previewFaceScan, initialSaved]);
 
   // Юз сканери ҳолат машинаси (cancel-safe: ҳолат ўзгарса таймер тозаланади).
   // Preview режимида статик туради — авто-ўтиш йўқ.
@@ -508,13 +514,45 @@ export default function SorovnomaScreen({
 
       {saveState === "success" && (
         <div className="shrink-0 px-3 pb-1">
-          <div
-            role="status"
-            className="flex items-center gap-2 rounded-xl border border-success/25 bg-success/[0.12] px-3 py-2.5 text-success shadow-layered-sm"
-          >
-            <Icon name="tick-circle" size={18} variant="Bold" />
-            <p className="text-[13px] font-semibold">Сўровнома сақланди</p>
-          </div>
+          {hasGarden && wantsRent ? (
+            /* «Истаги бор» — шартнома тузишга ўтиш таклифи */
+            <div className="overflow-hidden rounded-2xl border border-success/30 bg-gradient-to-br from-success/[0.10] to-success/[0.02] p-3.5 shadow-layered-sm">
+              <div className="flex items-center gap-2.5">
+                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-success/15 text-success">
+                  <Icon name="tick-circle" size={20} variant="Bold" />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-[13px] font-bold text-text-primary">Сўровнома сақланди</p>
+                  <p className="text-[11px] text-text-secondary">Оила ижарага рози — шартнома тузиш мумкин</p>
+                </div>
+              </div>
+              <div className="mt-3 flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={onCreateContract}
+                  className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-navy to-navy-light text-[13.5px] font-bold text-white shadow-[0_8px_20px_rgba(43,140,238,0.42)] transition-all hover:brightness-[1.08] active:scale-[0.98]"
+                >
+                  <Icon name="document-text" size={16} variant="Bold" />
+                  Шартнома тузиш
+                </button>
+                <button
+                  type="button"
+                  onClick={onBack}
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full px-4 text-[13px] font-semibold text-text-secondary transition-colors hover:bg-slate-100 active:scale-[0.97]"
+                >
+                  Рўйхатга
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div
+              role="status"
+              className="flex items-center gap-2 rounded-xl border border-success/25 bg-success/[0.12] px-3 py-2.5 text-success shadow-layered-sm"
+            >
+              <Icon name="tick-circle" size={18} variant="Bold" />
+              <p className="text-[13px] font-semibold">Сўровнома сақланди</p>
+            </div>
+          )}
         </div>
       )}
 
