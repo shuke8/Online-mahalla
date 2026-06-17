@@ -83,6 +83,7 @@ export default function IjaraModuleScreen({
               desc="Оила томорқасини баҳолаш ва ижара истагини аниқлаш"
               countLabel="Кутилмоқда"
               count={c.surveyPending}
+              countIcon="time"
               onClick={onOpenSurvey}
             />
             <ActionCard
@@ -92,6 +93,7 @@ export default function IjaraModuleScreen({
               desc="Ижарага рози оилалар билан ижара шартномасини тузиш"
               countLabel="Тайёр"
               count={c.contractReady}
+              countIcon="tick-circle"
               onClick={onOpenContract}
             />
           </div>
@@ -112,7 +114,7 @@ export default function IjaraModuleScreen({
   );
 }
 
-/* ── Katta amal kartasi ──────────────────────────────────────────────────── */
+/* ── Амал картаси — тоза (флат), Airwallex/Alipay услуби ──────────────────── */
 function ActionCard({
   icon,
   accent,
@@ -120,6 +122,7 @@ function ActionCard({
   desc,
   countLabel,
   count,
+  countIcon,
   onClick,
 }: {
   icon: IconName;
@@ -128,36 +131,33 @@ function ActionCard({
   desc: string;
   countLabel: string;
   count: number;
+  countIcon: IconName;
   onClick?: () => void;
 }) {
   return (
-    <PressCard onClick={onClick} className="h-full rounded-3xl">
-      <div
-        className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-light bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_14px_34px_-24px_rgba(15,23,42,0.4)] transition-shadow hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_22px_44px_-26px_rgba(15,23,42,0.5)]"
-        style={{ background: `linear-gradient(135deg, ${accent}0d 0%, #ffffff 42%)` }}
-      >
-        <span
-          className="inline-flex shrink-0 items-center justify-center rounded-2xl"
-          style={{ background: `${accent}1f`, color: accent, height: 52, width: 52 }}
-        >
-          <Icon name={icon} size={26} variant="Bold" />
-        </span>
-        <h3 className="mt-3.5 text-[15.5px] font-bold leading-tight text-text-primary">{title}</h3>
-        <p className="mt-1 text-[12px] leading-relaxed text-text-secondary">{desc}</p>
-
-        <div className="mt-4 flex items-center justify-between">
+    <PressCard onClick={onClick} className="h-full rounded-2xl">
+      <div className="flex h-full flex-col rounded-2xl border border-border-light bg-white p-4 shadow-layered-sm transition-shadow hover:shadow-layered">
+        {/* Иконка + сарлавҳа + chevron */}
+        <div className="flex items-center gap-3">
           <span
-            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11.5px] font-bold"
-            style={{ background: `${accent}16`, color: accent }}
+            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+            style={{ background: `${accent}14`, color: accent }}
           >
-            <Icon name="time" size={12} variant="Bold" />
-            {countLabel}: {count}
+            <Icon name={icon} size={24} variant="Bold" />
           </span>
+          <h3 className="min-w-0 flex-1 text-[15px] font-bold leading-tight text-text-primary">{title}</h3>
+          <Icon name="chevron-forward" size={20} className="shrink-0 text-text-secondary/45" />
+        </div>
+
+        <p className="mt-2.5 text-[12px] leading-relaxed text-text-secondary">{desc}</p>
+
+        <div className="mt-3.5 flex items-center">
           <span
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-white shadow-[0_6px_16px_-6px_rgba(15,23,42,0.6)]"
-            style={{ background: accent }}
+            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11.5px] font-bold"
+            style={{ background: `${accent}14`, color: accent }}
           >
-            <Icon name="chevron-forward" size={18} variant="Bold" />
+            <Icon name={countIcon} size={12} variant="Bold" />
+            {countLabel}: {count}
           </span>
         </div>
       </div>
