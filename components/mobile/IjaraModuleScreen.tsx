@@ -12,8 +12,9 @@
 import { Icon } from "@/components/atoms/Icon";
 import type { IconName } from "@/components/atoms/Icon";
 import {
-  ijaraFamilies,
   moduleCounts,
+  statusCounts,
+  MFY_NAME,
   STATUS_META,
   type FamilyStatus,
   type StatusTone,
@@ -28,13 +29,6 @@ const TONE_HEX: Record<StatusTone, string> = {
   navy: "#2b8cee",
   success: "#16a34a",
 };
-
-const STATUS_ORDER: FamilyStatus[] = [
-  "survey_pending",
-  "declined",
-  "contract_pending",
-  "contract_done",
-];
 
 export interface IjaraModuleScreenProps {
   layout: "phone" | "tablet";
@@ -51,8 +45,11 @@ export default function IjaraModuleScreen({
   const isTablet = layout === "tablet";
   const c = moduleCounts();
 
-  const byStatus = (s: FamilyStatus) => ijaraFamilies.filter((f) => f.status === s).length;
-  const segments = STATUS_ORDER.map((s) => ({ status: s, count: byStatus(s), meta: STATUS_META[s] }));
+  const segments = statusCounts().map(({ status, count }) => ({
+    status,
+    count,
+    meta: STATUS_META[status],
+  }));
 
   return (
     <div className="relative flex flex-1 flex-col bg-[#f1f2f4]">
@@ -64,8 +61,8 @@ export default function IjaraModuleScreen({
           <h1 className="truncate text-[22px] font-extrabold leading-none tracking-tight text-slate-900">
             Томорқа ижараси
           </h1>
-          <p className="mt-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
-            Ижтимоий реестр
+          <p className="mt-1.5 truncate text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
+            {MFY_NAME} · ижтимоий реестр
           </p>
         </div>
         <HeaderIcon icon="notifications" />
@@ -88,7 +85,7 @@ export default function IjaraModuleScreen({
             <FlowCard
               title="Сўровнома"
               label="Ўтказилди"
-              done={c.total - c.surveyPending}
+              done={c.surveyed}
               total={c.total}
               unit="оила"
               accent="#2b8cee"
@@ -96,9 +93,9 @@ export default function IjaraModuleScreen({
             />
             <FlowCard
               title="Шартнома"
-              label="Тузилди"
+              label="Ижарага берилди"
               done={c.contractDone}
-              total={c.contractReady + c.contractDone}
+              total={c.wantsRent}
               unit="рози оила"
               accent={GREEN}
               onClick={onOpenContract}
@@ -254,9 +251,9 @@ interface RecentItem {
 }
 
 const RECENT: RecentItem[] = [
-  { name: "Турсунов Жасур Олим ўғли", action: "Шартнома тузилди", when: "бугун", icon: "tick-circle", tint: GREEN },
-  { name: "Ғоибова Зулфизар Жаббор қизи", action: "Сўровнома ўтказилди", when: "кеча", icon: "note", tint: "#2b8cee" },
-  { name: "Эргашева Нодира Аброр қизи", action: "Сўровнома ўтказилди", when: "3 кун олдин", icon: "note", tint: "#2b8cee" },
+  { name: "Нематова Насиба Эргаш қизи", action: "Шартнома тузилди", when: "бугун", icon: "tick-circle", tint: GREEN },
+  { name: "Собиров Самад Собирович", action: "Сўровнома ўтказилди", when: "кеча", icon: "note", tint: "#2b8cee" },
+  { name: "Мансурова Мақсуда Шавкат қизи", action: "Сўровнома ўтказилди", when: "3 кун олдин", icon: "note", tint: "#2b8cee" },
 ];
 
 function RecentList() {

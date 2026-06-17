@@ -183,10 +183,48 @@ export function contractList(tab: "ready" | "done"): IjaraFamily[] {
   );
 }
 
-/** Modul kirish ekrani uchun sonlar. */
+/* ── МФЙ реестр статистикаси (реал жадвалга мос) ─────────────────────────── */
+
+/** Жорий МФЙ (реал тизим жадвалидан: poor_family_rents_land_info). */
+export const MFY_NAME = "Галаосиё МФЙ";
+
+/**
+ * МФЙ реестр статистикаси — устунлар реал жадвалга мос:
+ * жами рўйхат → сўровнома ўтказилди → ижара истаги → ижарага берилди.
+ * Реал тизим уланганда бу сонлар жадвалдан автоматик ҳисобланади
+ * (Галаосиё МФЙ: 34 оила рўйхатда). Қуйидаги тақсимот — намунавий прогресс.
+ */
+export const REGISTRY_STATS = {
+  total: 34, // рўйхатдаги оилалар
+  survey_pending: 13, // сўровнома кутилмоқда
+  declined: 8, // истаги йўқ
+  contract_pending: 9, // истаги бор, ижара йўқ
+  contract_done: 4, // ижарага берилди
+} as const;
+
+/** Modul kirish ekrani uchun sonlar (реестр статистикасидан). */
 export function moduleCounts() {
-  const surveyPending = ijaraFamilies.filter((f) => f.status === "survey_pending").length;
-  const contractReady = ijaraFamilies.filter((f) => f.status === "contract_pending").length;
-  const contractDone = ijaraFamilies.filter((f) => f.status === "contract_done").length;
-  return { total: ijaraFamilies.length, surveyPending, contractReady, contractDone };
+  const r = REGISTRY_STATS;
+  return {
+    total: r.total,
+    surveyPending: r.survey_pending,
+    declined: r.declined,
+    contractReady: r.contract_pending,
+    contractDone: r.contract_done,
+    /** сўровнома ўтказилди (жами − кутилмоқда) */
+    surveyed: r.total - r.survey_pending,
+    /** ижара истаги бор (рози оила) = тайёр + берилди */
+    wantsRent: r.contract_pending + r.contract_done,
+  };
+}
+
+/** Реестр статусларининг 4 та сони (statistika tile/segment uchun). */
+export function statusCounts(): { status: FamilyStatus; count: number }[] {
+  const r = REGISTRY_STATS;
+  return [
+    { status: "survey_pending", count: r.survey_pending },
+    { status: "declined", count: r.declined },
+    { status: "contract_pending", count: r.contract_pending },
+    { status: "contract_done", count: r.contract_done },
+  ];
 }
