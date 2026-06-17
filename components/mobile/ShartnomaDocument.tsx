@@ -189,10 +189,10 @@ function KeyValueList({ rows }: { rows: { label: string; value: string; mono?: b
   return (
     <dl className="flex flex-col gap-1.5">
       {rows.map((r) => (
-        <div key={r.label} className="flex items-baseline justify-between gap-3">
-          <dt className="shrink-0 text-[11.5px] font-medium text-text-secondary">{r.label}</dt>
+        <div key={r.label} className="flex items-start justify-between gap-3">
+          <dt className="shrink-0 text-[11.5px] font-medium leading-snug text-text-secondary">{r.label}</dt>
           <dd
-            className={`min-w-0 truncate text-right text-[12.5px] font-semibold text-text-primary ${
+            className={`min-w-0 text-right text-[12.5px] font-semibold leading-snug text-text-primary [overflow-wrap:anywhere] ${
               r.mono ? "tabular-nums" : ""
             }`}
           >
@@ -219,13 +219,13 @@ function DetailRow({
 }) {
   return (
     <div
-      className={`flex items-center justify-between gap-3 px-3 py-2.5 ${
+      className={`flex items-start justify-between gap-3 px-3 py-2.5 ${
         last ? "" : "border-b border-border-light"
       } ${emphasize ? "bg-navy-lighter/50" : ""}`}
     >
-      <span className="shrink-0 text-[11.5px] font-medium text-text-secondary">{label}</span>
+      <span className="shrink-0 text-[11.5px] font-medium leading-snug text-text-secondary">{label}</span>
       <span
-        className={`min-w-0 truncate text-right text-[12.5px] text-text-primary ${
+        className={`min-w-0 text-right text-[12.5px] leading-snug text-text-primary [overflow-wrap:anywhere] ${
           emphasize ? "font-extrabold text-navy" : "font-semibold"
         } ${mono ? "tabular-nums" : ""}`}
       >
@@ -249,7 +249,7 @@ function SignatureBlock({
   return (
     <div className="rounded-xl border border-border-light bg-surface/40 p-3">
       <p className="text-[10px] font-bold uppercase tracking-wide text-text-secondary">{role}</p>
-      <p className="mt-2 truncate text-[12px] font-semibold text-text-primary">{name}</p>
+      <p className="mt-2 text-[12px] font-semibold leading-snug text-text-primary [overflow-wrap:anywhere]">{name}</p>
       <div className="mt-3 border-t border-dashed border-slate-300 pt-1">
         {biometric ? (
           <p className="flex items-center gap-1 text-[9.5px] font-semibold text-success">
