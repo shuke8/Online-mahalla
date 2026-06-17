@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Icon, type IconName } from "@/components/atoms/Icon";
 import { DeviceFrame } from "@/components/mobile/DeviceFrame";
 import IjaraModuleScreen from "@/components/mobile/IjaraModuleScreen";
+import IjaraListScreen from "@/components/mobile/IjaraListScreen";
 
 export default function IjaraModuleDesignPreview() {
   return (
@@ -55,6 +56,24 @@ export default function IjaraModuleDesignPreview() {
           </DeviceFrame>
           <DeviceFrame variant="tablet" label="Планшет · Модул кириши">
             <IjaraModuleScreen layout="tablet" />
+          </DeviceFrame>
+        </div>
+
+        {/* ── СЎРОВНОМА РЎЙХАТИ ── */}
+        <SectionHeader
+          icon="note"
+          title="Сўровнома рўйхати"
+          subtitle="Оилани танлаш · қидирув + таб (кутилмоқда / ўтказилган)"
+        />
+        <div className="mb-12 flex flex-wrap items-start justify-center gap-10 sm:gap-14">
+          <DeviceFrame variant="phone" label="Телефон · Кутилмоқда">
+            <IjaraListScreen layout="phone" mode="survey" initialTab="pending" />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="Телефон · Ўтказилган">
+            <IjaraListScreen layout="phone" mode="survey" initialTab="done" />
+          </DeviceFrame>
+          <DeviceFrame variant="tablet" label="Планшет · Сўровнома рўйхати">
+            <IjaraListScreen layout="tablet" mode="survey" initialTab="pending" />
           </DeviceFrame>
         </div>
       </div>
