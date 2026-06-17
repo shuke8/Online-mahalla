@@ -688,16 +688,21 @@ export function Stepper({ current, onStep }: { current: number; onStep: (i: numb
           );
         })}
       </div>
-      <div className="mt-2 grid grid-cols-4 text-center">
+      {/* Ёрлиқлар — доиралар қатори билан бир хил flex структура (марказлар тўғри келади) */}
+      <div className="mt-2 flex items-start">
         {STEPS.map((s, i) => (
-          <span
-            key={s.label}
-            className={`truncate px-0.5 text-[10px] transition-colors ${
-              i === current ? "font-bold text-navy" : "font-semibold text-text-secondary/75"
-            }`}
-          >
-            {s.label}
-          </span>
+          <Fragment key={s.label}>
+            <span className="flex w-8 shrink-0 justify-center">
+              <span
+                className={`whitespace-nowrap text-center text-[10px] leading-tight transition-colors ${
+                  i === current ? "font-bold text-navy" : "font-semibold text-text-secondary/75"
+                }`}
+              >
+                {s.label}
+              </span>
+            </span>
+            {i < STEPS.length - 1 && <span className="mx-1.5 flex-1" />}
+          </Fragment>
         ))}
       </div>
     </div>
