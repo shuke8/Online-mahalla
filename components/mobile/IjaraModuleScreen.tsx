@@ -118,7 +118,14 @@ export default function IjaraModuleScreen({
   );
 }
 
-/* ── Статистика hero ─────────────────────────────────────────────────────── */
+/* ── Статистика hero (содда: жами + 4 ҳолат tile) ────────────────────────── */
+const STAT_TILE_ORDER: FamilyStatus[] = [
+  "survey_pending",
+  "contract_pending",
+  "contract_done",
+  "declined",
+];
+
 function StatsHero({
   total,
   segments,
@@ -128,56 +135,50 @@ function StatsHero({
   segments: { status: FamilyStatus; count: number; meta: (typeof STATUS_META)[FamilyStatus] }[];
   contractDone: number;
 }) {
+  const tiles = STAT_TILE_ORDER.map((s) => segments.find((x) => x.status === s)!);
+
   return (
-    <div className="overflow-hidden rounded-3xl border border-slate-200/70 bg-gradient-to-br from-[#eaf6ef] to-white p-5 shadow-[0_8px_28px_-18px_rgba(15,23,42,0.45)]">
-      {/* Top: чип + refresh */}
-      <div className="flex items-center justify-between">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[12px] font-bold text-slate-700 shadow-sm">
-          <Icon name="people" size={14} variant="Bold" style={{ color: GREEN }} />
-          {total} оила · реестр
+    <div className="relative rounded-3xl border border-slate-200/70 bg-white p-5 shadow-[0_8px_28px_-18px_rgba(15,23,42,0.45)]">
+      <button
+        type="button"
+        aria-label="Янгилаш"
+        className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-transform active:scale-90"
+      >
+        <Icon name="refresh" size={16} variant="Bold" />
+      </button>
+
+      {/* Катта жами */}
+      <div className="flex items-end gap-2">
+        <span className="text-[40px] font-extrabold leading-none tracking-tight text-slate-900">{total}</span>
+        <span className="mb-1 max-w-[150px] text-[12.5px] font-semibold leading-tight text-slate-500">
+          оила ижтимоий реестрда
         </span>
-        <button
-          type="button"
-          aria-label="Янгилаш"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-500 shadow-sm transition-transform active:scale-90"
-        >
-          <Icon name="refresh" size={17} variant="Bold" />
-        </button>
       </div>
 
-      {/* Катта рақам */}
-      <div className="mt-4 flex items-end gap-2">
-        <span className="text-[44px] font-extrabold leading-none tracking-tight text-slate-900">{total}</span>
-        <span className="mb-1 text-[13px] font-semibold text-slate-500">оила ижтимоий реестрда</span>
+      {/* 4 ҳолат — содда tile (амалга муҳтож → юқорида, ёпилган → пастда) */}
+      <div className="mt-4 grid grid-cols-2 gap-2.5">
+        {tiles.map((t) => {
+          const color = TONE_HEX[t.meta.tone];
+          return (
+            <div
+              key={t.status}
+              className="flex flex-col rounded-2xl px-3.5 py-3"
+              style={{ background: `${color}12` }}
+            >
+              <span className="text-[24px] font-extrabold leading-none tabular-nums" style={{ color }}>
+                {t.count}
+              </span>
+              <span className="mt-2 flex items-center gap-1.5 text-[12px] font-semibold text-slate-600">
+                <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: color }} />
+                <span className="truncate">{t.meta.short}</span>
+              </span>
+            </div>
+          );
+        })}
       </div>
 
-      {/* Ҳолат тақсимоти бар */}
-      <div className="mt-3.5 flex h-3 w-full overflow-hidden rounded-full bg-slate-100">
-        {segments.map((s) =>
-          s.count > 0 ? (
-            <span
-              key={s.status}
-              className="h-full"
-              style={{ width: `${(s.count / total) * 100}%`, background: TONE_HEX[s.meta.tone] }}
-              title={`${s.meta.short}: ${s.count}`}
-            />
-          ) : null,
-        )}
-      </div>
-
-      {/* Легенда (2 устун) */}
-      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2">
-        {segments.map((s) => (
-          <div key={s.status} className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: TONE_HEX[s.meta.tone] }} />
-            <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-slate-600">{s.meta.short}</span>
-            <span className="text-[12.5px] font-bold tabular-nums text-slate-900">{s.count}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Пастки pill (Mobbin House услуби) */}
-      <div className="mt-4 flex items-center gap-2 rounded-2xl bg-white px-3.5 py-3 shadow-sm">
+      {/* Пастки pill — жорий ой натижаси */}
+      <div className="mt-3 flex items-center gap-2 rounded-2xl bg-slate-50 px-3.5 py-3">
         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl" style={{ background: `${GREEN}1a`, color: GREEN }}>
           <Icon name="tick-circle" size={17} variant="Bold" />
         </span>
