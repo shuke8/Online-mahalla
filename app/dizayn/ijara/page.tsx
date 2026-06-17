@@ -5,6 +5,8 @@ import { Icon, type IconName } from "@/components/atoms/Icon";
 import { DeviceFrame } from "@/components/mobile/DeviceFrame";
 import IjaraModuleScreen from "@/components/mobile/IjaraModuleScreen";
 import IjaraListScreen from "@/components/mobile/IjaraListScreen";
+import ShartnomaScreen from "@/components/mobile/ShartnomaScreen";
+import { ijaraFamilies } from "@/lib/ijara-module-data";
 
 export default function IjaraModuleDesignPreview() {
   return (
@@ -95,6 +97,33 @@ export default function IjaraModuleDesignPreview() {
           </DeviceFrame>
           <DeviceFrame variant="tablet" label="Планшет · Шартнома рўйхати">
             <IjaraListScreen layout="tablet" mode="contract" initialTab="ready" />
+          </DeviceFrame>
+        </div>
+
+        {/* ── ШАРТНОМА ФОРМАСИ ── */}
+        <SectionHeader
+          icon="document-text"
+          title="Шартнома формаси"
+          subtitle="4 қадам: Берувчи (авто) → Олувчи → Шартлар → Якунлаш (биометрика + имзо)"
+        />
+        <div className="mb-12 flex flex-wrap items-start justify-center gap-8 sm:gap-12">
+          <DeviceFrame variant="phone" label="1 · Ижарага берувчи (авто)">
+            <ShartnomaScreen family={ijaraFamilies[0]} layout="phone" initialStep={0} />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="2 · Ижарага олувчи">
+            <ShartnomaScreen family={ijaraFamilies[0]} layout="phone" initialStep={1} />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="3 · Ижара шартлари">
+            <ShartnomaScreen family={ijaraFamilies[0]} layout="phone" initialStep={2} />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="4 · Якунлаш (тасдиқ кутмоқда)">
+            <ShartnomaScreen family={ijaraFamilies[0]} layout="phone" initialStep={3} />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="4 · Якунлаш (тасдиқланган)">
+            <ShartnomaScreen family={ijaraFamilies[0]} layout="phone" initialStep={3} initialFaceVerified />
+          </DeviceFrame>
+          <DeviceFrame variant="tablet" label="Планшет · Шартнома формаси">
+            <ShartnomaScreen family={ijaraFamilies[0]} layout="tablet" />
           </DeviceFrame>
         </div>
       </div>

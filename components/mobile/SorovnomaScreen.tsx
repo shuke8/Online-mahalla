@@ -54,7 +54,8 @@ export interface SorovnomaScreenProps {
 
 type SaveState = "idle" | "saving" | "success";
 type CadastreState = "idle" | "searching" | "verified";
-type FaceScanState = "idle" | "scanning" | "success" | "error";
+/** Юз сканери ҳолати — шартнома экранида ҳам қайта ишлатилади */
+export type FaceScanState = "idle" | "scanning" | "success" | "error";
 
 interface FormState {
   tomorqaMavjud: string;
@@ -902,7 +903,7 @@ export function BiometricCard({
 }
 
 /* ── FaceScanOverlay — тўлиқ экранли юз сканери (Face ID) ──────────────────── */
-function FaceScanOverlay({
+export function FaceScanOverlay({
   state,
   familyName,
   onClose,
