@@ -31,6 +31,8 @@ export interface IjaraListScreenProps {
   mode: Mode;
   /** preview учун бошланғич таб */
   initialTab?: string;
+  /** preview учун бошланғич қидирув матни */
+  initialQuery?: string;
   onBack?: () => void;
   onSelectFamily?: (family: IjaraFamily) => void;
   onSurveyFamily?: (family: IjaraFamily) => void;
@@ -56,6 +58,7 @@ export default function IjaraListScreen({
   layout,
   mode,
   initialTab,
+  initialQuery,
   onBack,
   onSelectFamily,
   onSurveyFamily,
@@ -63,7 +66,7 @@ export default function IjaraListScreen({
   const isTablet = layout === "tablet";
   const tabs = TABS[mode];
   const [tab, setTab] = useState(initialTab ?? tabs[0].value);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery ?? "");
   const q = query.trim().toLowerCase();
 
   const baseList = useMemo(

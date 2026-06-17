@@ -76,6 +76,27 @@ export default function IjaraModuleDesignPreview() {
             <IjaraListScreen layout="tablet" mode="survey" initialTab="pending" />
           </DeviceFrame>
         </div>
+
+        {/* ── ШАРТНОМА РЎЙХАТИ ── */}
+        <SectionHeader
+          icon="document-text"
+          title="Шартнома рўйхати"
+          subtitle="Фақат «ижарага рози» оилалар · яроқсизлар қидирувда сабаб билан"
+        />
+        <div className="mb-12 flex flex-wrap items-start justify-center gap-10 sm:gap-14">
+          <DeviceFrame variant="phone" label="Телефон · Тайёр (яроқли)">
+            <IjaraListScreen layout="phone" mode="contract" initialTab="ready" />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="Телефон · Тузилган">
+            <IjaraListScreen layout="phone" mode="contract" initialTab="done" />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="Телефон · Қидирув (яроқсиз ҳам)">
+            <IjaraListScreen layout="phone" mode="contract" initialTab="ready" initialQuery="МФЙ" />
+          </DeviceFrame>
+          <DeviceFrame variant="tablet" label="Планшет · Шартнома рўйхати">
+            <IjaraListScreen layout="tablet" mode="contract" initialTab="ready" />
+          </DeviceFrame>
+        </div>
       </div>
     </div>
   );
