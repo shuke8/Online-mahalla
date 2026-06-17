@@ -96,6 +96,16 @@ function addMonths(ddmmyyyy: string, months: number): string {
   return `${String(d).padStart(2, "0")}.${String(nm).padStart(2, "0")}.${ny}`;
 }
 
+/** Намунавий шартнома қиймати (ҳужжат previewи учун ҳам ишлатилади). */
+export function sampleContractForm(family: IjaraFamily): ContractForm {
+  return buildInitialForm(family);
+}
+
+/** Кунлар рўйхатини қисқа кўринишда (Ду, Се …) */
+export function formatKunlar(kunlar: string[]): string {
+  return kunlar.length ? kunlar.map((k) => KUN_SHORT[k] ?? k).join(", ") : "—";
+}
+
 function buildInitialForm(family: IjaraFamily, overrides?: Partial<ContractForm>): ContractForm {
   const boshlanish = "01.07.2026";
   return {

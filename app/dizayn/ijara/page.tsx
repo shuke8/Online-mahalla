@@ -5,7 +5,8 @@ import { Icon, type IconName } from "@/components/atoms/Icon";
 import { DeviceFrame } from "@/components/mobile/DeviceFrame";
 import IjaraModuleScreen from "@/components/mobile/IjaraModuleScreen";
 import IjaraListScreen from "@/components/mobile/IjaraListScreen";
-import ShartnomaScreen from "@/components/mobile/ShartnomaScreen";
+import ShartnomaScreen, { sampleContractForm } from "@/components/mobile/ShartnomaScreen";
+import ShartnomaDocument from "@/components/mobile/ShartnomaDocument";
 import { ijaraFamilies } from "@/lib/ijara-module-data";
 
 export default function IjaraModuleDesignPreview() {
@@ -124,6 +125,29 @@ export default function IjaraModuleDesignPreview() {
           </DeviceFrame>
           <DeviceFrame variant="tablet" label="Планшет · Шартнома формаси">
             <ShartnomaScreen family={ijaraFamilies[0]} layout="tablet" />
+          </DeviceFrame>
+        </div>
+
+        {/* ── ШАРТНОМА ҲУЖЖАТИ ── */}
+        <SectionHeader
+          icon="document-text"
+          title="Шартнома ҳужжати"
+          subtitle="Имзодан кейин — расмий ижара шартномаси (тарафлар, объект, шартлар, имзо/муҳр)"
+        />
+        <div className="mb-12 flex flex-wrap items-start justify-center gap-10 sm:gap-14">
+          <DeviceFrame variant="phone" label="Телефон · Шартнома ҳужжати">
+            <ShartnomaDocument
+              family={ijaraFamilies[0]}
+              contract={sampleContractForm(ijaraFamilies[0])}
+              layout="phone"
+            />
+          </DeviceFrame>
+          <DeviceFrame variant="tablet" label="Планшет · Шартнома ҳужжати">
+            <ShartnomaDocument
+              family={ijaraFamilies[0]}
+              contract={sampleContractForm(ijaraFamilies[0])}
+              layout="tablet"
+            />
           </DeviceFrame>
         </div>
       </div>
