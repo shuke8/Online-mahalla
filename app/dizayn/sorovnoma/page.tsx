@@ -71,6 +71,30 @@ export default function SorovnomaDesignPreview() {
           </DeviceFrame>
         </div>
 
+        {/* ── БИОМЕТРИК ТАСДИҚЛАШ ҲОЛАТЛАРИ ── */}
+        <SectionHeader
+          icon="scan"
+          title="Биометрик тасдиқлаш — ҳолатлар"
+          subtitle="Якунлаш қадами · юз тасдиқининг 5 ҳолати (кутилмоқда → сканерлаш → муваффақият / хато → тасдиқланган)"
+        />
+        <div className="mb-12 flex flex-wrap items-start justify-center gap-8 sm:gap-12">
+          <DeviceFrame variant="phone" label="1 · Кутилмоқда — тасдиқ талаб қилинади">
+            <SorovnomaScreen family={family} layout="phone" initialStep={3} />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="2 · Сканерлаш — юз аниқланмоқда">
+            <SorovnomaScreen family={family} layout="phone" initialStep={3} previewFaceScan="scanning" />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="3 · Муваффақият — шахс аниқланди">
+            <SorovnomaScreen family={family} layout="phone" initialStep={3} previewFaceScan="success" />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="4 · Хато — юз мос келмади">
+            <SorovnomaScreen family={family} layout="phone" initialStep={3} previewFaceScan="error" />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="5 · Тасдиқланган — сақлашга тайёр">
+            <SorovnomaScreen family={family} layout="phone" initialStep={3} initialFaceVerified />
+          </DeviceFrame>
+        </div>
+
         {/* ── ПЛАНШЕТ ── */}
         <SectionHeader icon="maximize" title="Планшет" subtitle="Android · landscape · якка экран" />
         <div className="flex flex-wrap items-start justify-center gap-10 sm:gap-14">
