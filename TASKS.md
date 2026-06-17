@@ -1,5 +1,33 @@
 # TASKS
 
+## 🔴 Bajarilmagan
+
+### TASK-025: «Томорқа ижараси» modul dizayni (so'rovnoma + shartnoma)
+**Yaratildi:** 2026-06-17
+**Manba:** Foydalanuvchi + grill-me sessiyasi + real tizim deep research
+(`online-mahalla.local/forms/social_reestr_land_renting_acts`)
+**Status:** TODO (spec tayyor, build kutilmoqda)
+
+**Tavsif:**
+So'rovnoma + shartnoma bitta modulда. Kirish → 2 amal (Сўровнома/Шартнома) → oilalar
+ro'yxati → tanlash → forma. Shartnoma faqat «ижарага рози» oilalar uchun ochiladi.
+To'liq spetsifikatsiya: `.claude-state/ONM-809/CONTRACT-MODULE-SPEC.md`.
+
+**Ekranlar:** Modul kirishi · So'rovnoma ro'yxati · So'rovnoma forma (MAVJUD) ·
+Shartnoma ro'yxati · Shartnoma forma (YANGI, 4-qadam) · Shartnoma hujjati (YANGI).
+
+**Acceptance criteria:**
+- `/dizayn/ijara` dizayn-kanvas: barcha ekranlar phone + tablet device-frame'larда
+- Shartnoma forma haqiqiy 14 maydonга mos (ижарага берувчи avto + олувчи/шартлар + biometrika)
+- 4-holat status modeli, ro'yxat tab'lari, gating (yaroqsiz=disabled+sabab)
+- So'rovnoma «Истаги бор» → «Шартнома тузиш» o'tishi
+- Prefill: oila/томорқа avto, муддат→тугаш санаси
+- tsc 0, 0 console error, page-by-page 9+/10
+
+**Verification plan:** Playwright 8 viewport, har ekran screenshot evidence, adversarial F-domeyn.
+
+---
+
 ## 🟢 Bajarildi (verified)
 
 ### TASK-024: Сўровнома — биометрик тасдиқлаш ҳолатларини саҳифага қўшиш
