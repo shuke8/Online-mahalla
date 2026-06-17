@@ -2,7 +2,7 @@
 
 **Manba:** grill-me sessiyasi (2026-06-17) + real tizim deep research
 (`http://online-mahalla.local/forms/social_reestr_land_renting_acts`).
-**Status:** TASARRUF — qaror qabul qilindi (10/10 savol = A), build kutilmoqda.
+**Status:** BAJARILDI (2026-06-17) — 6 ekran qurildi va verify qilindi (TASK-025 DONE).
 
 ## Maqsad
 «Ижтимоий реестр»даги ногиронлиги бўлган, ёлғиз ва оилада ягона боқувчи оилалар
