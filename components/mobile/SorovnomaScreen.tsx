@@ -860,11 +860,14 @@ export function BiometricCard({
             ))}
             <Icon name="profile" size={40} variant="Bulk" className="text-navy/55" />
           </div>
-          <p className="text-[12px] leading-relaxed text-text-secondary">
-            Оила бошлиғи{" "}
-            <span className="font-semibold text-text-primary">{familyName}</span> юзи «Ижтимоий
-            реестр» сурати билан солиштирилади — бу сохта сўровномани олдини олади.
-          </p>
+          <div className="min-w-0">
+            <p className="text-[12.5px] font-semibold leading-snug text-text-primary">
+              Оила бошлиғи юзи реестр сурати билан солиштирилади
+            </p>
+            <p className="mt-1 text-[11.5px] leading-snug text-text-secondary">
+              Сохта сўровномани олдини олади
+            </p>
+          </div>
         </div>
 
         <div className="mb-3.5 grid grid-cols-2 gap-2">
