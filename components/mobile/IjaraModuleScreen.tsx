@@ -1,19 +1,40 @@
 "use client";
 
 /**
- * IjaraModuleScreen — «Томорқа ижараси» модулига кириш экрани (NAVER app услуби).
- * Ёруғ фон, NAVER яшил (#03C75A) акцент, қидирув pill, яшил «service panel»да
- * 2 асосий амал + пастда тоза (флат) статистика tile'лари.
+ * IjaraModuleScreen — «Томорқа ижараси» модулига кириш экрани (Fi app услуби).
+ * Йирик сарлавҳа + катта статистика hero (ҳолат тақсимоти бар) + «Бугун» бўлими
+ * 2 оқим картаси (Сўровнома / Шартнома) + «Сўнгги фаолият» рўйхати.
+ * Ёруғ фон, тоза оқ карталар, яшил акцент.
  *
- * layout="phone" — бир устун; layout="tablet" — марказлашган, кенгроқ padding.
+ * layout="phone" — бир устун; layout="tablet" — марказлашган, кенгроқ.
  */
 
 import { Icon } from "@/components/atoms/Icon";
 import type { IconName } from "@/components/atoms/Icon";
-import { moduleCounts } from "@/lib/ijara-module-data";
+import {
+  ijaraFamilies,
+  moduleCounts,
+  STATUS_META,
+  type FamilyStatus,
+  type StatusTone,
+} from "@/lib/ijara-module-data";
 
-const GREEN = "#03C75A";
-const GREEN_DARK = "#02b350";
+const GREEN = "#16a34a";
+const SAMPLE_DATE = "Чоршанба, 17 июнь";
+
+const TONE_HEX: Record<StatusTone, string> = {
+  warning: "#f59e0b",
+  muted: "#94a3b8",
+  navy: "#2b8cee",
+  success: "#16a34a",
+};
+
+const STATUS_ORDER: FamilyStatus[] = [
+  "survey_pending",
+  "declined",
+  "contract_pending",
+  "contract_done",
+];
 
 export interface IjaraModuleScreenProps {
   layout: "phone" | "tablet";
@@ -26,161 +47,266 @@ export default function IjaraModuleScreen({
   layout,
   onOpenSurvey,
   onOpenContract,
-  onBack,
 }: IjaraModuleScreenProps) {
   const isTablet = layout === "tablet";
   const c = moduleCounts();
 
+  const byStatus = (s: FamilyStatus) => ijaraFamilies.filter((f) => f.status === s).length;
+  const segments = STATUS_ORDER.map((s) => ({ status: s, count: byStatus(s), meta: STATUS_META[s] }));
+
   return (
-    <div className="relative flex flex-1 flex-col bg-[#f3f4f6]">
+    <div className="relative flex flex-1 flex-col bg-[#f1f2f4]">
       <LightStatusBar />
 
-      {/* Ёруғ header (NAVER услуби) */}
-      <header className="flex shrink-0 items-center gap-2.5 bg-white px-4 pb-3 pt-1">
-        {onBack ? (
-          <button
-            type="button"
-            onClick={onBack}
-            aria-label="Орқага"
-            className="-ml-1.5 inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-700 transition-colors hover:bg-slate-100 active:scale-95"
-          >
-            <Icon name="arrow-left" size={20} />
-          </button>
-        ) : (
-          <span
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl text-white"
-            style={{ background: GREEN }}
-          >
-            <Icon name="tree" size={18} variant="Bold" />
-          </span>
-        )}
-        <div className="min-w-0">
-          <h1 className="truncate text-[15px] font-bold leading-tight text-slate-900">Томорқа ижараси</h1>
-          <p className="truncate text-[11px] leading-tight text-slate-500">Ижтимоий реестр</p>
+      {/* Header (Fi услуби) */}
+      <header className="flex shrink-0 items-start gap-2 bg-[#f1f2f4] px-4 pb-2 pt-2">
+        <div className="min-w-0 flex-1">
+          <h1 className="truncate text-[22px] font-extrabold leading-none tracking-tight text-slate-900">
+            Томорқа ижараси
+          </h1>
+          <p className="mt-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
+            Ижтимоий реестр
+          </p>
         </div>
-        <span
-          className="ml-auto inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10.5px] font-bold"
-          style={{ background: `${GREEN}1a`, color: GREEN_DARK }}
-        >
-          <Icon name="shield-tick" size={12} variant="Bold" />
-          Реестр
-        </span>
+        <HeaderIcon icon="notifications" />
       </header>
 
       {/* Body */}
-      <div className={`flex-1 overflow-auto pb-5 pt-3.5 ${isTablet ? "px-6" : "px-3.5"}`}>
+      <div className={`flex-1 overflow-auto pb-5 ${isTablet ? "px-6" : "px-4"}`}>
         <div className={isTablet ? "mx-auto max-w-xl" : ""}>
-          {/* Қидирув pill */}
-          <div className="flex items-center gap-2.5 rounded-full bg-white px-4 py-3 shadow-[0_4px_14px_rgba(15,23,42,0.08)]">
-            <Icon name="search" size={19} style={{ color: GREEN }} />
-            <span className="flex-1 truncate text-[13.5px] text-slate-400">Оила, ЖШШИР ёки манзил қидириш…</span>
-            <Icon name="scan" size={18} variant="Bold" style={{ color: GREEN }} />
+          {/* ── СТАТИСТИКА hero (map ўрнига) ── */}
+          <StatsHero total={c.total} segments={segments} contractDone={c.contractDone} />
+
+          {/* ── «Бугун» + сана ── */}
+          <div className="mb-2.5 mt-5 flex items-center justify-between">
+            <h2 className="text-[19px] font-extrabold tracking-tight text-slate-900">Бугун</h2>
+            <span className="text-[12.5px] font-semibold text-slate-400">{SAMPLE_DATE}</span>
           </div>
 
-          {/* Яшил service panel — 2 асосий амал */}
-          <div
-            className="mt-4 overflow-hidden rounded-3xl p-1.5 shadow-[0_10px_28px_-12px_rgba(3,199,90,0.6)]"
-            style={{ background: `linear-gradient(160deg, ${GREEN} 0%, ${GREEN_DARK} 100%)` }}
-          >
-            <ServiceRow
-              icon="note"
-              title="Сўровнома ўтказиш"
-              count={c.surveyPending}
-              countLabel="оила кутилмоқда"
+          {/* ── 2 оқим картаси (Rest/Activity ўрнига) ── */}
+          <div className="grid grid-cols-2 gap-3">
+            <FlowCard
+              title="Сўровнома"
+              label="Кутилмоқда"
+              value={`${c.surveyPending} оила`}
+              accent="#f59e0b"
               onClick={onOpenSurvey}
+              visual="icon"
             />
-            <div className="mx-3 h-px bg-white/20" />
-            <ServiceRow
-              icon="document-text"
-              title="Шартнома расмийлаштириш"
-              count={c.contractReady}
-              countLabel="оила тайёр"
+            <FlowCard
+              title="Шартнома"
+              label="Тайёр"
+              value={String(c.contractReady)}
+              accent={GREEN}
               onClick={onOpenContract}
+              visual="bars"
             />
           </div>
 
-          {/* Статистика — тоза (флат) NAVER tile'лари */}
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <FeatureTile icon="people" tint="#2b8cee" value={c.total} label="Жами оила" sub="ижтимоий реестрда" />
-            <FeatureTile icon="tick-circle" tint={GREEN} value={c.contractDone} label="Тузилган шартнома" sub="жорий йил" />
+          {/* ── Сўнгги фаолият ── */}
+          <div className="mb-2.5 mt-6 flex items-center justify-between">
+            <h2 className="text-[18px] font-extrabold tracking-tight text-slate-900">Сўнгги фаолият</h2>
+            <button type="button" className="inline-flex items-center gap-0.5 text-[13px] font-bold text-slate-700">
+              Тарих
+              <Icon name="chevron-forward" size={15} variant="Bold" />
+            </button>
           </div>
-
-          <p className="mt-5 text-center text-[10.5px] font-medium text-slate-400">
-            Ижтимоий реестр · томорқа ижараси модули
-          </p>
+          <RecentList />
         </div>
       </div>
     </div>
   );
 }
 
-/* ── Яшил панелдаги амал қатори ──────────────────────────────────────────── */
-function ServiceRow({
-  icon,
+/* ── Статистика hero ─────────────────────────────────────────────────────── */
+function StatsHero({
+  total,
+  segments,
+  contractDone,
+}: {
+  total: number;
+  segments: { status: FamilyStatus; count: number; meta: (typeof STATUS_META)[FamilyStatus] }[];
+  contractDone: number;
+}) {
+  return (
+    <div className="overflow-hidden rounded-3xl border border-slate-200/70 bg-gradient-to-br from-[#eaf6ef] to-white p-5 shadow-[0_8px_28px_-18px_rgba(15,23,42,0.45)]">
+      {/* Top: чип + refresh */}
+      <div className="flex items-center justify-between">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[12px] font-bold text-slate-700 shadow-sm">
+          <Icon name="people" size={14} variant="Bold" style={{ color: GREEN }} />
+          {total} оила · реестр
+        </span>
+        <button
+          type="button"
+          aria-label="Янгилаш"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-500 shadow-sm transition-transform active:scale-90"
+        >
+          <Icon name="refresh" size={17} variant="Bold" />
+        </button>
+      </div>
+
+      {/* Катта рақам */}
+      <div className="mt-4 flex items-end gap-2">
+        <span className="text-[44px] font-extrabold leading-none tracking-tight text-slate-900">{total}</span>
+        <span className="mb-1 text-[13px] font-semibold text-slate-500">оила ижтимоий реестрда</span>
+      </div>
+
+      {/* Ҳолат тақсимоти бар */}
+      <div className="mt-3.5 flex h-3 w-full overflow-hidden rounded-full bg-slate-100">
+        {segments.map((s) =>
+          s.count > 0 ? (
+            <span
+              key={s.status}
+              className="h-full"
+              style={{ width: `${(s.count / total) * 100}%`, background: TONE_HEX[s.meta.tone] }}
+              title={`${s.meta.short}: ${s.count}`}
+            />
+          ) : null,
+        )}
+      </div>
+
+      {/* Легенда (2 устун) */}
+      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2">
+        {segments.map((s) => (
+          <div key={s.status} className="flex items-center gap-2">
+            <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: TONE_HEX[s.meta.tone] }} />
+            <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-slate-600">{s.meta.short}</span>
+            <span className="text-[12.5px] font-bold tabular-nums text-slate-900">{s.count}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Пастки pill (Mobbin House услуби) */}
+      <div className="mt-4 flex items-center gap-2 rounded-2xl bg-white px-3.5 py-3 shadow-sm">
+        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl" style={{ background: `${GREEN}1a`, color: GREEN }}>
+          <Icon name="tick-circle" size={17} variant="Bold" />
+        </span>
+        <p className="min-w-0 flex-1 text-[12.5px] font-semibold text-slate-700">
+          Жорий ойда <span className="font-extrabold text-slate-900">{contractDone}</span> шартнома тузилди
+        </p>
+        <Icon name="chevron-forward" size={16} className="shrink-0 text-slate-400" />
+      </div>
+    </div>
+  );
+}
+
+/* ── Оқим картаси (Сўровнома / Шартнома) ─────────────────────────────────── */
+function FlowCard({
   title,
-  count,
-  countLabel,
+  label,
+  value,
+  accent,
+  visual,
   onClick,
 }: {
-  icon: IconName;
   title: string;
-  count: number;
-  countLabel: string;
+  label: string;
+  value: string;
+  accent: string;
+  visual: "icon" | "bars";
   onClick?: () => void;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-[20px] px-3 py-3.5 text-left transition-colors hover:bg-white/10 active:scale-[0.99]"
+      className="relative flex h-[150px] flex-col overflow-hidden rounded-3xl border border-slate-200/70 bg-white p-4 text-left shadow-[0_4px_14px_rgba(15,23,42,0.05)] transition-shadow hover:shadow-[0_8px_22px_rgba(15,23,42,0.1)] active:scale-[0.99]"
     >
-      <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/20 text-white backdrop-blur-sm">
-        <Icon name={icon} size={22} variant="Bold" />
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-[14px] font-bold leading-tight text-white">{title}</p>
-        <p className="mt-0.5 truncate text-[11.5px] font-medium leading-tight text-white/80">
-          <span className="font-bold tabular-nums">{count}</span> {countLabel}
-        </p>
+      <div className="flex items-center justify-between">
+        <h3 className="text-[16px] font-extrabold text-slate-900">{title}</h3>
+        <Icon name="chevron-forward" size={17} className="text-slate-400" />
       </div>
-      <Icon name="chevron-forward" size={18} variant="Bold" className="shrink-0 text-white/75" />
+      <p className="mt-2 text-[10.5px] font-bold uppercase tracking-wide text-slate-400">{label}</p>
+      <p className="mt-0.5 text-[22px] font-extrabold leading-none tracking-tight" style={{ color: accent }}>
+        {value}
+      </p>
+
+      {/* Пастки визуал */}
+      <div className="mt-auto">
+        {visual === "bars" ? (
+          <MiniBars accent={accent} />
+        ) : (
+          <div className="flex justify-end">
+            <Icon name="note" size={40} variant="Bulk" style={{ color: `${accent}40` }} />
+          </div>
+        )}
+      </div>
     </button>
   );
 }
 
-/* ── Статистика tile (NAVER флат) ────────────────────────────────────────── */
-function FeatureTile({
-  icon,
-  tint,
-  value,
-  label,
-  sub,
-}: {
-  icon: IconName;
-  tint: string;
-  value: number;
-  label: string;
-  sub: string;
-}) {
+function MiniBars({ accent }: { accent: string }) {
+  const hs = [34, 48, 40, 66, 82, 100];
   return (
-    <div className="rounded-2xl bg-white p-4 shadow-[0_4px_14px_rgba(15,23,42,0.06)]">
-      <span
-        className="inline-flex h-9 w-9 items-center justify-center rounded-xl"
-        style={{ background: `${tint}1a`, color: tint }}
-      >
-        <Icon name={icon} size={18} variant="Bold" />
-      </span>
-      <p className="mt-2.5 text-[24px] font-bold leading-none tabular-nums text-slate-900">{value}</p>
-      <p className="mt-1.5 text-[12.5px] font-bold leading-tight text-slate-800">{label}</p>
-      <p className="text-[10.5px] leading-tight text-slate-400">{sub}</p>
+    <div className="flex h-10 items-end gap-1">
+      {hs.map((h, i) => (
+        <span
+          key={i}
+          className="flex-1 rounded-[3px]"
+          style={{ height: `${h}%`, background: i === hs.length - 1 ? accent : `${accent}40` }}
+        />
+      ))}
     </div>
   );
 }
 
-/* ── Ёруғ статус-бар (NAVER ёруғ мавзу) ──────────────────────────────────── */
+/* ── Сўнгги фаолият рўйхати ──────────────────────────────────────────────── */
+interface RecentItem {
+  name: string;
+  action: string;
+  when: string;
+  icon: IconName;
+  tint: string;
+}
+
+const RECENT: RecentItem[] = [
+  { name: "Турсунов Жасур Олим ўғли", action: "Шартнома тузилди", when: "бугун", icon: "tick-circle", tint: GREEN },
+  { name: "Ғоибова Зулфизар Жаббор қизи", action: "Сўровнома ўтказилди", when: "кеча", icon: "note", tint: "#2b8cee" },
+  { name: "Эргашева Нодира Аброр қизи", action: "Сўровнома ўтказилди", when: "3 кун олдин", icon: "note", tint: "#2b8cee" },
+];
+
+function RecentList() {
+  return (
+    <div className="overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-[0_4px_14px_rgba(15,23,42,0.05)]">
+      <div className="divide-y divide-slate-100">
+        {RECENT.map((r) => (
+          <div key={r.name} className="flex items-center gap-3 px-4 py-3.5">
+            <span
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl"
+              style={{ background: `${r.tint}14`, color: r.tint }}
+            >
+              <Icon name={r.icon} size={19} variant="Bold" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[13.5px] font-bold text-slate-900">{r.name}</p>
+              <p className="truncate text-[11.5px] text-slate-500">
+                {r.action} · {r.when}
+              </p>
+            </div>
+            <Icon name="chevron-forward" size={16} className="shrink-0 text-slate-300" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Header иконка тугмаси ───────────────────────────────────────────────── */
+function HeaderIcon({ icon }: { icon: IconName }) {
+  return (
+    <button
+      type="button"
+      className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-700 transition-colors hover:bg-slate-200/70 active:scale-95"
+    >
+      <Icon name={icon} size={21} variant="Bold" />
+    </button>
+  );
+}
+
+/* ── Ёруғ статус-бар ─────────────────────────────────────────────────────── */
 function LightStatusBar({ time = "09:41" }: { time?: string }) {
   return (
-    <div className="flex shrink-0 select-none items-center justify-between bg-white px-4 pb-0.5 pt-1.5 text-slate-900">
+    <div className="flex shrink-0 select-none items-center justify-between bg-[#f1f2f4] px-4 pb-0.5 pt-1.5 text-slate-900">
       <span className="text-[11px] font-semibold tabular-nums tracking-wide">{time}</span>
       <div className="flex items-center gap-1.5 text-slate-800">
         <svg width="15" height="11" viewBox="0 0 16 12" aria-hidden fill="none">
