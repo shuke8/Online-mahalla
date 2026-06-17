@@ -19,7 +19,9 @@ Spec: `.claude-state/ONM-809/CONTRACT-MODULE-SPEC.md`. Qarorlar: grill-me 10/10.
 - `components/mobile/IjaraListScreen.tsx` — qayta ishlatiladigan ro'yxat (survey/contract, gating)
 - `components/mobile/ShartnomaScreen.tsx` — shartnoma 4-qadam wizard (14 maydon + biometrika)
 - `components/mobile/ShartnomaDocument.tsx` — rasmiy shartnoma hujjati (qog'oz uslubi)
-- `app/dizayn/ijara/page.tsx` — dizayn-kanvas (6 bo'lim, phone + tablet)
+- `components/design/IjaraCanvas.tsx` — umumiy qobiq (top-bar + nav tab + canvas)
+- `app/dizayn/ijara/` — **3 sahifa** (split): `page.tsx` (Кириш) ·
+  `sorovnoma/page.tsx` (ro'yxat + forma + handoff) · `shartnoma/page.tsx` (ro'yxat + forma + hujjat)
 
 **O'zgargan fayllar (additive):**
 - `SorovnomaScreen.tsx` — `FaceScanOverlay`/`FaceScanState` export (biometrika reuse);
