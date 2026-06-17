@@ -2,6 +2,33 @@
 
 ## 🟢 Bajarildi (verified)
 
+### TASK-024: Сўровнома — биометрик тасдиқлаш ҳолатларини саҳифага қўшиш
+**Yaratildi:** 2026-06-17 · **Bajarildi:** 2026-06-17
+**Manba:** Foydalanuvchi — "biometrik tasdiqlashda statuslarini ham so'rovnoma bo'limiga qo'sh"
+**Status:** DONE
+
+**Tavsif:**
+`/dizayn/sorovnoma` саҳифасида биометрик тасдиқ фақат default «кутилмоқда» ҳолатида кўринарди
+(scanning/success overlay'ларни preview қилиб бўлмасди). «Биометрик тасдиқлаш — ҳолатлар» бўлими
+қўшилди: якунлаш қадамининг 5 ҳолати — кутилмоқда → сканерлаш → муваффақият → хато → тасдиқланган.
+Қўшимча: оқимда олдин йўқ эди — **хато (face mismatch) ҳолати** (қизил romka + «реестр сурати
+билан мос келмади» + «Қайта уриниш» тугмаси).
+
+**O'zgargan fayllar:**
+- `components/mobile/SorovnomaScreen.tsx` — `previewFaceScan?: "scanning"|"success"|"error"` проп
+  (статик preview, timer'лар preview'да ўчирилади); `FaceScanState`'га `"error"`; `FaceScanOverlay`
+  error tarmoғи + `onRetry`
+- `app/dizayn/sorovnoma/page.tsx` — «Биометрик тасдиқлаш — ҳолатлар» бўлими (5 телефон фрейм)
+
+**Verification:**
+- tsc --noEmit: 0 error · 0 console error
+- Playwright 1440px: 5 ҳолат тўғри render (кутилмоқда/сканерлаш/муваффақият/хато/тасдиқланган);
+  error overlay — қизил romka + badge + retry тугма ✓
+- Regression: жонли оқим бузилмаган — реал фреймда «Юзни тасдиқлаш» → scanning→success→verified
+  (verifiedCards 1→2); preview фреймлар статик қолади (scanning/success overlay 1/1)
+- 375px: document horizontal overflow йўқ (375===375)
+**Sifat:** 9.5/10
+
 ### TASK-023: Альтернатив (шартли) экран previewларни дизайн тизими саҳifaсига кўчириш
 **Yaratildi:** 2026-06-16 · **Bajarildi:** 2026-06-16
 **Manba:** Ярим қолган рефактор (мид-флайт): TASK-022 фреймлари сўровнома саҳифасидан
