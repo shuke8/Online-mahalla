@@ -87,19 +87,21 @@ export default function IjaraModuleScreen({
           <div className="grid grid-cols-2 gap-3">
             <FlowCard
               title="Сўровнома"
-              label="Кутилмоқда"
-              value={`${c.surveyPending} оила`}
-              accent="#f59e0b"
+              label="Ўтказилди"
+              done={c.total - c.surveyPending}
+              total={c.total}
+              unit="оила"
+              accent="#2b8cee"
               onClick={onOpenSurvey}
-              visual="icon"
             />
             <FlowCard
               title="Шартнома"
-              label="Тайёр"
-              value={String(c.contractReady)}
+              label="Тузилди"
+              done={c.contractDone}
+              total={c.contractReady + c.contractDone}
+              unit="рози оила"
               accent={GREEN}
               onClick={onOpenContract}
-              visual="bars"
             />
           </div>
 
@@ -191,22 +193,25 @@ function StatsHero({
   );
 }
 
-/* ── Оқим картаси (Сўровнома / Шартнома) ─────────────────────────────────── */
+/* ── Оқим картаси (Сўровнома / Шартнома) — N оиладан нечтаси бажарилди ───── */
 function FlowCard({
   title,
   label,
-  value,
+  done,
+  total,
+  unit,
   accent,
-  visual,
   onClick,
 }: {
   title: string;
   label: string;
-  value: string;
+  done: number;
+  total: number;
+  unit: string;
   accent: string;
-  visual: "icon" | "bars";
   onClick?: () => void;
 }) {
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
   return (
     <button
       type="button"
@@ -218,36 +223,24 @@ function FlowCard({
         <Icon name="chevron-forward" size={17} className="text-slate-400" />
       </div>
       <p className="mt-2 text-[10.5px] font-bold uppercase tracking-wide text-slate-400">{label}</p>
-      <p className="mt-0.5 text-[22px] font-extrabold leading-none tracking-tight" style={{ color: accent }}>
-        {value}
+
+      {/* N оиладан нечтаси */}
+      <p className="mt-1 flex items-baseline gap-1">
+        <span className="text-[26px] font-extrabold leading-none tabular-nums" style={{ color: accent }}>
+          {done}
+        </span>
+        <span className="text-[15px] font-bold leading-none tabular-nums text-slate-400">/ {total}</span>
+        <span className="ml-0.5 truncate text-[11px] font-semibold text-slate-400">{unit}</span>
       </p>
 
-      {/* Пастки визуал */}
+      {/* Progress bar (нисбатни кўрсатади) */}
       <div className="mt-auto">
-        {visual === "bars" ? (
-          <MiniBars accent={accent} />
-        ) : (
-          <div className="flex justify-end">
-            <Icon name="note" size={40} variant="Bulk" style={{ color: `${accent}40` }} />
-          </div>
-        )}
+        <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
+          <div className="h-full rounded-full transition-[width]" style={{ width: `${pct}%`, background: accent }} />
+        </div>
+        <p className="mt-1.5 text-[10.5px] font-semibold text-slate-400">{pct}% бажарилди</p>
       </div>
     </button>
-  );
-}
-
-function MiniBars({ accent }: { accent: string }) {
-  const hs = [34, 48, 40, 66, 82, 100];
-  return (
-    <div className="flex h-10 items-end gap-1">
-      {hs.map((h, i) => (
-        <span
-          key={i}
-          className="flex-1 rounded-[3px]"
-          style={{ height: `${h}%`, background: i === hs.length - 1 ? accent : `${accent}40` }}
-        />
-      ))}
-    </div>
   );
 }
 
