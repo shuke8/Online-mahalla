@@ -837,18 +837,24 @@ export function BiometricCard({
 
   return (
     <div className="overflow-hidden rounded-2xl border border-navy/20 bg-white shadow-layered-sm">
-      <div className="flex items-center gap-2.5 bg-gradient-to-r from-navy/[0.09] to-navy/[0.02] px-4 py-3">
+      <div className="flex items-start gap-2.5 bg-gradient-to-r from-navy/[0.09] to-navy/[0.02] px-4 py-3">
         <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy/10 text-navy">
           <Icon name="scan" size={18} variant="Bold" />
         </span>
-        <div className="min-w-0">
-          <h3 className="text-[14px] font-bold leading-tight text-text-primary">Биометрик тасдиқлаш</h3>
-          <p className="text-[11px] leading-tight text-text-secondary">Сақлаш учун мажбурий қадам</p>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate text-[14px] font-bold leading-tight text-text-primary">
+            Биометрик тасдиқлаш
+          </h3>
+          <div className="mt-1 flex items-center gap-2">
+            <p className="min-w-0 truncate text-[11px] leading-tight text-text-secondary">
+              Мажбурий қадам
+            </p>
+            <span className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-full border border-warning/30 bg-warning/10 px-2 py-0.5 text-[10px] font-bold text-[#b45309]">
+              <Icon name="time" size={11} variant="Bold" />
+              Кутилмоқда
+            </span>
+          </div>
         </div>
-        <span className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-full border border-warning/30 bg-warning/10 px-2 py-0.5 text-[10px] font-bold text-[#b45309]">
-          <Icon name="time" size={11} variant="Bold" />
-          Кутилмоқда
-        </span>
       </div>
 
       <div className="p-4">
