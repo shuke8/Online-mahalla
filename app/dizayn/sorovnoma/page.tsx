@@ -75,7 +75,7 @@ export default function SorovnomaDesignPreview() {
         <SectionHeader
           icon="scan"
           title="Биометрик тасдиқлаш — ҳолатлар"
-          subtitle="Якунлаш қадами · юз тасдиқининг 5 ҳолати (кутилмоқда → сканерлаш → муваффақият / хато → тасдиқланган)"
+          subtitle="Якунлаш қадами · 2 усул (Face ID / Touch ID) · 5 ҳолат (кутилмоқда → сканерлаш → муваффақият / хато → тасдиқланган)"
         />
         <div className="mb-12 flex flex-wrap items-start justify-center gap-8 sm:gap-12">
           <DeviceFrame variant="phone" label="1 · Кутилмоқда — тасдиқ талаб қилинади">
@@ -92,6 +92,24 @@ export default function SorovnomaDesignPreview() {
           </DeviceFrame>
           <DeviceFrame variant="phone" label="5 · Тасдиқланган — сақлашга тайёр">
             <SorovnomaScreen family={family} layout="phone" initialStep={3} initialFaceVerified />
+          </DeviceFrame>
+        </div>
+
+        {/* ── TOUCH ID (бармоқ изи) — альтернатив усул ── */}
+        <SectionHeader
+          icon="scan"
+          title="Touch ID — бармоқ изи (альтернатив усул)"
+          subtitle="«Touch ID» танланса — бармоқ изи орқали тасдиқ (Face ID ўрнига)"
+        />
+        <div className="mb-12 flex flex-wrap items-start justify-center gap-8 sm:gap-12">
+          <DeviceFrame variant="phone" label="Сканерлаш — бармоқ изи">
+            <SorovnomaScreen family={family} layout="phone" initialStep={3} previewFaceScan="scanning" previewMethod="touch" />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="Муваффақият — бармоқ изи">
+            <SorovnomaScreen family={family} layout="phone" initialStep={3} previewFaceScan="success" previewMethod="touch" />
+          </DeviceFrame>
+          <DeviceFrame variant="phone" label="Тасдиқланган — Touch ID">
+            <SorovnomaScreen family={family} layout="phone" initialStep={3} initialFaceVerified initialVerifiedMethod="touch" />
           </DeviceFrame>
         </div>
 

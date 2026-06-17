@@ -48,8 +48,12 @@ export interface SorovnomaScreenProps {
   initialForm?: Partial<FormState>;
   /** preview учун: биометрик тасдиқ аллақачон бажарилган ҳолат */
   initialFaceVerified?: boolean;
-  /** preview учун: юз сканери overlay'ини маълум ҳолатда статик кўрсатиш */
+  /** preview учун: юз/бармоқ сканери overlay'ини маълум ҳолатда статик кўрсатиш */
   previewFaceScan?: "scanning" | "success" | "error";
+  /** preview учун: сканер overlay усули (Face/Touch) */
+  previewMethod?: BiometricMethod;
+  /** preview учун: тасдиқланган биометрик усул (Face/Touch) */
+  initialVerifiedMethod?: BiometricMethod;
   /** preview учун: сақланган (success) ҳолатни кўрсатиш */
   initialSaved?: boolean;
   /** «Истаги бор» сўровномадан кейин — шартнома тузишга ўтиш */
@@ -58,8 +62,45 @@ export interface SorovnomaScreenProps {
 
 type SaveState = "idle" | "saving" | "success";
 type CadastreState = "idle" | "searching" | "verified";
-/** Юз сканери ҳолати — шартнома экранида ҳам қайта ишлатилади */
+/** Юз/бармоқ сканери ҳолати — шартнома экранида ҳам қайта ишлатилади */
 export type FaceScanState = "idle" | "scanning" | "success" | "error";
+
+/** Биометрик усул — Face ID (юз) ёки Touch ID (бармоқ изи). */
+export type BiometricMethod = "face" | "touch";
+
+const BIO_METHOD: Record<
+  BiometricMethod,
+  { short: string; verb: string; verified: string; instruction: string; mismatch: string }
+> = {
+  face: {
+    short: "Face ID",
+    verb: "Юзни тасдиқлаш",
+    verified: "Юз орқали тасдиқланди",
+    instruction: "Юзни доира ичида тутиб туринг…",
+    mismatch: "Юз «Ижтимоий реестр» сурати билан мос келмади",
+  },
+  touch: {
+    short: "Touch ID",
+    verb: "Бармоқ изини тасдиқлаш",
+    verified: "Бармоқ изи орқали тасдиқланди",
+    instruction: "Бармоғингизни сенсорга қўйиб туринг…",
+    mismatch: "Бармоқ изи реестр маълумоти билан мос келмади",
+  },
+};
+
+/** Бармоқ изи (Touch ID) иконкаси — иконка тўпламида йўқ, inline SVG. */
+function FingerprintGlyph({ size = 24, className = "" }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M12 10v4c0 1.5-.3 3-1 4.3" />
+      <path d="M8.5 8.5A5 5 0 0 1 17 12v2c0 1 .1 2 .4 3" />
+      <path d="M5.5 11.5A6.5 6.5 0 0 1 12 5c1.4 0 2.7.4 3.8 1.1" />
+      <path d="M9 13v1c0 2-.5 3.8-1.5 5.4" />
+      <path d="M12 13.5c0 3-.7 5.8-2.1 8.2" />
+      <path d="M15 14c0 2.4.3 4.7 1 6.9" />
+    </svg>
+  );
+}
 
 interface FormState {
   tomorqaMavjud: string;
@@ -114,6 +155,8 @@ export default function SorovnomaScreen({
   initialForm,
   initialFaceVerified = false,
   previewFaceScan,
+  previewMethod,
+  initialVerifiedMethod = "face",
   initialSaved = false,
   onCreateContract,
 }: SorovnomaScreenProps) {
@@ -125,7 +168,9 @@ export default function SorovnomaScreen({
   const [cadastre, setCadastre] = useState<CadastreState>("verified");
   const [step, setStep] = useState(initialStep);
   const [faceVerified, setFaceVerified] = useState(initialFaceVerified);
+  const [verifiedMethod, setVerifiedMethod] = useState<BiometricMethod>(initialVerifiedMethod);
   const [faceScan, setFaceScan] = useState<FaceScanState>(previewFaceScan ?? "idle");
+  const [scanMethod, setScanMethod] = useState<BiometricMethod>(previewMethod ?? "face");
   const [showFaceScan, setShowFaceScan] = useState(Boolean(previewFaceScan));
 
   useEffect(() => {
@@ -135,11 +180,13 @@ export default function SorovnomaScreen({
     setCadastre("verified");
     setStep(initialStep);
     setFaceVerified(initialFaceVerified);
+    setVerifiedMethod(initialVerifiedMethod);
     setFaceScan(previewFaceScan ?? "idle");
+    setScanMethod(previewMethod ?? "face");
     setShowFaceScan(Boolean(previewFaceScan));
-  }, [family, initialStep, initialForm, initialFaceVerified, previewFaceScan, initialSaved]);
+  }, [family, initialStep, initialForm, initialFaceVerified, previewFaceScan, previewMethod, initialVerifiedMethod, initialSaved]);
 
-  // Юз сканери ҳолат машинаси (cancel-safe: ҳолат ўзгарса таймер тозаланади).
+  // Сканер ҳолат машинаси (cancel-safe: ҳолат ўзгарса таймер тозаланади).
   // Preview режимида статик туради — авто-ўтиш йўқ.
   useEffect(() => {
     if (previewFaceScan) return;
@@ -150,12 +197,13 @@ export default function SorovnomaScreen({
     if (faceScan === "success") {
       const t = window.setTimeout(() => {
         setFaceVerified(true);
+        setVerifiedMethod(scanMethod);
         setShowFaceScan(false);
         setFaceScan("idle");
       }, 850);
       return () => window.clearTimeout(t);
     }
-  }, [faceScan, previewFaceScan]);
+  }, [faceScan, previewFaceScan, scanMethod]);
 
   const hasGarden = form.tomorqaMavjud === "Мавжуд";
   const notUsing = form.foydalanishHolati === "Фойдаланмайди";
@@ -176,11 +224,12 @@ export default function SorovnomaScreen({
     window.setTimeout(() => setCadastre("verified"), 850);
   }
 
-  function openFaceScan() {
+  function openScan(method: BiometricMethod) {
+    setScanMethod(method);
     setShowFaceScan(true);
     setFaceScan("scanning");
-    // Реал биометрия (Face ID / FaceSDK) шу ерга уланади: оила бошлиғи
-    // юзи реестр/паспорт сурати билан солиштирилади.
+    // Реал биометрия (Face ID / Touch ID) шу ерга уланади: оила бошлиғи
+    // юзи/бармоқ изи реестр/паспорт маълумоти билан солиштирилади.
   }
 
   function closeFaceScan() {
@@ -237,7 +286,7 @@ export default function SorovnomaScreen({
     }
     // Биометрик тасдиқ — сақлаш учун мажбурий (тугма ҳам disabled, бу қўшимча ҳимоя).
     if (!faceVerified) {
-      openFaceScan();
+      openScan("face");
       return;
     }
     setSaveState("saving");
@@ -404,6 +453,7 @@ export default function SorovnomaScreen({
       {showFaceScan && (
         <FaceScanOverlay
           state={faceScan}
+          method={scanMethod}
           familyName={family.oilaBoshligiFio}
           onClose={closeFaceScan}
           onRetry={() => setFaceScan("scanning")}
@@ -448,8 +498,9 @@ export default function SorovnomaScreen({
               </SectionCard>
               <BiometricCard
                 verified={faceVerified}
+                verifiedMethod={verifiedMethod}
                 familyName={family.oilaBoshligiFio}
-                onVerify={openFaceScan}
+                onVerify={openScan}
               />
             </div>
           </div>
@@ -505,7 +556,8 @@ export default function SorovnomaScreen({
                 wantsRent={wantsRent}
                 onEdit={() => setStep(1)}
                 faceVerified={faceVerified}
-                onVerifyFace={openFaceScan}
+                verifiedMethod={verifiedMethod}
+                onVerifyFace={openScan}
               />
             )}
           </div>
@@ -722,6 +774,7 @@ function ReviewStep({
   wantsRent,
   onEdit,
   faceVerified,
+  verifiedMethod,
   onVerifyFace,
 }: {
   family: SocialSurveyFamily;
@@ -731,7 +784,8 @@ function ReviewStep({
   wantsRent: boolean;
   onEdit: () => void;
   faceVerified: boolean;
-  onVerifyFace: () => void;
+  verifiedMethod: BiometricMethod;
+  onVerifyFace: (method: BiometricMethod) => void;
 }) {
   const rows: { label: string; value: string }[] = [
     { label: "Оила бошлиғи", value: family.oilaBoshligiFio },
@@ -788,33 +842,45 @@ function ReviewStep({
         </div>
       </div>
 
-      <BiometricCard verified={faceVerified} familyName={family.oilaBoshligiFio} onVerify={onVerifyFace} />
+      <BiometricCard
+        verified={faceVerified}
+        verifiedMethod={verifiedMethod}
+        familyName={family.oilaBoshligiFio}
+        onVerify={onVerifyFace}
+      />
     </div>
   );
 }
 
-/* ── Биометрик тасдиқлаш картаси (Face ID) ────────────────────────────────── */
+/* ── Биометрик тасдиқлаш картаси (Face ID / Touch ID) ─────────────────────── */
 export function BiometricCard({
   verified,
+  verifiedMethod = "face",
   familyName,
   onVerify,
 }: {
   verified: boolean;
+  verifiedMethod?: BiometricMethod;
   familyName: string;
-  onVerify: () => void;
+  onVerify: (method: BiometricMethod) => void;
 }) {
   if (verified) {
+    const isTouch = verifiedMethod === "touch";
     return (
       <div className="overflow-hidden rounded-2xl border border-success/30 bg-gradient-to-br from-success/[0.12] to-success/[0.03] p-4 shadow-layered-sm">
         <div className="flex items-center gap-3.5">
           <span className="relative inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-success/15 text-success">
-            <Icon name="user-tick" size={26} variant="Bold" />
+            {isTouch ? (
+              <FingerprintGlyph size={26} className="text-success" />
+            ) : (
+              <Icon name="user-tick" size={26} variant="Bold" />
+            )}
             <span className="absolute -bottom-1 -right-1 inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-success text-white shadow-sm">
               <Icon name="tick-circle" size={13} variant="Bold" />
             </span>
           </span>
           <div className="min-w-0">
-            <p className="text-[14px] font-bold text-text-primary">Юз орқали тасдиқланди</p>
+            <p className="text-[14px] font-bold text-text-primary">{BIO_METHOD[verifiedMethod].verified}</p>
             <p className="truncate text-[12px] text-text-secondary">
               {familyName} · шахси тасдиқланди
             </p>
@@ -830,13 +896,7 @@ export function BiometricCard({
 
   const trust: { icon: IconName; text: string }[] = [
     { icon: "time", text: "Бир неча сония" },
-    { icon: "shield-tick", text: "Сурат сақланмайди" },
-  ];
-  const bracket = [
-    "left-2 top-2 border-l-2 border-t-2 rounded-tl-lg",
-    "right-2 top-2 border-r-2 border-t-2 rounded-tr-lg",
-    "left-2 bottom-2 border-b-2 border-l-2 rounded-bl-lg",
-    "right-2 bottom-2 border-b-2 border-r-2 rounded-br-lg",
+    { icon: "shield-tick", text: "Маълумот сақланмайди" },
   ];
 
   return (
@@ -862,25 +922,13 @@ export function BiometricCard({
       </div>
 
       <div className="p-4">
-        <div className="mb-3.5 flex items-center gap-3.5">
-          {/* Юз сканери мини-кўриниши (нима бўлишини кўрсатади) */}
-          <div className="relative grid h-[72px] w-[72px] shrink-0 place-items-center rounded-2xl bg-navy/[0.06]">
-            {bracket.map((pos) => (
-              <span key={pos} className={`absolute h-5 w-5 border-navy/40 ${pos}`} />
-            ))}
-            <Icon name="profile" size={40} variant="Bulk" className="text-navy/55" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-[12.5px] font-semibold leading-snug text-text-primary">
-              Оила бошлиғи юзи реестр сурати билан солиштирилади
-            </p>
-            <p className="mt-1 text-[11.5px] leading-snug text-text-secondary">
-              Сохта сўровномани олдини олади
-            </p>
-          </div>
-        </div>
+        <p className="text-[12px] leading-snug text-text-secondary">
+          Оила бошлиғи <span className="font-semibold text-text-primary">{familyName}</span> шахсини
+          тасдиқланг — <span className="font-semibold text-text-primary">Face ID</span> (юз) ёки{" "}
+          <span className="font-semibold text-text-primary">Touch ID</span> (бармоқ изи) орқали.
+        </p>
 
-        <div className="mb-3.5 grid grid-cols-2 gap-2">
+        <div className="mb-3.5 mt-3 grid grid-cols-2 gap-2">
           {trust.map((t) => (
             <div
               key={t.text}
@@ -892,34 +940,48 @@ export function BiometricCard({
           ))}
         </div>
 
-        <button
-          type="button"
-          onClick={onVerify}
-          className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-navy to-navy-light text-[14px] font-bold text-white shadow-[0_8px_20px_rgba(43,140,238,0.42)] transition-all hover:brightness-[1.08] active:scale-[0.98]"
-        >
-          <Icon name="scan" size={18} variant="Bold" />
-          Юзни тасдиқлаш
-        </button>
+        {/* 2 усул — Face ID / Touch ID */}
+        <div className="grid grid-cols-2 gap-2.5">
+          <button
+            type="button"
+            onClick={() => onVerify("face")}
+            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-navy to-navy-light text-[13.5px] font-bold text-white shadow-[0_8px_20px_rgba(43,140,238,0.42)] transition-all hover:brightness-[1.08] active:scale-[0.98]"
+          >
+            <Icon name="scan" size={17} variant="Bold" />
+            Face ID
+          </button>
+          <button
+            type="button"
+            onClick={() => onVerify("touch")}
+            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border-2 border-navy/25 bg-navy/[0.04] text-[13.5px] font-bold text-navy transition-colors hover:bg-navy/[0.09] active:scale-[0.98]"
+          >
+            <FingerprintGlyph size={18} className="text-navy" />
+            Touch ID
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
-/* ── FaceScanOverlay — тўлиқ экранли юз сканери (Face ID) ──────────────────── */
+/* ── FaceScanOverlay — тўлиқ экранли биометрик сканер (Face ID / Touch ID) ──── */
 export function FaceScanOverlay({
   state,
+  method = "face",
   familyName,
   onClose,
   onRetry,
 }: {
   state: FaceScanState;
+  method?: BiometricMethod;
   familyName: string;
   onClose: () => void;
   onRetry: () => void;
 }) {
   const success = state === "success";
   const error = state === "error";
-  const title = success ? "Шахс тасдиқланди" : error ? "Тасдиқлаб бўлмади" : "Юзни тасдиқлаш";
+  const isTouch = method === "touch";
+  const title = success ? "Шахс тасдиқланди" : error ? "Тасдиқлаб бўлмади" : BIO_METHOD[method].verb;
   const bracketColor = success ? "border-success" : error ? "border-danger" : "face-bracket border-sky-400";
   const faceTone = success ? "text-success/70" : error ? "text-danger/55" : "text-white/25";
 
@@ -964,9 +1026,13 @@ export function FaceScanOverlay({
           <span key={pos} className={`absolute h-12 w-12 ${pos} ${bracketColor}`} />
         ))}
 
-        {/* Юз силуэти */}
+        {/* Юз / бармоқ изи силуэти */}
         <div className="absolute inset-[26px] flex items-center justify-center overflow-hidden rounded-full bg-white/[0.04]">
-          <Icon name="profile" size={104} variant="Bulk" className={faceTone} />
+          {isTouch ? (
+            <FingerprintGlyph size={96} className={faceTone} />
+          ) : (
+            <Icon name="profile" size={104} variant="Bulk" className={faceTone} />
+          )}
           {/* Сканерлаш чизиғи — фақат сканерлаш пайтида */}
           {!success && !error && (
             <span className="face-sweep pointer-events-none absolute left-3 right-3 h-[3px] rounded-full bg-sky-400 shadow-[0_0_14px_4px_rgba(56,189,248,0.7)]" />
@@ -998,12 +1064,12 @@ export function FaceScanOverlay({
         ) : error ? (
           <>
             <Icon name="warning" size={16} variant="Bold" className="text-danger" />
-            Юз «Ижтимоий реестр» сурати билан мос келмади
+            {BIO_METHOD[method].mismatch}
           </>
         ) : (
           <>
             <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-sky-400" />
-            Юзни доира ичида тутиб туринг…
+            {BIO_METHOD[method].instruction}
           </>
         )}
       </p>

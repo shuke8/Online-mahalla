@@ -28,6 +28,7 @@ import {
   InfoNote,
   FaceScanOverlay,
   type FaceScanState,
+  type BiometricMethod,
 } from "@/components/mobile/SorovnomaScreen";
 import { formatJshshir, formatPhone } from "@/lib/social-survey-data";
 import {
@@ -140,7 +141,9 @@ export default function ShartnomaScreen({
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [stir, setStir] = useState<"idle" | "searching" | "verified">("verified");
   const [faceVerified, setFaceVerified] = useState(initialFaceVerified);
+  const [verifiedMethod, setVerifiedMethod] = useState<BiometricMethod>("face");
   const [faceScan, setFaceScan] = useState<FaceScanState>(previewFaceScan ?? "idle");
+  const [scanMethod, setScanMethod] = useState<BiometricMethod>("face");
   const [showFaceScan, setShowFaceScan] = useState(Boolean(previewFaceScan));
 
   useEffect(() => {
@@ -162,12 +165,13 @@ export default function ShartnomaScreen({
     if (faceScan === "success") {
       const t = window.setTimeout(() => {
         setFaceVerified(true);
+        setVerifiedMethod(scanMethod);
         setShowFaceScan(false);
         setFaceScan("idle");
       }, 850);
       return () => window.clearTimeout(t);
     }
-  }, [faceScan, previewFaceScan]);
+  }, [faceScan, previewFaceScan, scanMethod]);
 
   const set = <K extends keyof ContractForm>(key: K, value: ContractForm[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
@@ -178,7 +182,8 @@ export default function ShartnomaScreen({
       kunlar: f.kunlar.includes(day) ? f.kunlar.filter((d) => d !== day) : [...f.kunlar, day],
     }));
 
-  function openFaceScan() {
+  function openScan(method: BiometricMethod) {
+    setScanMethod(method);
     setShowFaceScan(true);
     setFaceScan("scanning");
   }
@@ -201,7 +206,7 @@ export default function ShartnomaScreen({
   }
   async function handleSave() {
     if (!faceVerified) {
-      openFaceScan();
+      openScan("face");
       return;
     }
     setSaveState("saving");
@@ -325,6 +330,7 @@ export default function ShartnomaScreen({
       {showFaceScan && (
         <FaceScanOverlay
           state={faceScan}
+          method={scanMethod}
           familyName={family.oilaBoshligiFio}
           onClose={closeFaceScan}
           onRetry={() => setFaceScan("scanning")}
@@ -353,7 +359,7 @@ export default function ShartnomaScreen({
             <div className="flex w-1/2 flex-col gap-5">
               {termsBlock}
               <ReviewCard family={family} form={form} />
-              <BiometricCard verified={faceVerified} familyName={family.oilaBoshligiFio} onVerify={openFaceScan} />
+              <BiometricCard verified={faceVerified} verifiedMethod={verifiedMethod} familyName={family.oilaBoshligiFio} onVerify={openScan} />
             </div>
           </div>
         </div>
@@ -375,7 +381,7 @@ export default function ShartnomaScreen({
             {step === 3 && (
               <div className="flex flex-col gap-4">
                 <ReviewCard family={family} form={form} />
-                <BiometricCard verified={faceVerified} familyName={family.oilaBoshligiFio} onVerify={openFaceScan} />
+                <BiometricCard verified={faceVerified} verifiedMethod={verifiedMethod} familyName={family.oilaBoshligiFio} onVerify={openScan} />
               </div>
             )}
           </div>
