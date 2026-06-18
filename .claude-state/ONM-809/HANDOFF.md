@@ -35,7 +35,9 @@
 - `components/mobile/SorovnomaScreen.tsx` — сўровнома форма + **BiometricCard/FaceScanOverlay**
   (Face ID + Touch ID, export) + SavedModal
 - `components/mobile/SorovnomaNatijaScreen.tsx` — ўтказилган сўровнома натижаси (no-garden ҳам)
-- `components/mobile/ShartnomaScreen.tsx` — шартнома 4-қадам wizard (биометрика reuse)
+- `components/mobile/ShartnomaScreen.tsx` — шартнома 4-қадам wizard (биометрика reuse);
+  «Иш вақти» — chiroyli `TimeRangeField` (Кириш→Чиқиш катта tabular рақамлар + давомийлик чипи «N соат»,
+  native select overlay; эски 2 dropdown ўрнига). SelectField import олиб ташланди.
 - `components/mobile/ShartnomaDocument.tsx` — расмий шартнома ҳужжати (узун қиймат wrap қилинади)
 - `components/design/IjaraCanvas.tsx` — умумий canvas қобиқ (top-bar + nav)
 - Спецификация: `.claude-state/ONM-809/CONTRACT-MODULE-SPEC.md`

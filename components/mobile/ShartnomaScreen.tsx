@@ -16,7 +16,6 @@ import type { IconName } from "@/components/atoms/Icon";
 import {
   AppBar,
   TextField,
-  SelectField,
   SearchTextField,
   ChoiceToggle,
   SectionCard,
@@ -310,10 +309,12 @@ export default function ShartnomaScreen({
           placeholder="0"
         />
         <WeekdayPicker value={form.kunlar} onToggle={toggleDay} />
-        <div className="grid grid-cols-2 gap-3">
-          <SelectField label="Кириш соати" value={form.kirishSoati} options={SOATLAR} onChange={(v) => set("kirishSoati", v)} required />
-          <SelectField label="Чиқиш соати" value={form.chiqishSoati} options={SOATLAR} onChange={(v) => set("chiqishSoati", v)} required />
-        </div>
+        <TimeRangeField
+          kirish={form.kirishSoati}
+          chiqish={form.chiqishSoati}
+          onKirish={(v) => set("kirishSoati", v)}
+          onChiqish={(v) => set("chiqishSoati", v)}
+        />
       </div>
     </SectionCard>
   );
@@ -477,6 +478,90 @@ function WeekdayPicker({ value, onToggle }: { value: string[]; onToggle: (d: str
         })}
       </div>
     </div>
+  );
+}
+
+/* ── Иш вақти — Кириш→Чиқиш оралиғи (chiroyli range picker) ──────────────── */
+function hoursBetween(a: string, b: string): number | null {
+  const h1 = Number.parseInt(a.slice(0, 2), 10);
+  const h2 = Number.parseInt(b.slice(0, 2), 10);
+  if (Number.isNaN(h1) || Number.isNaN(h2)) return null;
+  const d = h2 - h1;
+  return d > 0 ? d : null;
+}
+
+function TimeRangeField({
+  kirish,
+  chiqish,
+  onKirish,
+  onChiqish,
+}: {
+  kirish: string;
+  chiqish: string;
+  onKirish: (v: string) => void;
+  onChiqish: (v: string) => void;
+}) {
+  const dur = hoursBetween(kirish, chiqish);
+  return (
+    <div>
+      <div className="mb-2 flex items-center justify-between">
+        <p className="text-[12.5px] font-semibold text-text-label">
+          Иш вақти <span className="text-danger">*</span>
+        </p>
+        {dur !== null ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-navy/[0.08] px-2 py-0.5 text-[11px] font-bold text-navy">
+            <Icon name="time" size={11} variant="Bold" />
+            {dur} соат
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 rounded-full bg-danger/10 px-2 py-0.5 text-[11px] font-bold text-danger">
+            <Icon name="warning" size={11} variant="Bold" />
+            Чиқиш киришдан кейин
+          </span>
+        )}
+      </div>
+      <div className="flex items-stretch rounded-2xl border border-border-light bg-white p-1.5 shadow-[0_6px_18px_-12px_rgba(15,23,42,0.45)]">
+        <TimeHalf label="Кириш" value={kirish} onChange={onKirish} />
+        <span className="flex shrink-0 items-center px-0.5 text-navy/50">
+          <Icon name="chevron-forward" size={16} variant="Bold" />
+        </span>
+        <TimeHalf label="Чиқиш" value={chiqish} onChange={onChiqish} />
+      </div>
+    </div>
+  );
+}
+
+function TimeHalf({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <label className="relative flex-1 cursor-pointer rounded-[14px] px-3 py-2 transition-colors hover:bg-navy/[0.05]">
+      <span className="flex items-center gap-1 text-[10.5px] font-bold uppercase tracking-[0.06em] text-text-secondary">
+        <Icon name="time" size={11} variant="Bold" />
+        {label}
+      </span>
+      <span className="mt-1 block text-[21px] font-extrabold leading-none tracking-tight tabular-nums text-text-primary">
+        {value}
+      </span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        aria-label={`${label} соати`}
+        className="absolute inset-0 h-full w-full cursor-pointer appearance-none opacity-0"
+      >
+        {SOATLAR.map((s) => (
+          <option key={s} value={s}>
+            {s}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
 
