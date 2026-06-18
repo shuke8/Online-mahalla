@@ -1,20 +1,22 @@
 "use client";
 
 /**
- * IjaraModuleScreen — «Томорқа ижараси» модулига кириш экрани (calm/meditation
- * app услуби): ёруғ фон, soft-blue акцент, 2 та катта карта (қора + оқ) +
- * амал тугмаси, «Сўнгги фаолият» рўйхати, пастки навигация.
+ * IjaraModuleScreen — «Томорқа ижараси» модулига кириш экрани.
  *
- * layout="phone" — бир устун; layout="tablet" — марказлашган.
+ * Услуб: Apple App Store / Arcade (ёруғ режим) — editorial masthead, рамли
+ * featured карта (glass info-panel + CTA), 2 устунли амал карталари ва ранг-баранг
+ * «Ҳолат бўйича» рейтинг плиткалари (катта шаффоф рақам). SF-system шрифти.
+ *
+ * layout="phone" — бир устун; layout="tablet" — марказлашган тор устун.
  */
 
 import { Icon } from "@/components/atoms/Icon";
 import type { IconName } from "@/components/atoms/Icon";
 import { moduleCounts, MFY_NAME } from "@/lib/ijara-module-data";
 
-const ACCENT = "#54c0e8"; // тугма/актив — soft cyan-blue
-const ACCENT_SOFT = "#aaddf0"; // енгил кўк карта/пилл фони
-const DARK = "#181b20"; // қора карта
+const ACCENT = "#2b8cee"; // App Store кўк — асосий CTA / актив таб
+const BG = "#f2f2f7"; // iOS systemGroupedBackground
+const SF = '-apple-system, "SF Pro Display", "SF Pro Text", system-ui, sans-serif';
 
 export interface IjaraModuleScreenProps {
   layout: "phone" | "tablet";
@@ -22,18 +24,6 @@ export interface IjaraModuleScreenProps {
   onOpenContract?: () => void;
   onBack?: () => void;
 }
-
-interface RecentItem {
-  name: string;
-  tag: string;
-  when: string;
-}
-
-const RECENT: RecentItem[] = [
-  { name: "Нематова Насиба Эргаш қизи", tag: "Шартнома", when: "Бугун" },
-  { name: "Собиров Самад Собирович", tag: "Сўровнома", when: "Кеча" },
-  { name: "Мансурова Мақсуда Шавкат қизи", tag: "Сўровнома", when: "3 кун олдин" },
-];
 
 export default function IjaraModuleScreen({
   layout,
@@ -44,79 +34,102 @@ export default function IjaraModuleScreen({
   const c = moduleCounts();
 
   return (
-    <div className="relative flex flex-1 flex-col bg-[#f4f5f7]">
+    <div
+      className="relative flex flex-1 flex-col text-[#1d1d1f]"
+      style={{ background: BG, fontFamily: SF }}
+    >
       <LightStatusBar />
 
-      {/* Header — салом + билдиришнома */}
-      <header className="flex shrink-0 items-start gap-2 px-5 pb-1 pt-2">
-        <div className="min-w-0 flex-1">
-          <h1 className="text-[25px] font-extrabold leading-none tracking-tight text-slate-900">
-            Ассалому алейкум{" "}
-            <span aria-hidden role="img">
-              👋
-            </span>
-          </h1>
-          <p className="mt-1.5 truncate text-[12.5px] font-semibold text-slate-400">
-            {MFY_NAME} · {c.total} оила
-          </p>
-        </div>
-        <button
-          type="button"
-          aria-label="Билдиришномалар"
-          className="relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white"
-          style={{ background: DARK }}
-        >
-          <Icon name="notifications" size={20} variant="Bold" />
-          <span
-            className="absolute right-2.5 top-2.5 h-2.5 w-2.5 rounded-full border-2"
-            style={{ background: ACCENT, borderColor: DARK }}
-          />
-        </button>
-      </header>
+      <div className={`flex-1 overflow-auto pb-4 ${isTablet ? "px-6" : "px-5"}`}>
+        <div className={isTablet ? "mx-auto max-w-[420px]" : ""}>
+          {/* ── Masthead (App Store «Today» услуби) ─────────────────────── */}
+          <header className="flex items-end justify-between gap-3 pt-2">
+            <div className="min-w-0">
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#86868b]">
+                Ижтимоий реестр
+              </p>
+              <h1 className="mt-0.5 text-[30px] font-extrabold leading-[1.04] tracking-[-0.02em] text-[#1d1d1f]">
+                Томорқа ижараси
+              </h1>
+              <p className="mt-1 truncate text-[13px] font-medium text-[#86868b]">
+                {MFY_NAME} · {c.total} оила
+              </p>
+            </div>
+            <button
+              type="button"
+              aria-label="Билдиришномалар"
+              className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#1d1d1f] shadow-[0_2px_10px_-2px_rgba(15,23,42,0.18)] ring-1 ring-black/[0.04] transition-transform active:scale-95"
+            >
+              <Icon name="notifications" size={19} variant="Bold" />
+              <span
+                className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full border-2 border-white"
+                style={{ background: "#ff453a" }}
+              />
+            </button>
+          </header>
 
-      <div className={`flex-1 overflow-auto pb-3 ${isTablet ? "px-7" : "px-5"}`}>
-        <div className={isTablet ? "mx-auto max-w-xl" : ""}>
-          {/* Қидирув */}
-          <div className="mt-3.5 flex items-center gap-2.5 rounded-2xl bg-white px-4 py-3.5 shadow-[0_6px_18px_-8px_rgba(15,23,42,0.18)]">
-            <Icon name="search" size={19} className="text-slate-400" />
-            <span className="text-[14px] text-slate-400">Оила, ЖШШИР қидириш…</span>
+          {/* ── Қидирув ─────────────────────────────────────────────────── */}
+          <div className="mt-4 flex items-center gap-2 rounded-[13px] bg-[#e6e6eb] px-3.5 py-2.5">
+            <Icon name="search" size={17} className="text-[#86868b]" />
+            <span className="text-[15px] text-[#86868b]">Оила, ЖШШИР қидириш</span>
           </div>
 
-          {/* 2 та катта амал картаси */}
+          {/* ── Featured карта (рамли + glass panel) ─────────────────────── */}
+          <SectionEyebrow label="Кунлик вазифа" />
+          <FeaturedCard
+            title="Сўровнома ўтказиш"
+            subtitle={`${c.surveyPending} оила навбатда`}
+            cta="Бошлаш"
+            icon="note"
+            onClick={onOpenSurvey}
+          />
+
+          {/* ── 2 устунли амаллар (Arcade плитка услуби) ─────────────────── */}
           <div className="mt-4 grid grid-cols-2 gap-3.5">
-            <BigCard
-              variant="dark"
-              title="Сўровнома ўтказиш"
-              count={c.surveyPending}
-              countLabel="кутмоқда"
-              pillIcon="time"
-              onClick={onOpenSurvey}
-            />
-            <BigCard
-              variant="light"
+            <ActionTile
+              tone="indigo"
               title="Шартнома тузиш"
               count={c.contractReady}
-              countLabel="тайёр"
-              pillIcon="tick-circle"
+              countLabel="оила тайёр"
+              icon="document-text"
               onClick={onOpenContract}
+            />
+            <ActionTile
+              tone="white"
+              title="Барча оилалар"
+              count={c.total}
+              countLabel="реестрда"
+              icon="people"
             />
           </div>
 
-          {/* Сўнгги фаолият */}
-          <div className="mb-3 mt-6 flex items-center justify-between">
-            <h2 className="text-[19px] font-extrabold tracking-tight text-slate-900">Сўнгги фаолият</h2>
-            <button type="button" className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-slate-400">
-              Барчаси
-              <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-slate-200/70 text-slate-500">
-                <Icon name="chevron-forward" size={12} variant="Bold" />
-              </span>
-            </button>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            {RECENT.map((r, i) => (
-              <RecentCard key={r.name} item={r} blue={i === 0} />
-            ))}
+          {/* ── Ҳолат бўйича — рейтинг плиткалари ────────────────────────── */}
+          <SectionHeader title="Ҳолат бўйича" caption="Реестр статистикаси" />
+          <div className="grid grid-cols-2 gap-3.5">
+            <StatRankCard
+              tone="amber"
+              count={c.surveyPending}
+              label="Сўровнома кутилмоқда"
+              icon="time"
+            />
+            <StatRankCard
+              tone="blue"
+              count={c.contractReady}
+              label="Ижарага рози"
+              icon="user-tick"
+            />
+            <StatRankCard
+              tone="green"
+              count={c.contractDone}
+              label="Шартнома тузилган"
+              icon="tick-circle"
+            />
+            <StatRankCard
+              tone="graphite"
+              count={c.declined}
+              label="Рад этилган"
+              icon="close-circle"
+            />
           </div>
         </div>
       </div>
@@ -126,106 +139,255 @@ export default function IjaraModuleScreen({
   );
 }
 
-/* ── Катта амал картаси (қора/оқ) ─────────────────────────────────────────── */
-function BigCard({
-  variant,
+/* ── Секция сарлавҳалари ───────────────────────────────────────────────── */
+function SectionEyebrow({ label }: { label: string }) {
+  return (
+    <p className="mb-2 mt-6 text-[12px] font-bold uppercase tracking-[0.12em] text-[#86868b]">
+      {label}
+    </p>
+  );
+}
+
+function SectionHeader({ title, caption }: { title: string; caption: string }) {
+  return (
+    <div className="mb-3 mt-7 flex items-end justify-between">
+      <div>
+        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#86868b]">{caption}</p>
+        <h2 className="mt-0.5 text-[22px] font-extrabold tracking-[-0.02em] text-[#1d1d1f]">
+          {title}
+        </h2>
+      </div>
+      <span className="mb-1 inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/[0.05] text-[#86868b]">
+        <Icon name="chevron-forward" size={14} variant="Bold" />
+      </span>
+    </div>
+  );
+}
+
+/* ── Featured карта — рамли hero + шаффоф info-panel ─────────────────────── */
+function FeaturedCard({
   title,
-  count,
-  countLabel,
-  pillIcon,
+  subtitle,
+  cta,
+  icon,
   onClick,
 }: {
-  variant: "dark" | "light";
   title: string;
-  count: number;
-  countLabel: string;
-  pillIcon: IconName;
+  subtitle: string;
+  cta: string;
+  icon: IconName;
   onClick?: () => void;
 }) {
-  const dark = variant === "dark";
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`flex h-[186px] flex-col rounded-[26px] p-4 text-left transition-transform active:scale-[0.98] ${
-        dark
-          ? "bg-[#181b20] shadow-[0_14px_30px_-16px_rgba(15,23,42,0.7)]"
-          : "border border-slate-200/80 bg-white shadow-[0_10px_26px_-16px_rgba(15,23,42,0.4)]"
-      }`}
+      className="group relative block h-[208px] w-full overflow-hidden rounded-[26px] text-left shadow-[0_18px_40px_-20px_rgba(15,23,42,0.5)] ring-1 ring-black/[0.04] transition-transform active:scale-[0.985]"
     >
-      <h3
-        className={`text-[19px] font-extrabold leading-tight tracking-tight ${
-          dark ? "text-white" : "text-slate-900"
-        }`}
-      >
-        {title}
-      </h3>
-      <div className="mt-auto flex items-center justify-between gap-2">
+      <GardenArt />
+      {/* пастки қоронғулаштириш — матн ўқилиши учун */}
+      <span className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/35 via-black/5 to-transparent" />
+
+      {/* Glass info-panel */}
+      <span className="absolute inset-x-2.5 bottom-2.5 flex items-center gap-2.5 rounded-[19px] border border-white/50 bg-white/70 px-2.5 py-2.5 backdrop-blur-xl">
         <span
-          title={`${count} ${countLabel}`}
-          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[12px] font-bold ${
-            dark ? "bg-white/[0.12] text-white/90" : "bg-slate-100 text-slate-600"
-          }`}
-        >
-          <Icon name={pillIcon} size={13} variant="Bold" />
-          <span className="tabular-nums">{count}</span>
-        </span>
-        <span
-          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white shadow-[0_6px_14px_-4px_rgba(84,192,232,0.7)]"
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] text-white shadow-[0_6px_14px_-4px_rgba(43,140,238,0.7)]"
           style={{ background: ACCENT }}
         >
-          <Icon name="chevron-forward" size={18} variant="Bold" />
+          <Icon name={icon} size={19} variant="Bold" />
         </span>
-      </div>
-    </button>
-  );
-}
-
-/* ── Сўнгги фаолият картаси (кўк/оқ) ──────────────────────────────────────── */
-function RecentCard({ item, blue }: { item: RecentItem; blue?: boolean }) {
-  return (
-    <button
-      type="button"
-      className={`flex items-center gap-3 rounded-[22px] p-3.5 text-left transition-transform active:scale-[0.99] ${
-        blue ? "" : "border border-slate-200/80 bg-white"
-      }`}
-      style={blue ? { background: ACCENT_SOFT } : undefined}
-    >
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-[14.5px] font-bold text-slate-900">{item.name}</p>
-        <div className="mt-2 flex flex-wrap items-center gap-2">
-          <Tag onBlue={blue}>{item.tag}</Tag>
-          <Tag onBlue={blue}>{item.when}</Tag>
-        </div>
-      </div>
-      <span
-        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white"
-        style={{ background: blue ? "#ffffff" : ACCENT }}
-      >
-        <Icon
-          name="chevron-forward"
-          size={20}
-          variant="Bold"
-          className={blue ? "text-slate-900" : "text-white"}
-        />
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-bold leading-tight tracking-[-0.01em] text-[#1d1d1f]">
+            {title}
+          </span>
+          <span className="mt-0.5 block truncate text-[12.5px] font-medium text-[#5b5b60]">
+            {subtitle}
+          </span>
+        </span>
+        <span
+          className="inline-flex shrink-0 items-center rounded-full px-3.5 py-2 text-[12.5px] font-bold text-white shadow-[0_6px_14px_-5px_rgba(43,140,238,0.8)]"
+          style={{ background: ACCENT }}
+        >
+          {cta}
+        </span>
       </span>
     </button>
   );
 }
 
-function Tag({ children, onBlue }: { children: React.ReactNode; onBlue?: boolean }) {
+/* ── Бог иллюстрацияси (SVG, self-contained) ────────────────────────────── */
+function GardenArt() {
   return (
-    <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-        onBlue ? "bg-white/80 text-slate-700" : "bg-slate-100 text-slate-500"
-      }`}
+    <svg
+      aria-hidden
+      className="absolute inset-0 h-full w-full"
+      viewBox="0 0 320 208"
+      preserveAspectRatio="xMidYMid slice"
     >
-      {children}
-    </span>
+      <defs>
+        <linearGradient id="ij-sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#bfe6f7" />
+          <stop offset="0.6" stopColor="#dcf0ec" />
+          <stop offset="1" stopColor="#eef6e3" />
+        </linearGradient>
+        <linearGradient id="ij-field" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#a8db86" />
+          <stop offset="1" stopColor="#6cb84d" />
+        </linearGradient>
+        <linearGradient id="ij-field2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#83c861" />
+          <stop offset="1" stopColor="#4f9e39" />
+        </linearGradient>
+        <radialGradient id="ij-sun" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#fff6d8" stopOpacity="0.95" />
+          <stop offset="0.55" stopColor="#ffe9ad" stopOpacity="0.55" />
+          <stop offset="1" stopColor="#ffe9ad" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      {/* осмон */}
+      <rect width="320" height="208" fill="url(#ij-sky)" />
+      {/* қуёш ёғдуси */}
+      <circle cx="248" cy="48" r="80" fill="url(#ij-sun)" />
+      <circle cx="248" cy="48" r="20" fill="#fff4cf" />
+
+      {/* узоқ тепаликлар */}
+      <path d="M0 112 Q70 86 150 104 T320 96 V140 H0 Z" fill="#c4e3ad" />
+      {/* дарахт силуэтлари */}
+      <ellipse cx="44" cy="104" rx="20" ry="22" fill="#5a9a4c" />
+      <ellipse cx="64" cy="108" rx="16" ry="18" fill="#4f8e44" />
+      <ellipse cx="288" cy="110" rx="18" ry="20" fill="#5a9a4c" />
+
+      {/* ўрта дала */}
+      <path d="M0 122 Q90 104 180 120 T320 116 V208 H0 Z" fill="url(#ij-field)" />
+      {/* олд дала */}
+      <path d="M0 150 Q110 134 220 150 T320 148 V208 H0 Z" fill="url(#ij-field2)" />
+
+      {/* экин қаторлари (перспектива) */}
+      <g stroke="#3f8a2e" strokeOpacity="0.35" strokeWidth="2" strokeLinecap="round">
+        <path d="M-10 176 Q160 162 330 176" />
+        <path d="M-10 188 Q160 174 330 188" />
+        <path d="M-10 200 Q160 186 330 200" />
+      </g>
+      <g stroke="#ffffff" strokeOpacity="0.16" strokeWidth="1.5" strokeLinecap="round">
+        <path d="M-10 170 Q160 156 330 170" />
+        <path d="M-10 182 Q160 168 330 182" />
+      </g>
+    </svg>
   );
 }
 
-/* ── Пастки навигация ────────────────────────────────────────────────────── */
+/* ── Амал плиткаси (2 устун) ────────────────────────────────────────────── */
+function ActionTile({
+  tone,
+  title,
+  count,
+  countLabel,
+  icon,
+  onClick,
+}: {
+  tone: "indigo" | "white";
+  title: string;
+  count: number;
+  countLabel: string;
+  icon: IconName;
+  onClick?: () => void;
+}) {
+  const indigo = tone === "indigo";
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`relative flex h-[132px] flex-col overflow-hidden rounded-[22px] p-3.5 text-left transition-transform active:scale-[0.97] ${
+        indigo
+          ? "text-white shadow-[0_14px_30px_-16px_rgba(79,70,229,0.85)]"
+          : "bg-white text-[#1d1d1f] shadow-[0_10px_26px_-18px_rgba(15,23,42,0.5)] ring-1 ring-black/[0.05]"
+      }`}
+      style={indigo ? { background: "linear-gradient(150deg,#6366f1,#4b49d6)" } : undefined}
+    >
+      <span
+        className={`inline-flex h-10 w-10 items-center justify-center rounded-[13px] ${
+          indigo ? "bg-white/20 text-white" : "text-white"
+        }`}
+        style={indigo ? undefined : { background: ACCENT }}
+      >
+        <Icon name={icon} size={20} variant="Bold" />
+      </span>
+      <span className="mt-auto block text-[15px] font-bold leading-tight tracking-[-0.01em]">
+        {title}
+      </span>
+      <span className="mt-1 flex items-center gap-1.5">
+        <span className={`text-[15px] font-extrabold tabular-nums ${indigo ? "text-white" : "text-[#1d1d1f]"}`}>
+          {count}
+        </span>
+        <span className={`text-[12px] font-medium ${indigo ? "text-white/80" : "text-[#86868b]"}`}>
+          {countLabel}
+        </span>
+      </span>
+      <span
+        className={`absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-full ${
+          indigo ? "bg-white/20 text-white" : "bg-black/[0.05] text-[#86868b]"
+        }`}
+      >
+        <Icon name="chevron-forward" size={13} variant="Bold" />
+      </span>
+    </button>
+  );
+}
+
+/* ── Ҳолат рейтинг плиткаси — катта шаффоф рақам ─────────────────────────── */
+const RANK_TONE: Record<
+  "amber" | "blue" | "green" | "graphite",
+  { bg: string; shadow: string }
+> = {
+  amber: { bg: "linear-gradient(155deg,#ffae28,#fb7e0a)", shadow: "rgba(251,126,10,0.8)" },
+  blue: { bg: "linear-gradient(155deg,#3aa0ff,#1b6fe6)", shadow: "rgba(27,111,230,0.8)" },
+  green: { bg: "linear-gradient(155deg,#43cf6b,#23a049)", shadow: "rgba(35,160,73,0.8)" },
+  graphite: { bg: "linear-gradient(155deg,#9aa0a9,#62686f)", shadow: "rgba(98,104,111,0.75)" },
+};
+
+function StatRankCard({
+  tone,
+  count,
+  label,
+  icon,
+}: {
+  tone: "amber" | "blue" | "green" | "graphite";
+  count: number;
+  label: string;
+  icon: IconName;
+}) {
+  const t = RANK_TONE[tone];
+  return (
+    <button
+      type="button"
+      className="relative flex h-[124px] flex-col overflow-hidden rounded-[22px] p-3.5 text-left text-white transition-transform active:scale-[0.97]"
+      style={{ background: t.bg, boxShadow: `0 14px 30px -18px ${t.shadow}` }}
+    >
+      {/* катта шаффоф рақам (фон) */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -top-3 right-1 select-none text-[80px] font-black leading-none tabular-nums text-white/[0.22]"
+      >
+        {count}
+      </span>
+
+      <span className="inline-flex h-9 w-9 items-center justify-center rounded-[12px] bg-white/22 text-white backdrop-blur-sm">
+        <Icon name={icon} size={18} variant="Bold" />
+      </span>
+
+      <span className="mt-auto block text-[13px] font-semibold leading-tight text-white">
+        {label}
+      </span>
+      <span className="mt-1.5 inline-flex w-fit items-center gap-1 rounded-full bg-white/22 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
+        Кўриш
+        <Icon name="chevron-forward" size={11} variant="Bold" />
+      </span>
+    </button>
+  );
+}
+
+/* ── Пастки навигация (iOS таб-бар) ─────────────────────────────────────── */
 function BottomNav() {
   const tabs: { icon: IconName; label: string; active?: boolean }[] = [
     { icon: "home", label: "Бош", active: true },
@@ -234,29 +396,21 @@ function BottomNav() {
     { icon: "profile", label: "Профил" },
   ];
   return (
-    <div className="shrink-0 border-t border-slate-200/70 bg-white px-3 pb-5 pt-2.5">
-      <div className="flex items-center justify-around">
-        {tabs.map((t) =>
-          t.active ? (
-            <span
-              key={t.label}
-              className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[12.5px] font-bold text-slate-900"
-              style={{ background: ACCENT_SOFT }}
-            >
-              <Icon name={t.icon} size={18} variant="Bold" />
-              {t.label}
-            </span>
-          ) : (
-            <button
-              key={t.label}
-              type="button"
-              aria-label={t.label}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-400 transition-colors hover:text-slate-600"
-            >
-              <Icon name={t.icon} size={21} variant="Bold" />
-            </button>
-          ),
-        )}
+    <div className="shrink-0 border-t border-black/[0.07] bg-white/85 px-2 pb-5 pt-2 backdrop-blur-xl">
+      <div className="flex items-stretch justify-around">
+        {tabs.map((t) => (
+          <button
+            key={t.label}
+            type="button"
+            aria-label={t.label}
+            aria-current={t.active ? "page" : undefined}
+            className="flex min-w-0 flex-1 flex-col items-center gap-1 py-0.5"
+            style={{ color: t.active ? ACCENT : "#9a9aa0" }}
+          >
+            <Icon name={t.icon} size={23} variant={t.active ? "Bold" : "Linear"} />
+            <span className="text-[10px] font-semibold leading-none tracking-tight">{t.label}</span>
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -265,9 +419,12 @@ function BottomNav() {
 /* ── Ёруғ статус-бар ─────────────────────────────────────────────────────── */
 function LightStatusBar({ time = "09:41" }: { time?: string }) {
   return (
-    <div className="flex shrink-0 select-none items-center justify-between bg-[#f4f5f7] px-5 pb-0.5 pt-1.5 text-slate-900">
-      <span className="text-[11px] font-semibold tabular-nums tracking-wide">{time}</span>
-      <div className="flex items-center gap-1.5 text-slate-800">
+    <div
+      className="flex shrink-0 select-none items-center justify-between px-5 pb-0.5 pt-2 text-[#1d1d1f]"
+      style={{ background: BG }}
+    >
+      <span className="text-[12px] font-semibold tabular-nums tracking-wide">{time}</span>
+      <div className="flex items-center gap-1.5 text-[#1d1d1f]">
         <svg width="15" height="11" viewBox="0 0 16 12" aria-hidden fill="none">
           <rect x="0" y="8" width="3" height="4" rx="0.6" fill="currentColor" />
           <rect x="4.3" y="5.5" width="3" height="6.5" rx="0.6" fill="currentColor" />
@@ -279,10 +436,10 @@ function LightStatusBar({ time = "09:41" }: { time?: string }) {
           <path d="M8 11.2 4.3 7.4a5.2 5.2 0 0 1 7.4 0L8 11.2Z" fill="currentColor" />
         </svg>
         <span className="flex items-center gap-0.5">
-          <span className="relative flex h-[10px] w-[19px] items-center rounded-[3px] border border-slate-400 px-[1.5px]">
-            <span className="block h-[5px] w-[12px] rounded-[1px] bg-slate-800" />
+          <span className="relative flex h-[11px] w-[21px] items-center rounded-[3px] border border-[#1d1d1f]/40 px-[1.5px]">
+            <span className="block h-[6px] w-[14px] rounded-[1px] bg-[#1d1d1f]" />
           </span>
-          <span className="block h-[4px] w-[1.5px] rounded-r-sm bg-slate-400" />
+          <span className="block h-[4px] w-[1.5px] rounded-r-sm bg-[#1d1d1f]/40" />
         </span>
       </div>
     </div>
