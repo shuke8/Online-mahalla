@@ -15,7 +15,7 @@
 Бир МФЙ контексти: **Галаосиё МФЙ** (реал жадвал `poor_family_rents_land_info`дан — 34 оила).
 
 ## Саҳифалар (дизайн-кanvas)
-- `/dizayn/ijara` — **Модул кириши** (ҲОЗИР: **App Store / Arcade light услуби** — editorial masthead + қидирув + рамли featured карта (**real Higgsfield томорқа фото** + glass info-panel + «Бошлаш») + 2 устунли амал плиткаси (indigo Шартнома + оқ Барча оилалар) + «Ҳолат бўйича» 4 та ранг-баранг рейтинг плиткаси (катта шаффоф рақам: 13/9/4/8) + iOS таб-бар). Evidence: `ARTIFACTS/appstore-light/`
+- `/dizayn/ijara` — **Модул кириши** (ҲОЗИР: **App Store light + содда UX** — masthead + қидирув + рамли featured карта (Сўровнома, **real Higgsfield томорқа фото** + glass info-panel + «Бошлаш») + Шартнома содда тўлиқ-кенглик картаси (count) + iOS таб-бар). **Статистика плиткалари ва «Барча оилалар» олиб ташланди** (фойдаланувчи: entry ортиқча маълумотсиз, содда бўлсин — фақат 2 амал; статистика рўйхат/ҳисобот экранларида). Evidence: `ARTIFACTS/appstore-light/ijara-simple*.png`
 - `/dizayn/ijara/sorovnoma` — Сўровнома: рўйхат + форма + натижа + «томорқа мавжуд эмас» + handoff
 - `/dizayn/ijara/shartnoma` — Шартнома: рўйхат + форма (4 қадам) + ҳужжат
 - `/dizayn/ijara/referenslar` — Mobbin референслар галереяси
@@ -28,8 +28,9 @@
 - `lib/ijara-module-data.ts` — оилалар (9 намуна, барчаси Галаосиё МФЙ), статуслар (4),
   REGISTRY_STATS (34 оила), reference рўйхатлар, helper'лар (surveyList/contractList/
   moduleCounts/statusCounts/surveyOutcomeOf/ijaraIstagiOf)
-- `components/mobile/IjaraModuleScreen.tsx` — кириш экрани (**App Store / Arcade light услуби**;
-  FeaturedCard (real `<img>` tomorqa-hero.webp) + ActionTile + StatRankCard + iOS BottomNav; SF system шрифт)
+- `components/mobile/IjaraModuleScreen.tsx` — кириш экрани (**App Store light, содда UX**;
+  FeaturedCard (Сўровнома, real `<img>` tomorqa-hero.webp) + ContractCard (Шартнома) + iOS BottomNav;
+  SF system шрифт. Статистика/рейтинг плиткалари йўқ.)
 - `components/mobile/IjaraListScreen.tsx` — рўйхат (survey/contract, gating, streetOf)
 - `components/mobile/SorovnomaScreen.tsx` — сўровнома форма + **BiometricCard/FaceScanOverlay**
   (Face ID + Touch ID, export) + SavedModal
