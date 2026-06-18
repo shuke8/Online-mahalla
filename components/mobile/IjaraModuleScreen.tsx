@@ -3,10 +3,9 @@
 /**
  * IjaraModuleScreen — «Томорқа ижараси» модулига кириш экрани.
  *
- * Услуб: Apple App Store (ёруғ режим), лекин UX содда — кириш экрани фақат
- * «нима қилмоқчисиз?» саволига жавоб беради: 2 та асосий амал. Ортиқча статистика
- * йўқ (у рўйхат/ҳисобот экранларида). Masthead + қидирув + рамли featured карта
- * (Сўровнома, real Higgsfield «томорқа» фото) + Шартнома карта + iOS таб-бар.
+ * Услуб: тоза iOS-native (Settings / Health / Wallet) — катта сарлавҳа (large title),
+ * iOS қидирув майдони, gradient app-icon кvadратчали тоза амал карталари. Расм йўқ.
+ * UX содда: кириш фақат «нима қилмоқчисиз?» — 2 та амал (Сўровнома асосий, Шартнома).
  *
  * layout="phone" — бир устун; layout="tablet" — марказлашган тор устун.
  */
@@ -15,10 +14,14 @@ import { Icon } from "@/components/atoms/Icon";
 import type { IconName } from "@/components/atoms/Icon";
 import { moduleCounts, MFY_NAME } from "@/lib/ijara-module-data";
 
-const ACCENT = "#2b8cee"; // App Store кўк — асосий CTA / актив таб
-const INDIGO = "#5b58e0"; // шартнома акценти
+const ACCENT = "#0a84ff"; // iOS systemBlue — асосий CTA / актив таб
 const BG = "#f2f2f7"; // iOS systemGroupedBackground
 const SF = '-apple-system, "SF Pro Display", "SF Pro Text", system-ui, sans-serif';
+
+const GRAD = {
+  blue: "linear-gradient(160deg,#3aa0ff,#0a6ff0)",
+  indigo: "linear-gradient(160deg,#6d6af5,#4b49d6)",
+} as const;
 
 export interface IjaraModuleScreenProps {
   layout: "phone" | "tablet";
@@ -44,49 +47,56 @@ export default function IjaraModuleScreen({
 
       <div className={`flex-1 overflow-auto pb-4 ${isTablet ? "px-6" : "px-5"}`}>
         <div className={isTablet ? "mx-auto max-w-[420px]" : ""}>
-          {/* ── Masthead ─────────────────────────────────────────────────── */}
-          <header className="flex items-end justify-between gap-3 pt-2">
+          {/* ── Large title (iOS nav) ────────────────────────────────────── */}
+          <header className="flex items-start justify-between gap-3 pt-3">
             <div className="min-w-0">
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#86868b]">
-                Ижтимоий реестр
-              </p>
-              <h1 className="mt-0.5 text-[30px] font-extrabold leading-[1.04] tracking-[-0.02em] text-[#1d1d1f]">
+              <h1 className="text-[33px] font-bold leading-[1.05] tracking-[-0.022em] text-[#1d1d1f]">
                 Томорқа ижараси
               </h1>
-              <p className="mt-1 truncate text-[13px] font-medium text-[#86868b]">
+              <p className="mt-1.5 truncate text-[14px] font-medium text-[#86868b]">
                 {MFY_NAME} · {c.total} оила
               </p>
             </div>
             <button
               type="button"
               aria-label="Билдиришномалар"
-              className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#1d1d1f] shadow-[0_2px_10px_-2px_rgba(15,23,42,0.18)] ring-1 ring-black/[0.04] transition-transform active:scale-95"
+              className="relative mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#1d1d1f] shadow-[0_2px_10px_-2px_rgba(15,23,42,0.16)] ring-1 ring-black/[0.04] transition-transform active:scale-95"
             >
-              <Icon name="notifications" size={19} variant="Bold" />
+              <Icon name="notifications" size={18} variant="Bold" />
               <span
-                className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full border-2 border-white"
-                style={{ background: "#ff453a" }}
+                className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full border-2 border-white"
+                style={{ background: "#ff3b30" }}
               />
             </button>
           </header>
 
-          {/* ── Қидирув ─────────────────────────────────────────────────── */}
-          <div className="mt-4 flex items-center gap-2 rounded-[13px] bg-[#e6e6eb] px-3.5 py-2.5">
-            <Icon name="search" size={17} className="text-[#86868b]" />
-            <span className="text-[15px] text-[#86868b]">Оила, ЖШШИР қидириш</span>
+          {/* ── Қидирув (iOS) ───────────────────────────────────────────── */}
+          <div className="mt-4 flex items-center gap-1.5 rounded-[11px] bg-[#e3e3e9] px-2.5 py-2">
+            <Icon name="search" size={17} className="text-[#8e8e93]" />
+            <span className="text-[16px] text-[#8e8e93]">Қидириш</span>
           </div>
 
-          {/* ── Асосий амал — Сўровнома (рамли featured карта) ───────────── */}
-          <FeaturedCard
+          {/* ── Амаллар ──────────────────────────────────────────────────── */}
+          <p className="mb-2.5 ml-1 mt-6 text-[12.5px] font-semibold uppercase tracking-[0.06em] text-[#8e8e93]">
+            Амаллар
+          </p>
+
+          {/* Сўровнома — асосий */}
+          <ActionCard
+            grad={GRAD.blue}
+            icon="note"
             title="Сўровнома ўтказиш"
             subtitle={`${c.surveyPending} оила навбатда`}
-            cta="Бошлаш"
-            icon="note"
             onClick={onOpenSurvey}
           />
-
-          {/* ── Иккинчи амал — Шартнома (содда карта) ─────────────────────── */}
-          <ContractCard count={c.contractReady} onClick={onOpenContract} />
+          {/* Шартнома — иккинчи */}
+          <ActionCard
+            grad={GRAD.indigo}
+            icon="document-text"
+            title="Шартнома тузиш"
+            subtitle={`${c.contractReady} оила тайёр`}
+            onClick={onOpenContract}
+          />
         </div>
       </div>
 
@@ -95,89 +105,39 @@ export default function IjaraModuleScreen({
   );
 }
 
-/* ── Featured карта — рамли hero + шаффоф info-panel ─────────────────────── */
-function FeaturedCard({
+/* ── iOS амал картаси (gradient app-icon + sarlavha + chevron/CTA) ───────── */
+function ActionCard({
+  grad,
+  icon,
   title,
   subtitle,
-  cta,
-  icon,
   onClick,
 }: {
+  grad: string;
+  icon: IconName;
   title: string;
   subtitle: string;
-  cta: string;
-  icon: IconName;
   onClick?: () => void;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="group relative mt-5 block h-[216px] w-full overflow-hidden rounded-[26px] text-left shadow-[0_18px_40px_-20px_rgba(15,23,42,0.5)] ring-1 ring-black/[0.04] transition-transform active:scale-[0.985]"
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/ijara/tomorqa-hero.webp"
-        alt=""
-        aria-hidden
-        draggable={false}
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-      {/* пастки қоронғулаштириш — матн ўқилиши учун */}
-      <span className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/35 via-black/5 to-transparent" />
-
-      {/* Glass info-panel */}
-      <span className="absolute inset-x-2.5 bottom-2.5 flex items-center gap-2.5 rounded-[19px] border border-white/50 bg-white/70 px-2.5 py-2.5 backdrop-blur-xl">
-        <span
-          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] text-white shadow-[0_6px_14px_-4px_rgba(43,140,238,0.7)]"
-          style={{ background: ACCENT }}
-        >
-          <Icon name={icon} size={19} variant="Bold" />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-bold leading-tight tracking-[-0.01em] text-[#1d1d1f]">
-            {title}
-          </span>
-          <span className="mt-0.5 block truncate text-[12.5px] font-medium text-[#5b5b60]">
-            {subtitle}
-          </span>
-        </span>
-        <span
-          className="inline-flex shrink-0 items-center rounded-full px-3.5 py-2 text-[12.5px] font-bold text-white shadow-[0_6px_14px_-5px_rgba(43,140,238,0.8)]"
-          style={{ background: ACCENT }}
-        >
-          {cta}
-        </span>
-      </span>
-    </button>
-  );
-}
-
-/* ── Шартнома — содда тўлиқ-кенглик картаси ─────────────────────────────── */
-function ContractCard({ count, onClick }: { count: number; onClick?: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="mt-3.5 flex w-full items-center gap-3.5 rounded-[22px] bg-white px-4 py-4 text-left shadow-[0_10px_26px_-18px_rgba(15,23,42,0.5)] ring-1 ring-black/[0.05] transition-transform active:scale-[0.99]"
+      className="mt-3 flex w-full items-center gap-3.5 rounded-[20px] bg-white p-3.5 text-left shadow-[0_8px_22px_-16px_rgba(15,23,42,0.55)] ring-1 ring-black/[0.05] transition-transform active:scale-[0.985]"
     >
       <span
-        className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-[15px] text-white shadow-[0_6px_14px_-5px_rgba(91,88,224,0.8)]"
-        style={{ background: INDIGO }}
+        className="inline-flex h-[54px] w-[54px] shrink-0 items-center justify-center rounded-[16px] text-white"
+        style={{ background: grad, boxShadow: "0 8px 18px -8px rgba(43,90,230,0.55)" }}
       >
-        <Icon name="document-text" size={22} variant="Bold" />
+        <Icon name={icon} size={26} variant="Bold" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-[16px] font-bold leading-tight tracking-[-0.01em] text-[#1d1d1f]">
-          Шартнома тузиш
+        <span className="block truncate text-[17px] font-semibold leading-tight tracking-[-0.01em] text-[#1d1d1f]">
+          {title}
         </span>
-        <span className="mt-0.5 block text-[13px] font-medium text-[#86868b]">
-          {count} оила тайёр
-        </span>
+        <span className="mt-1 block text-[13.5px] font-medium text-[#8e8e93]">{subtitle}</span>
       </span>
-      <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-black/[0.05] text-[#86868b]">
-        <Icon name="chevron-forward" size={14} variant="Bold" />
-      </span>
+      <Icon name="chevron-forward" size={18} className="shrink-0 text-[#c4c4cc]" variant="Bold" />
     </button>
   );
 }

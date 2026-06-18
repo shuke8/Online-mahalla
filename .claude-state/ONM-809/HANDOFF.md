@@ -15,7 +15,7 @@
 Бир МФЙ контексти: **Галаосиё МФЙ** (реал жадвал `poor_family_rents_land_info`дан — 34 оила).
 
 ## Саҳифалар (дизайн-кanvas)
-- `/dizayn/ijara` — **Модул кириши** (ҲОЗИР: **App Store light + содда UX** — masthead + қидирув + рамли featured карта (Сўровнома, **real Higgsfield томорқа фото** + glass info-panel + «Бошлаш») + Шартнома содда тўлиқ-кенглик картаси (count) + iOS таб-бар). **Статистика плиткалари ва «Барча оилалар» олиб ташланди** (фойдаланувчи: entry ортиқча маълумотсиз, содда бўлсин — фақат 2 амал; статистика рўйхат/ҳисобот экранларида). Evidence: `ARTIFACTS/appstore-light/ijara-simple*.png`
+- `/dizayn/ijara` — **Модул кириши** (ҲОЗИР: **тоза iOS-native** (Settings/Health услуби) — large title + iOS қидирув + «Амаллар» бўлими + 2 та тоза оқ карта (gradient app-icon + сарлавҳа + count + chevron): Сўровнома (blue) ва Шартнома (indigo) + iOS таб-бар). **Расм/фото йўқ** (фойдаланувчи: «rasm ўрнига iOS дизайн»), статистика плиткалари ҳам йўқ — entry содда. Evidence: `ARTIFACTS/appstore-light/ijara-ios*.png`
 - `/dizayn/ijara/sorovnoma` — Сўровнома: рўйхат + форма + натижа + «томорқа мавжуд эмас» + handoff
 - `/dizayn/ijara/shartnoma` — Шартнома: рўйхат + форма (4 қадам) + ҳужжат
 - `/dizayn/ijara/referenslar` — Mobbin референслар галереяси
@@ -28,9 +28,9 @@
 - `lib/ijara-module-data.ts` — оилалар (9 намуна, барчаси Галаосиё МФЙ), статуслар (4),
   REGISTRY_STATS (34 оила), reference рўйхатлар, helper'лар (surveyList/contractList/
   moduleCounts/statusCounts/surveyOutcomeOf/ijaraIstagiOf)
-- `components/mobile/IjaraModuleScreen.tsx` — кириш экрани (**App Store light, содда UX**;
-  FeaturedCard (Сўровнома, real `<img>` tomorqa-hero.webp) + ContractCard (Шартнома) + iOS BottomNav;
-  SF system шрифт. Статистика/рейтинг плиткалари йўқ.)
+- `components/mobile/IjaraModuleScreen.tsx` — кириш экрани (**тоза iOS-native**;
+  ActionCard ×2 (gradient app-icon iOS qatorлари: Сўровнома blue + Шартнома indigo) + iOS BottomNav;
+  SF system шрифт. Расм/статистика плиткалари йўқ.)
 - `components/mobile/IjaraListScreen.tsx` — рўйхат (survey/contract, gating, streetOf)
 - `components/mobile/SorovnomaScreen.tsx` — сўровнома форма + **BiometricCard/FaceScanOverlay**
   (Face ID + Touch ID, export) + SavedModal
@@ -53,9 +53,10 @@
 
 ## Очиқ / кейинги қадамлар (опционал)
 - Кириш экрани кўп бор қайта чизилди — фойдаланувчи яна услуб ўзгартириши мумкин (ҳозирги: App Store / Arcade light).
-- Featured карта фони — **real Higgsfield Soul Location фото** (`public/ijara/tomorqa-hero.webp`, 111KB, 3:2).
-  Higgsfield CLI (`higgsfield generate create soul_location --prompt "..." --aspect_ratio 3:2 --wait`) орқали
-  генерация қилинди (account stemirov777@gmail.com). Кейин бошқа joyларга ham расм керак бўлса — ҳамон шу CLI.
+- **Higgsfield CLI** (`higgsfield generate create soul_location --prompt "..." --aspect_ratio 3:2 --wait`)
+  расм генерация учун мавжуд (account stemirov777@gmail.com, скиллар `.agents/skills/`). Томорқа фото синаб
+  кўрилди, лекин фойдаланувчи **iOS-native (фотосиз)** дизайнни танлади → `tomorqa-hero.webp` олиб ташланди.
+  Келажакда расм керак бўлса — шу CLI (`reference_higgsfield_image_tool` memory).
 - Реал backend уланганда: статистика жадвалдан ҳисобланади (ҳозир Галаосиё МФЙ реал 34 рўйхат / 0 сўровнома,
   дизайнда намунавий прогресс 13/9/4/8). Бошқа МФЙ керак бўлса `_mid` берилади.
 - «Идентификация» алоҳида tab/саҳифа эмас — формалар ичида (керак бўлса ажратиш мумкин).
