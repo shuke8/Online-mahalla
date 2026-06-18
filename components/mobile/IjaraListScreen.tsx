@@ -19,12 +19,19 @@ import {
   surveyList,
   contractList,
   STATUS_META,
+  MFY_NAME,
   type FamilyStatus,
   type IjaraFamily,
   type StatusTone,
 } from "@/lib/ijara-module-data";
 
 type Mode = "survey" | "contract";
+
+/** Манзилдан МФЙ префиксини олиб ташлайди — рўйхатда фақат кўча/уй кўрсатилади
+ *  (барча оила битта МФЙда, номи header'да бир марта). */
+function streetOf(manzil: string): string {
+  return manzil.replace(/^[^,]*МФЙ,\s*/, "").trim() || manzil;
+}
 
 export interface IjaraListScreenProps {
   layout: "phone" | "tablet";
@@ -101,7 +108,7 @@ export default function IjaraListScreen({
 
       <AppBar
         title={TITLE[mode].title}
-        subtitle="Оилани танланг"
+        subtitle={`${MFY_NAME} · оилани танланг`}
         onBack={onBack}
         trailing={
           <span className="mr-1 inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-[10.5px] font-semibold text-white">
@@ -259,7 +266,8 @@ function FamilyRow({
         <div className="mt-1.5 flex items-center gap-2">
           <span className="flex min-w-0 flex-1 items-center gap-1 truncate text-[11px] text-text-secondary">
             <Icon name="location" size={12} variant="Bold" className="shrink-0 text-text-secondary/70" />
-            <span className="truncate">{family.manzil}</span>
+            {/* МФЙ битта (header'да) — қаторда фақат кўча/уй кўрсатилади */}
+            <span className="truncate">{streetOf(family.manzil)}</span>
           </span>
           <span className="shrink-0">
             <StatusBadge status={family.status} />
