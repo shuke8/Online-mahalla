@@ -15,7 +15,7 @@
 Бир МФЙ контексти: **Галаосиё МФЙ** (реал жадвал `poor_family_rents_land_info`дан — 34 оила).
 
 ## Саҳифалар (дизайн-кanvas)
-- `/dizayn/ijara` — **Модул кириши** (ҲОЗИР: **App Store / Arcade light услуби** — editorial masthead + қидирув + рамли featured карта (бог SVG illustration + glass info-panel + «Бошлаш») + 2 устунли амал плиткаси (indigo Шартнома + оқ Барча оилалар) + «Ҳолат бўйича» 4 та ранг-баранг рейтинг плиткаси (катта шаффоф рақам: 13/9/4/8) + iOS таб-бар). Evidence: `ARTIFACTS/appstore-light/`
+- `/dizayn/ijara` — **Модул кириши** (ҲОЗИР: **App Store / Arcade light услуби** — editorial masthead + қидирув + рамли featured карта (**real Higgsfield томорқа фото** + glass info-panel + «Бошлаш») + 2 устунли амал плиткаси (indigo Шартнома + оқ Барча оилалар) + «Ҳолат бўйича» 4 та ранг-баранг рейтинг плиткаси (катта шаффоф рақам: 13/9/4/8) + iOS таб-бар). Evidence: `ARTIFACTS/appstore-light/`
 - `/dizayn/ijara/sorovnoma` — Сўровнома: рўйхат + форма + натижа + «томорқа мавжуд эмас» + handoff
 - `/dizayn/ijara/shartnoma` — Шартнома: рўйхат + форма (4 қадам) + ҳужжат
 - `/dizayn/ijara/referenslar` — Mobbin референслар галереяси
@@ -29,7 +29,7 @@
   REGISTRY_STATS (34 оила), reference рўйхатлар, helper'лар (surveyList/contractList/
   moduleCounts/statusCounts/surveyOutcomeOf/ijaraIstagiOf)
 - `components/mobile/IjaraModuleScreen.tsx` — кириш экрани (**App Store / Arcade light услуби**;
-  GardenArt SVG + FeaturedCard + ActionTile + StatRankCard + iOS BottomNav; SF system шрифт)
+  FeaturedCard (real `<img>` tomorqa-hero.webp) + ActionTile + StatRankCard + iOS BottomNav; SF system шрифт)
 - `components/mobile/IjaraListScreen.tsx` — рўйхат (survey/contract, gating, streetOf)
 - `components/mobile/SorovnomaScreen.tsx` — сўровнома форма + **BiometricCard/FaceScanOverlay**
   (Face ID + Touch ID, export) + SavedModal
@@ -52,8 +52,9 @@
 
 ## Очиқ / кейинги қадамлар (опционал)
 - Кириш экрани кўп бор қайта чизилди — фойдаланувчи яна услуб ўзгартириши мумкин (ҳозирги: App Store / Arcade light).
-- Featured карта фони — self-contained SVG бог иллюстрацияси (Gemini image API кvotaси 0 эди). Кейин истаса
-  реал фото билан алмаштириш мумкин (`GardenArt` ўрнига `<img>`/background-image).
+- Featured карта фони — **real Higgsfield Soul Location фото** (`public/ijara/tomorqa-hero.webp`, 111KB, 3:2).
+  Higgsfield CLI (`higgsfield generate create soul_location --prompt "..." --aspect_ratio 3:2 --wait`) орқали
+  генерация қилинди (account stemirov777@gmail.com). Кейин бошқа joyларга ham расм керак бўлса — ҳамон шу CLI.
 - Реал backend уланганда: статистика жадвалдан ҳисобланади (ҳозир Галаосиё МФЙ реал 34 рўйхат / 0 сўровнома,
   дизайнда намунавий прогресс 13/9/4/8). Бошқа МФЙ керак бўлса `_mid` берилади.
 - «Идентификация» алоҳида tab/саҳифа эмас — формалар ичида (керак бўлса ажратиш мумкин).

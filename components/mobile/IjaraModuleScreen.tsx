@@ -4,8 +4,9 @@
  * IjaraModuleScreen — «Томорқа ижараси» модулига кириш экрани.
  *
  * Услуб: Apple App Store / Arcade (ёруғ режим) — editorial masthead, рамли
- * featured карта (glass info-panel + CTA), 2 устунли амал карталари ва ранг-баранг
- * «Ҳолат бўйича» рейтинг плиткалари (катта шаффоф рақам). SF-system шрифти.
+ * featured карта (real Higgsfield Soul Location «томорқа» фото + glass info-panel +
+ * CTA), 2 устунли амал карталари ва ранг-баранг «Ҳолат бўйича» рейтинг плиткалари
+ * (катта шаффоф рақам). SF-system шрифти. Фото: public/ijara/tomorqa-hero.webp.
  *
  * layout="phone" — бир устун; layout="tablet" — марказлашган тор устун.
  */
@@ -184,7 +185,14 @@ function FeaturedCard({
       onClick={onClick}
       className="group relative block h-[208px] w-full overflow-hidden rounded-[26px] text-left shadow-[0_18px_40px_-20px_rgba(15,23,42,0.5)] ring-1 ring-black/[0.04] transition-transform active:scale-[0.985]"
     >
-      <GardenArt />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/ijara/tomorqa-hero.webp"
+        alt=""
+        aria-hidden
+        draggable={false}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
       {/* пастки қоронғулаштириш — матн ўқилиши учун */}
       <span className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/35 via-black/5 to-transparent" />
 
@@ -212,68 +220,6 @@ function FeaturedCard({
         </span>
       </span>
     </button>
-  );
-}
-
-/* ── Бог иллюстрацияси (SVG, self-contained) ────────────────────────────── */
-function GardenArt() {
-  return (
-    <svg
-      aria-hidden
-      className="absolute inset-0 h-full w-full"
-      viewBox="0 0 320 208"
-      preserveAspectRatio="xMidYMid slice"
-    >
-      <defs>
-        <linearGradient id="ij-sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#bfe6f7" />
-          <stop offset="0.6" stopColor="#dcf0ec" />
-          <stop offset="1" stopColor="#eef6e3" />
-        </linearGradient>
-        <linearGradient id="ij-field" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#a8db86" />
-          <stop offset="1" stopColor="#6cb84d" />
-        </linearGradient>
-        <linearGradient id="ij-field2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#83c861" />
-          <stop offset="1" stopColor="#4f9e39" />
-        </linearGradient>
-        <radialGradient id="ij-sun" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#fff6d8" stopOpacity="0.95" />
-          <stop offset="0.55" stopColor="#ffe9ad" stopOpacity="0.55" />
-          <stop offset="1" stopColor="#ffe9ad" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-
-      {/* осмон */}
-      <rect width="320" height="208" fill="url(#ij-sky)" />
-      {/* қуёш ёғдуси */}
-      <circle cx="248" cy="48" r="80" fill="url(#ij-sun)" />
-      <circle cx="248" cy="48" r="20" fill="#fff4cf" />
-
-      {/* узоқ тепаликлар */}
-      <path d="M0 112 Q70 86 150 104 T320 96 V140 H0 Z" fill="#c4e3ad" />
-      {/* дарахт силуэтлари */}
-      <ellipse cx="44" cy="104" rx="20" ry="22" fill="#5a9a4c" />
-      <ellipse cx="64" cy="108" rx="16" ry="18" fill="#4f8e44" />
-      <ellipse cx="288" cy="110" rx="18" ry="20" fill="#5a9a4c" />
-
-      {/* ўрта дала */}
-      <path d="M0 122 Q90 104 180 120 T320 116 V208 H0 Z" fill="url(#ij-field)" />
-      {/* олд дала */}
-      <path d="M0 150 Q110 134 220 150 T320 148 V208 H0 Z" fill="url(#ij-field2)" />
-
-      {/* экин қаторлари (перспектива) */}
-      <g stroke="#3f8a2e" strokeOpacity="0.35" strokeWidth="2" strokeLinecap="round">
-        <path d="M-10 176 Q160 162 330 176" />
-        <path d="M-10 188 Q160 174 330 188" />
-        <path d="M-10 200 Q160 186 330 200" />
-      </g>
-      <g stroke="#ffffff" strokeOpacity="0.16" strokeWidth="1.5" strokeLinecap="round">
-        <path d="M-10 170 Q160 156 330 170" />
-        <path d="M-10 182 Q160 168 330 182" />
-      </g>
-    </svg>
   );
 }
 
